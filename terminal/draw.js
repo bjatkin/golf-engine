@@ -1,8 +1,8 @@
 // Get the canvas and context
 var canvas = document.getElementById("mycanvas");
 var context = canvas.getContext("2d");
-var width = 320;
-var height = 288;
+var width = 3200;
+var height = 2880;
 var imagedata = context.createImageData(width, height);
 
 var pixelData = new Uint8Array(((width * height)/2)+1);
