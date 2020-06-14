@@ -10,6 +10,19 @@ import (
 // 	Pal Buff: 0x2401 - 0x3600
 //  Pal Set: 0x3601
 // BG Color: 0x3602 - high 3 bits
+// CameraX: 0x3603-0x3604
+// CameraY: 0x3605-0x3606
+// Frames: 0x3607-0x3609
+// ClipX: 0x360A
+// ClipY: 0x360B
+// ClipW: 0x360C
+// ClipH: 0x360D
+// Mouse:
+//  X: 0x360E
+//	Y: 0x360F
+//	Left Click: 0x3610
+//	Middle Click: 0x3610
+//	Right Click: 0x3610
 
 // Engine Screen Width and Height
 const (
@@ -40,6 +53,7 @@ func NewEngine(updateFunc func(float64), draw func()) *Engine {
 
 	ret.kl = newKeyListener(js.Global().Get("document"), ret.RAM)
 	ret.ml = newMouseListener(js.Global().Get("golfcanvas"), ret.RAM)
+	ret.RClip() // Reset the cliping box
 
 	return &ret
 }
@@ -49,6 +63,7 @@ func (e *Engine) Run() {
 	var renderFrame js.Func
 
 	renderFrame = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		e.addFrame()
 
 		// TODO update this to include tdiff
 		// now := args[0].Float()
@@ -70,14 +85,48 @@ func (e *Engine) Run() {
 	<-done
 }
 
-// Time is the number of seconds since the engine was started
-func (e *Engine) Time() float64 {
-	return 0.0
+func toInt(b []byte) int {
+	ret := []byte{0, 0, 0, 0}
+	l := len(b)
+	for i := 0; i < 4; i++ {
+		if l-i-1 > -1 {
+			ret[3-i] = b[l-i-1]
+		}
+	}
+	return int(ret[0])<<24 | int(ret[1])<<16 | int(ret[2])<<8 | int(ret[3])
+}
+
+func toBytes(i int, l int) []byte {
+	if l == 1 {
+		return []byte{byte(i)}
+	}
+	if l == 2 {
+		return []byte{byte(i >> 8), byte(i)}
+	}
+	if l == 3 {
+		return []byte{byte(i >> 16), byte(i >> 8), byte(i)}
+	}
+
+	return []byte{byte(i >> 24), byte(i >> 16), byte(i >> 8), byte(i)}
+}
+
+// Frames is the number of frames since the engine was started
+func (e *Engine) Frames() int {
+	return toInt(e.RAM[0x3607:0x360A])
+}
+
+func (e *Engine) addFrame() {
+	f := toInt(e.RAM[0x3607:0x360A])
+	f++
+	b := toBytes(f, 3)
+	e.RAM[0x3607] = b[0]
+	e.RAM[0x3608] = b[1]
+	e.RAM[0x3609] = b[2]
 }
 
 // Mouse returns the X, Y coords of the mouse
 func (e *Engine) Mouse() (int, int) {
-	return 0, 0
+	return toInt(e.RAM[0x360E:0x360F]), toInt(e.RAM[0x360F:0x3610])
 }
 
 // BG sets the bg color of the engine
@@ -104,22 +153,84 @@ func (e *Engine) Cls() {
 }
 
 // Camera moves the camera which modifies all draw functions
-func (e *Engine) Camera(x, y int) {}
+func (e *Engine) Camera(x, y int) {
+	xb := toBytes(x, 2)
+	yb := toBytes(y, 2)
+	e.RAM[0x3603] = xb[0]
+	e.RAM[0x3604] = xb[1]
+	e.RAM[0x3605] = yb[0]
+	e.RAM[0x3606] = yb[1]
+}
 
 // Rect draws a rectangle border on the screen
-func (e *Engine) Rect(x, y, w, h int, col Col) {}
+func (e *Engine) Rect(x, y, w, h int, col Col) {
+	x -= toInt(e.RAM[0x3603:0x3605])
+	y -= toInt(e.RAM[0x3605:0x3607])
+	for r := 0; r < w; r++ {
+		e.Pset(x+r, y, col)
+		e.Pset(x+r, y+(h-1), col)
+	}
+	for c := 0; c < h; c++ {
+		e.Pset(x, y+c, col)
+		e.Pset(x+(w-1), y+c, col)
+	}
+}
 
 // RectFill draws a filled rectangle one the screen
-func (e *Engine) RectFill(x, y, w, h int, col Col) {}
+func (e *Engine) RectFill(x, y, w, h int, col Col) {
+	x -= toInt(e.RAM[0x3603:0x3605])
+	y -= toInt(e.RAM[0x3605:0x3607])
+	for r := 0; r < w; r++ {
+		for c := 0; c < h; c++ {
+			e.Pset(r+x, c+y, col)
+		}
+	}
+}
 
 // Line draws a colored line
-func (e *Engine) Line(x1, y1, x2, y2 int, col Col) {}
+func (e *Engine) Line(x1, y1, x2, y2 int, col Col) {
+	x1 -= toInt(e.RAM[0x3603:0x3605])
+	x2 -= toInt(e.RAM[0x3603:0x3605])
+	y1 -= toInt(e.RAM[0x3605:0x3607])
+	y2 -= toInt(e.RAM[0x3605:0x3607])
+	if x2 < x1 {
+		x2, x1 = x1, x2
+	}
+	w := x2 - x1
+	dh := (float64(y2) - float64(y1)) / float64(w)
+	if w > 0 {
+		for x := x1; x < x2; x++ {
+			e.Pset(x, y1+int(dh*float64(x-x1)), col)
+		}
+		return
+	}
+	if y2 < y1 {
+		y2, y1 = y1, y2
+	}
+	h := y2 - y1
+	dw := (float64(x2) - float64(x1)) / float64(h)
+	if h > 0 {
+		for y := y1; y < y2; y++ {
+			e.Pset(x1+int(dw*float64(y-y1)), y, col)
+		}
+	}
+}
 
 // Clip clips all functions that draw to the screen
-func (e *Engine) Clip(x, y, w, h int) {}
+func (e *Engine) Clip(x, y, w, h int) {
+	e.RAM[0x360A] = byte(x)
+	e.RAM[0x360B] = byte(y)
+	e.RAM[0x360C] = byte(w)
+	e.RAM[0x360D] = byte(h)
+}
 
 // RClip resets the screen cliping
-func (e *Engine) RClip() {}
+func (e *Engine) RClip() {
+	e.RAM[0x360A] = 0
+	e.RAM[0x360B] = 0
+	e.RAM[0x360C] = 192
+	e.RAM[0x360D] = 192
+}
 
 // Pset sets a pixel on the screen
 func (e *Engine) Pset(x, y int, col Col) {
@@ -187,7 +298,15 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SprOpts) {}
 
 // subPixels is used to swap pixels based on a pallet swap
 func subPixels(palFrom, palTo []Col, col Col) Col {
-	return Col0
+	if len(palFrom) == 0 {
+		return col
+	}
+	for i, p := range palFrom {
+		if p == col {
+			return palTo[i]
+		}
+	}
+	return col
 }
 
 // TextOpts additional options for drawing text
@@ -208,15 +327,21 @@ func (e *Engine) TextR(text string, opts ...TextOpts) {}
 // Text prints text at the x, y coords on the screen
 func (e *Engine) Text(text string, x, y int, opts ...TextOpts) {}
 
-// Pal1 sets pallet one
-func (e *Engine) Pal1(pallet Pal) {}
+// PalA sets pallet A
+func (e *Engine) PalA(pallet Pal) {
+	e.RAM[0x3601] &= 0b00001111
+	e.RAM[0x3601] |= byte(pallet << 4)
+}
 
-// Pal2 sets pallet one
-func (e *Engine) Pal2(pallet Pal) {}
+// PalB sets pallet B
+func (e *Engine) PalB(pallet Pal) {
+	e.RAM[0x3601] &= 0b11110000
+	e.RAM[0x3601] |= byte(pallet)
+}
 
 // PalGet gets the currently set pallets
 func (e *Engine) PalGet() (Pal, Pal) {
-	return Pal0, Pal0
+	return Pal(e.RAM[0x3601] >> 4), Pal(e.RAM[0x3601] & 0b00001111)
 }
 
 // Col is a screen color
