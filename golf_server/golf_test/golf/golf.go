@@ -23,6 +23,8 @@ import (
 //	Left Click: 0x3610
 //	Middle Click: 0x3610
 //	Right Click: 0x3610
+//	Mouse Style: 0x3610
+// Keyboard: 0x3611-0x3647
 
 // Engine Screen Width and Height
 const (

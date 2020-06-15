@@ -2,7 +2,6 @@ package main
 
 import (
 	"fantasyConsole/golf_server/golf_test/golf"
-	"fmt"
 )
 
 var g *golf.Engine
@@ -18,7 +17,6 @@ var x = 0
 func update(tdiff float64) {
 	x++
 	x %= 192
-	fmt.Printf("%b\n", g.RAM[0x3610])
 }
 
 func draw() {

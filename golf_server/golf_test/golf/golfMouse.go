@@ -16,21 +16,12 @@ const (
 	RightClick  = MouseBtn(2)
 )
 
-// clickState is the current click state
-type clickState byte
-
-// clickStates
-const (
-	unpressed = clickState(0)
-	start     = clickState(1)
-	end       = clickState(2)
-	pressed   = clickState(3)
-)
-
 type mouseListener struct {
-	new, old, released []MouseBtn
-	ram                *[0xFFFF]byte
+	ram *[0xFFFF]byte
 }
+
+//TODO replace with mouseBase
+const mouseBase = uint16(0x3610)
 
 func newMouseListener(canvas js.Value, ram *[0xFFFF]byte) *mouseListener {
 	ret := mouseListener{ram: ram}
@@ -46,21 +37,21 @@ func newMouseListener(canvas js.Value, ram *[0xFFFF]byte) *mouseListener {
 		e := MouseBtn(args[0].Get("button").Int())
 
 		if e == LeftClick {
-			btn := clickState(ret.ram[0x3610] & 0b00000011)
+			btn := btnState(ret.ram[mouseBase] & 0b00000011)
 			if btn == unpressed {
-				ret.ram[0x3610] |= byte(start)
+				ret.ram[mouseBase] |= byte(start)
 			}
 		}
 		if e == MiddleClick {
-			btn := clickState((ret.ram[0x3610] & 0b00001100) >> 2)
+			btn := btnState((ret.ram[mouseBase] & 0b00001100) >> 2)
 			if btn == unpressed {
-				ret.ram[0x3610] |= (byte(start) << 2)
+				ret.ram[mouseBase] |= (byte(start) << 2)
 			}
 		}
 		if e == RightClick {
-			btn := clickState((ret.ram[0x3610] & 0b00110000) >> 4)
+			btn := btnState((ret.ram[mouseBase] & 0b00110000) >> 4)
 			if btn == unpressed {
-				ret.ram[0x3610] |= (byte(start) << 4)
+				ret.ram[mouseBase] |= (byte(start) << 4)
 			}
 		}
 
@@ -70,24 +61,24 @@ func newMouseListener(canvas js.Value, ram *[0xFFFF]byte) *mouseListener {
 		e := MouseBtn(args[0].Get("button").Int())
 
 		if e == LeftClick {
-			btn := clickState(ret.ram[0x3610] & 0b00000011)
+			btn := btnState(ret.ram[mouseBase] & 0b00000011)
 			if btn == pressed || btn == start {
-				ret.ram[0x3610] &= 0b11111100
-				ret.ram[0x3610] |= byte(end)
+				ret.ram[mouseBase] &= 0b11111100
+				ret.ram[mouseBase] |= byte(end)
 			}
 		}
 		if e == MiddleClick {
-			btn := clickState((ret.ram[0x3610] & 0b00001100) >> 2)
+			btn := btnState((ret.ram[mouseBase] & 0b00001100) >> 2)
 			if btn == pressed || btn == start {
-				ret.ram[0x3610] &= 0b11110011
-				ret.ram[0x3610] |= (byte(end) << 2)
+				ret.ram[mouseBase] &= 0b11110011
+				ret.ram[mouseBase] |= (byte(end) << 2)
 			}
 		}
 		if e == RightClick {
-			btn := clickState((ret.ram[0x3610] & 0b00110000) >> 4)
+			btn := btnState((ret.ram[mouseBase] & 0b00110000) >> 4)
 			if btn == pressed || btn == start {
-				ret.ram[0x3610] &= 0b11001111
-				ret.ram[0x3610] |= (byte(end) << 4)
+				ret.ram[mouseBase] &= 0b11001111
+				ret.ram[mouseBase] |= (byte(end) << 4)
 			}
 		}
 
@@ -102,39 +93,39 @@ func newMouseListener(canvas js.Value, ram *[0xFFFF]byte) *mouseListener {
 
 func (ml *mouseListener) tick() {
 	// Move btn from start to pressed
-	if clickState(ml.ram[0x3610]&0b00000011) == start {
-		ml.ram[0x3610] &= 0b11111100
-		ml.ram[0x3610] |= byte(pressed)
+	if btnState(ml.ram[mouseBase]&0b00000011) == start {
+		ml.ram[mouseBase] &= 0b11111100
+		ml.ram[mouseBase] |= byte(pressed)
 	}
-	if clickState((ml.ram[0x3610]&0b00001100)>>2) == start {
-		ml.ram[0x3610] &= 0b11110011
-		ml.ram[0x3610] |= (byte(pressed) << 2)
+	if btnState((ml.ram[mouseBase]&0b00001100)>>2) == start {
+		ml.ram[mouseBase] &= 0b11110011
+		ml.ram[mouseBase] |= (byte(pressed) << 2)
 	}
-	if clickState((ml.ram[0x3610]&0b00110000)>>4) == start {
-		ml.ram[0x3610] &= 0b11001111
-		ml.ram[0x3610] |= (byte(pressed) << 4)
+	if btnState((ml.ram[mouseBase]&0b00110000)>>4) == start {
+		ml.ram[mouseBase] &= 0b11001111
+		ml.ram[mouseBase] |= (byte(pressed) << 4)
 	}
 
 	// Move from end to unpressed
-	if clickState(ml.ram[0x3610]&0b00000011) == end {
-		ml.ram[0x3610] &= 0b11111100
+	if btnState(ml.ram[mouseBase]&0b00000011) == end {
+		ml.ram[mouseBase] &= 0b11111100
 	}
-	if clickState((ml.ram[0x3610]&0b00001100)>>2) == end {
-		ml.ram[0x3610] &= 0b11110011
+	if btnState((ml.ram[mouseBase]&0b00001100)>>2) == end {
+		ml.ram[mouseBase] &= 0b11110011
 	}
-	if clickState((ml.ram[0x3610]&0b00110000)>>4) == end {
-		ml.ram[0x3610] &= 0b11001111
+	if btnState((ml.ram[mouseBase]&0b00110000)>>4) == end {
+		ml.ram[mouseBase] &= 0b11001111
 	}
 }
 
 // Mbtn returns true is the mouse key is being pressed
 func (e *Engine) Mbtn(key MouseBtn) bool {
-	btn := clickState(e.RAM[0x3610] & 0b00000011)
+	btn := btnState(e.RAM[mouseBase] & 0b00000011)
 	if key == MiddleClick {
-		btn = clickState(e.RAM[0x3610] & 0b00001100)
+		btn = btnState(e.RAM[mouseBase] & 0b00001100)
 	}
 	if key == RightClick {
-		btn = clickState(e.RAM[0x3610] & 0b00110000)
+		btn = btnState(e.RAM[mouseBase] & 0b00110000)
 	}
 	if btn == start || btn == pressed {
 		return true
@@ -144,12 +135,12 @@ func (e *Engine) Mbtn(key MouseBtn) bool {
 
 // Mbtnp returns true if the mouse key was pressed this frame
 func (e *Engine) Mbtnp(key MouseBtn) bool {
-	btn := clickState(e.RAM[0x3610] & 0b00000011)
+	btn := btnState(e.RAM[mouseBase] & 0b00000011)
 	if key == MiddleClick {
-		btn = clickState(e.RAM[0x3610] & 0b00001100)
+		btn = btnState(e.RAM[mouseBase] & 0b00001100)
 	}
 	if key == RightClick {
-		btn = clickState(e.RAM[0x3610] & 0b00110000)
+		btn = btnState(e.RAM[mouseBase] & 0b00110000)
 	}
 	if btn == start {
 		return true
@@ -159,12 +150,12 @@ func (e *Engine) Mbtnp(key MouseBtn) bool {
 
 // Mbtnr returns true if the mouse key was released this frame
 func (e *Engine) Mbtnr(key MouseBtn) bool {
-	btn := clickState(e.RAM[0x3610] & 0b00000011)
+	btn := btnState(e.RAM[mouseBase] & 0b00000011)
 	if key == MiddleClick {
-		btn = clickState(e.RAM[0x3610] & 0b00001100)
+		btn = btnState(e.RAM[mouseBase] & 0b00001100)
 	}
 	if key == RightClick {
-		btn = clickState(e.RAM[0x3610] & 0b00110000)
+		btn = btnState(e.RAM[mouseBase] & 0b00110000)
 	}
 	if btn == end {
 		return true
