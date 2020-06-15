@@ -38,10 +38,6 @@ type Engine struct {
 	screenBufHook js.Value
 	Draw          func()
 	Update        func(float64)
-
-	//TODO move these to the ram
-	kl *keyListener
-	ml *mouseListener
 }
 
 // NewEngine creates a new golf engine
@@ -53,10 +49,12 @@ func NewEngine(updateFunc func(float64), draw func()) *Engine {
 		screenBufHook: js.Global().Get("screenBuff"),
 	}
 
-	ret.kl = newKeyListener(js.Global().Get("document"), ret.RAM)
-	ret.ml = newMouseListener(js.Global().Get("golfcanvas"), ret.RAM)
+	ret.initKeyListener(js.Global().Get("document"))
+	ret.initMouseListener(js.Global().Get("golfcanvas"))
+
 	ret.RClip() // Reset the cliping box
 
+	//TODO inject the custom javascritp into the page here
 	return &ret
 }
 
@@ -71,8 +69,8 @@ func (e *Engine) Run() {
 		// now := args[0].Float()
 		e.Update(0.0)
 		e.Draw()
-		e.kl.tick()
-		e.ml.tick()
+		e.tickKeyboard()
+		e.tickMouse()
 
 		js.CopyBytesToJS(e.screenBufHook, e.RAM[:0x3601])
 		js.Global().Call("drawScreen")
@@ -85,31 +83,6 @@ func (e *Engine) Run() {
 
 	js.Global().Call("requestAnimationFrame", renderFrame)
 	<-done
-}
-
-func toInt(b []byte) int {
-	ret := []byte{0, 0, 0, 0}
-	l := len(b)
-	for i := 0; i < 4; i++ {
-		if l-i-1 > -1 {
-			ret[3-i] = b[l-i-1]
-		}
-	}
-	return int(ret[0])<<24 | int(ret[1])<<16 | int(ret[2])<<8 | int(ret[3])
-}
-
-func toBytes(i int, l int) []byte {
-	if l == 1 {
-		return []byte{byte(i)}
-	}
-	if l == 2 {
-		return []byte{byte(i >> 8), byte(i)}
-	}
-	if l == 3 {
-		return []byte{byte(i >> 16), byte(i >> 8), byte(i)}
-	}
-
-	return []byte{byte(i >> 24), byte(i >> 16), byte(i >> 8), byte(i)}
 }
 
 // Frames is the number of frames since the engine was started
@@ -383,3 +356,28 @@ const (
 	Pal14 = Pal(0b00001110)
 	Pal15 = Pal(0b00001111)
 )
+
+func toInt(b []byte) int {
+	ret := []byte{0, 0, 0, 0}
+	l := len(b)
+	for i := 0; i < 4; i++ {
+		if l-i-1 > -1 {
+			ret[3-i] = b[l-i-1]
+		}
+	}
+	return int(ret[0])<<24 | int(ret[1])<<16 | int(ret[2])<<8 | int(ret[3])
+}
+
+func toBytes(i int, l int) []byte {
+	if l == 1 {
+		return []byte{byte(i)}
+	}
+	if l == 2 {
+		return []byte{byte(i >> 8), byte(i)}
+	}
+	if l == 3 {
+		return []byte{byte(i >> 16), byte(i >> 8), byte(i)}
+	}
+
+	return []byte{byte(i >> 24), byte(i >> 16), byte(i >> 8), byte(i)}
+}

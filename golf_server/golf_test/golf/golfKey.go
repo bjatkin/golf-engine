@@ -120,20 +120,12 @@ const (
 	pressed   = btnState(3)
 )
 
-type keyListener struct {
-	new      []Key
-	old      []Key
-	released []Key
-	ram      *[0xFFFF]byte
-}
-
 const keyBase = uint16(0x3611)
 
-func newKeyListener(doc js.Value, ram *[0xFFFF]byte) *keyListener {
-	ret := keyListener{ram: ram}
+func (e *Engine) initKeyListener(doc js.Value) {
 	keyDown := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		// Get KeyCode starting at 0
-		e := Key(args[0].Get("keyCode").Int()) - Backspace
+		k := Key(args[0].Get("keyCode").Int()) - Backspace
 		masks := []byte{
 			0b00000011,
 			0b00001100,
@@ -141,19 +133,19 @@ func newKeyListener(doc js.Value, ram *[0xFFFF]byte) *keyListener {
 			0b11000000,
 		}
 
-		addr := keyBase + uint16(e/4)
-		b := ret.ram[addr]
-		m := masks[e%4]
-		shift := (e % 4) * 2
+		addr := keyBase + uint16(k/4)
+		b := e.RAM[addr]
+		m := masks[k%4]
+		shift := (k % 4) * 2
 		btn := btnState(b & m)
 		if btn == unpressed {
-			ret.ram[addr] |= (byte(start) << shift)
+			e.RAM[addr] |= (byte(start) << shift)
 		}
 
 		return nil
 	})
 	keyUp := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		e := Key(args[0].Get("keyCode").Int()) - Backspace
+		k := Key(args[0].Get("keyCode").Int()) - Backspace
 		masks := []byte{
 			0b00000011,
 			0b00001100,
@@ -161,25 +153,23 @@ func newKeyListener(doc js.Value, ram *[0xFFFF]byte) *keyListener {
 			0b11000000,
 		}
 
-		addr := keyBase + uint16(e/4)
-		b := ret.ram[addr]
-		m := masks[e%4]
-		shift := (e % 4) * 2
+		addr := keyBase + uint16(k/4)
+		b := e.RAM[addr]
+		m := masks[k%4]
+		shift := (k % 4) * 2
 		btn := btnState(b & m >> shift)
 		if btn == pressed || btn == start {
-			ret.ram[addr] &= (m ^ 0b11111111)
-			ret.ram[addr] |= (byte(end) << shift)
+			e.RAM[addr] &= (m ^ 0b11111111)
+			e.RAM[addr] |= (byte(end) << shift)
 		}
 
 		return nil
 	})
 	doc.Call("addEventListener", "keydown", keyDown)
 	doc.Call("addEventListener", "keyup", keyUp)
-
-	return &ret
 }
 
-func (kl *keyListener) tick() {
+func (e *Engine) tickKeyboard() {
 	masks := []byte{
 		0b00000011,
 		0b00001100,
@@ -187,20 +177,20 @@ func (kl *keyListener) tick() {
 		0b11000000,
 	}
 	for i := Backspace; i < Quotes; i++ {
-		e := byte(i - Backspace)
-		addr := keyBase + uint16(e/4)
-		b := kl.ram[addr]
-		m := masks[e%4]
-		shift := (e % 4) * 2
+		k := byte(i - Backspace)
+		addr := keyBase + uint16(k/4)
+		b := e.RAM[addr]
+		m := masks[k%4]
+		shift := (k % 4) * 2
 		btn := btnState(b & m >> shift)
 		if btn == start {
-			kl.ram[addr] &= (m ^ 0b11111111)
-			kl.ram[addr] |= (byte(pressed) << shift)
+			e.RAM[addr] &= (m ^ 0b11111111)
+			e.RAM[addr] |= (byte(pressed) << shift)
 		}
 
 		if btn == end {
-			kl.ram[addr] &= (m ^ 0b11111111)
-			kl.ram[addr] |= (byte(unpressed) << shift)
+			e.RAM[addr] &= (m ^ 0b11111111)
+			e.RAM[addr] |= (byte(unpressed) << shift)
 		}
 	}
 }
@@ -220,7 +210,7 @@ func (e *Engine) Btn(key Key) bool {
 
 	k := key - Backspace
 	addr := keyBase + uint16(k/4)
-	b := e.kl.ram[addr]
+	b := e.RAM[addr]
 	m := masks[k%4]
 	shift := (k % 4) * 2
 	if btnState(b&m>>shift) == pressed {
@@ -241,7 +231,7 @@ func (e *Engine) Btnp(key Key) bool {
 
 	k := key - Backspace
 	addr := keyBase + uint16(k/4)
-	b := e.kl.ram[addr]
+	b := e.RAM[addr]
 	m := masks[k%4]
 	shift := (k % 4) * 2
 	if btnState(b&m>>shift) == start {
@@ -262,7 +252,7 @@ func (e *Engine) Btnr(key Key) bool {
 
 	k := key - Backspace
 	addr := keyBase + uint16(k/4)
-	b := e.kl.ram[addr]
+	b := e.RAM[addr]
 	m := masks[k%4]
 	shift := (k % 4) * 2
 	if btnState(b&m>>shift) == end {
