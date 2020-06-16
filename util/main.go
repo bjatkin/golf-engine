@@ -22,7 +22,6 @@ var pallet = []color{
 
 func main() {
 	filePath := os.Args[1]
-	fmt.Printf("File: %s\n", filePath)
 	file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Printf("Error 1! %s", err.Error())
@@ -39,19 +38,19 @@ func main() {
 	maxX := img.Bounds().Max.X
 	minY := img.Bounds().Min.Y
 	maxY := img.Bounds().Max.Y
-	fmt.Printf("MinX: %d, MaxX: %d, MinY: %d, MaxY: %d\n", minX, maxX, minY, maxY)
 	imgColor := []int{}
-	for x := minX; x < maxX; x++ {
-		for y := minY; y < maxY; y++ {
+	for y := minY; y < maxY; y++ {
+		for x := minX; x < maxX; x++ {
 			r, g, b, a := img.At(x, y).RGBA()
 			if a == 0 {
 				continue
 			}
 			avg := (r + g + b) / 3
+			avg /= 256
 			bestI := 0
-			bestDist := 65536.0
+			bestDist := 255.0
 			for i := 0; i < 4; i++ {
-				dist := math.Abs(float64(avg - pallet[i].r))
+				dist := math.Abs(float64(avg - (pallet[i].r)))
 				if dist < bestDist {
 					bestI = i
 					bestDist = dist
@@ -69,15 +68,13 @@ func main() {
 			colorBuff = append(colorBuff, 0)
 		}
 
-		colorBuff[index] = (byte(col) << shift)
+		colorBuff[index] |= (byte(col) << (6 - shift))
 	}
-	fmt.Printf("%#v\n", colorBuff[:30])
 
 	palBuff := []byte{}
 	for i := 0; i < len(colorBuff)/2; i++ {
 		palBuff = append(palBuff, 0)
 	}
-	fmt.Printf("Image: %d, ColorBuffer: %d, PalBuffer: %d\n", len(imgColor), len(colorBuff), len(palBuff))
 
 	outputFile := os.Args[2]
 	bytes := []string{}

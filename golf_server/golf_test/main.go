@@ -29,4 +29,5 @@ func draw() {
 	g.RectFill(50, 15, 10, 20, golf.Col0)
 	x, y := g.Mouse()
 	g.Pset(x, y, golf.Col3)
+	g.SSpr(0, 0, 255, 24, 0, 0)
 }
