@@ -14,7 +14,7 @@ func main() {
 
 var x = 0
 
-func update(tdiff float64) {
+func update() {
 	x++
 	x %= 192
 }
