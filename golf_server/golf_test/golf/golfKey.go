@@ -15,6 +15,7 @@ const (
 	Break        = Key(19)
 	CapsLock     = Key(20)
 	Esc          = Key(27)
+	Space        = Key(32)
 	PageUp       = Key(33)
 	PageDown     = Key(34)
 	End          = Key(35)

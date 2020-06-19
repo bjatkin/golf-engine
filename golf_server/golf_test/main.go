@@ -2,32 +2,72 @@ package main
 
 import (
 	"fantasyConsole/golf_server/golf_test/golf"
+	"fmt"
+	"time"
 )
 
 var g *golf.Engine
 
 func main() {
+	lastFrameTime = time.Now().UnixNano()
 	g = golf.NewEngine(update, draw)
-	g.BG(golf.Col1)
+	g.BG(golf.Col3)
+	g.DrawMouse(1)
 	g.Run()
 }
 
-var x = 0
+var cx, cy int
+var clipped bool
 
 func update() {
-	x++
-	x %= 192
+	if g.Btn(golf.WKey) {
+		cy -= 10
+		if cy < 0 {
+			cy = 0
+		}
+	}
+	if g.Btn(golf.AKey) {
+		cx -= 10
+		if cx < 0 {
+			cx = 0
+		}
+	}
+	if g.Btn(golf.SKey) {
+		cy += 10
+	}
+	if g.Btn(golf.DKey) {
+		cx += 10
+	}
+	if g.Btnp(golf.Space) {
+		if clipped {
+			g.RClip()
+		} else {
+			g.Clip(10, 30, 172, 152)
+		}
+		clipped = !clipped
+	}
 }
+
+var lastFrameTime int64
+var lastFrame int
+var frameDiff int
 
 func draw() {
 	g.Cls()
-	g.Pset(x, 10, golf.Col3)
-	for i := 0; i < 192; i++ {
-		g.Pset(i, i, golf.Col0)
+	now := time.Now().UnixNano()
+	nanoSec := int64(1000000000)
+	if now-lastFrameTime > nanoSec/4 {
+		lastFrameTime = now
+		diff := g.Frames() - lastFrame
+		lastFrame = g.Frames()
+		frameDiff = diff * 4
 	}
-	g.Rect(10, 10, 10, 10, golf.Col0)
-	g.RectFill(50, 15, 10, 20, golf.Col0)
-	x, y := g.Mouse()
-	g.Pset(x, y, golf.Col3)
-	g.SSpr(0, 0, 255, 24, 0, 0)
+
+	g.Camera(cx, cy)
+	g.Rect(1, 10, 190, 181, golf.Col0)
+	g.TextR(fmt.Sprintf("FPS: %d", frameDiff), golf.TextOpts{Col: golf.Col2, Fixed: true})
+	g.RectFill(64, 90, 64, 5, golf.Col2)
+	g.Line(74, 97, 118, 97, golf.Col2)
+	g.Line(90, 99, 102, 99, golf.Col2)
+	g.SSpr(152, 0, 64, 24, 64, 64)
 }

@@ -16,10 +16,6 @@ const (
 	RightClick  = MouseBtn(2)
 )
 
-type mouseListener struct {
-	ram *[0xFFFF]byte
-}
-
 // Mouse Data addresses
 const (
 	mouseBase = uint16(0x3610)

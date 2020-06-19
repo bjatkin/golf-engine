@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"image/png"
 	"io/ioutil"
@@ -13,11 +14,80 @@ type color struct {
 	r, g, b uint32
 }
 
-var pallet = []color{
-	color{0, 0, 0},       //black
-	color{84, 84, 84},    // dark gray
-	color{168, 168, 168}, // light gray
-	color{255, 255, 255}, // white
+type pallet [4]color
+
+var pallets = []pallet{
+	pallet{
+		color{0, 0, 0},       // black
+		color{84, 84, 84},    // dark gray
+		color{168, 168, 168}, // light gray
+		color{255, 255, 255}, // white
+	},
+	pallet{
+		color{21, 25, 18},  // GB 0
+		color{41, 50, 36},  // GB 1
+		color{62, 75, 54},  // GB 2
+		color{82, 100, 71}, // GB 3
+	},
+	pallet{
+		color{103, 125, 89},  // GB 4
+		color{124, 149, 107}, // GB 5
+		color{145, 175, 125}, // GB 6
+		color{165, 199, 142}, // GB 7
+	},
+}
+
+type pixel struct {
+	pal, col int
+}
+
+type pixelArray struct {
+	pixels     []pixel
+	pal1, pal2 int
+}
+
+func newPixelArray() pixelArray {
+	return pixelArray{
+		pal1: -1,
+		pal2: -1,
+	}
+}
+
+func (p *pixelArray) addPixel(pxl pixel) error {
+	if p.pal2 == -1 && p.pal1 != -1 {
+		p.pal2 = pxl.pal
+	}
+	if p.pal1 == -1 {
+		p.pal1 = pxl.pal
+	}
+	if pxl.pal != p.pal1 && pxl.pal != p.pal2 {
+		return errors.New("More than 2 pallets detected")
+	}
+	p.pixels = append(p.pixels, pxl)
+	return nil
+}
+
+func dist(r1, g1, b1, r2, g2, b2 int) float64 {
+	a := float64(r2 - r1)
+	b := float64(g2 - g1)
+	c := float64(b2 - b1)
+	return math.Sqrt(a*a + b*b + c*c)
+}
+
+func nearistPixel(r, g, b int) pixel {
+	minDist := 65535.0
+	bestPixel := pixel{}
+	for p, pal := range pallets {
+		for c, col := range pal {
+			dist := dist(r, g, b, int(col.r), int(col.g), int(col.b))
+			if dist < minDist {
+				bestPixel.pal = p
+				bestPixel.col = c
+				minDist = dist
+			}
+		}
+	}
+	return bestPixel
 }
 
 func main() {
@@ -38,42 +108,34 @@ func main() {
 	maxX := img.Bounds().Max.X
 	minY := img.Bounds().Min.Y
 	maxY := img.Bounds().Max.Y
-	imgColor := []int{}
+	image := newPixelArray()
 	for y := minY; y < maxY; y++ {
 		for x := minX; x < maxX; x++ {
-			r, g, b, a := img.At(x, y).RGBA()
-			if a == 0 {
-				continue
-			}
-			avg := (r + g + b) / 3
-			avg /= 256
-			bestI := 0
-			bestDist := 255.0
-			for i := 0; i < 4; i++ {
-				dist := math.Abs(float64(avg - (pallet[i].r)))
-				if dist < bestDist {
-					bestI = i
-					bestDist = dist
-				}
-			}
-			imgColor = append(imgColor, bestI)
+			r, g, b, _ := img.At(x, y).RGBA()
+			pxl := nearistPixel(int(r), int(g), int(b))
+			image.addPixel(pxl)
 		}
 	}
 
 	colorBuff := []byte{}
-	for i, col := range imgColor {
+	for i, pxl := range image.pixels {
 		shift := (i % 4) * 2
 		index := i / 4
 		if shift == 0 {
 			colorBuff = append(colorBuff, 0)
 		}
 
-		colorBuff[index] |= (byte(col) << (6 - shift))
+		col := pxl.col
+		colorBuff[index] |= (byte(col) << shift)
 	}
 
 	palBuff := []byte{}
-	for i := 0; i < len(colorBuff)/2; i++ {
-		palBuff = append(palBuff, 0)
+	for _, pxl := range image.pixels {
+		p := byte(0)
+		if pxl.pal == image.pal2 {
+			p = byte(1)
+		}
+		palBuff = append(palBuff, p)
 	}
 
 	outputFile := os.Args[2]
