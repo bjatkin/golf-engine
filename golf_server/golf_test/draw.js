@@ -13,7 +13,7 @@ var screenBuff = new Uint8Array(setPal+screenCol+screenPal);
 canvas.addEventListener('contextmenu', e=> e.preventDefault());
 
 // Engine Pallets
-pallets = [
+var pallets = [
     // Pallet 0
     [[0, 0, 0], //black
     [84, 84, 84], // dark gray
@@ -101,13 +101,12 @@ pallets = [
     [0, 0, 255]], // REPLACE THIS
 ];
 
-fPallet = [0,1,2,3,4,5,6,7]; // Place Holder Data
+var fPallet = [0,1,2,3,4,5,6,7]; // Place Holder Data
 // Create the image
 function drawScreen() {
-    // console.log("JS 0x0000:", screenBuff[0])
     // Set the pallets from the first byte of data
-    a = pallets[screenBuff[screenCol+screenPal] & 0b00001111];
-    b = pallets[(screenBuff[screenCol+screenPal] & 0b11110000) / 16];
+    a = pallets[(screenBuff[screenCol+screenPal] & 0b11110000) / 16];
+    b = pallets[(screenBuff[screenCol+screenPal] & 0b00001111)];
     for (let i = 0; i < 4; i++) {
         fPallet[i] = a[i];
         fPallet[i+4] = b[i];
@@ -118,21 +117,21 @@ function drawScreen() {
     p =[0,0,0,0,0,0,0,0];
     for (let i=0; i < screenPal; i++) {
         c[0] = 0b00000011 & screenBuff[i*2];
-        p[0] = 0b00000001 & screenBuff[screenPal+i];
+        p[0] = 0b00000001 & screenBuff[screenCol+i];
         c[1] = (0b00001100 & screenBuff[i*2]) / 4;
-        p[1] = (0b00000010 & screenBuff[screenPal+i]) / 2;
+        p[1] = (0b00000010 & screenBuff[screenCol+i]) / 2;
         c[2] = (0b00110000 & screenBuff[i*2]) / 16;
-        p[2] = (0b00000100 & screenBuff[screenPal+i]) / 4;
+        p[2] = (0b00000100 & screenBuff[screenCol+i]) / 4;
         c[3] = (0b11000000 & screenBuff[i*2]) / 64;
-        p[3] = (0b00001000 & screenBuff[screenPal+i]) / 8;
+        p[3] = (0b00001000 & screenBuff[screenCol+i]) / 8;
         c[4] = (0b00000011 & screenBuff[i*2+1]);
-        p[4] = (0b00010000 & screenBuff[screenPal+i]) / 16;
+        p[4] = (0b00010000 & screenBuff[screenCol+i]) / 16;
         c[5] = (0b00001100 & screenBuff[i*2+1]) / 4;
-        p[5] = (0b00100000 & screenBuff[screenPal+i]) / 32;
+        p[5] = (0b00100000 & screenBuff[screenCol+i]) / 32;
         c[6] = (0b00110000 & screenBuff[i*2+1]) / 16;
-        p[6] = (0b01000000 & screenBuff[screenPal+i]) / 64;
+        p[6] = (0b01000000 & screenBuff[screenCol+i]) / 64;
         c[7] = (0b11000000 & screenBuff[i*2+1]) / 64;
-        p[7] = (0b10000000 & screenBuff[screenPal+i]) / 128;
+        p[7] = (0b10000000 & screenBuff[screenCol+i]) / 128;
         
         let x = i*8 % 192
         let y = Math.floor(i / 24)
@@ -151,8 +150,8 @@ function drawHiResPixel(x, y, rgb) {
     for(let i = s; i < s+4; i++) {
         for(let j = 0; j < 4; j++) {
             imagedata.data[i*4+j*192*4*4] = rgb[0]
-            imagedata.data[i*4+1+j*192*4*4] = rgb[0]
-            imagedata.data[i*4+2+j*192*4*4] = rgb[0]
+            imagedata.data[i*4+1+j*192*4*4] = rgb[1]
+            imagedata.data[i*4+2+j*192*4*4] = rgb[2]
             imagedata.data[i*4+3+j*192*4*4] = 255
         }
     }

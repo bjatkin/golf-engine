@@ -121,8 +121,6 @@ const (
 	pressed   = btnState(3)
 )
 
-const keyBase = uint16(0x3611)
-
 func (e *Engine) initKeyListener(doc js.Value) {
 	keyDown := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		// Get KeyCode starting at 0

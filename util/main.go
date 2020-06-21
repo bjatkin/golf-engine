@@ -54,7 +54,7 @@ func newPixelArray() pixelArray {
 }
 
 func (p *pixelArray) addPixel(pxl pixel) error {
-	if p.pal2 == -1 && p.pal1 != -1 {
+	if p.pal2 == -1 && p.pal1 != -1 && p.pal1 != pxl.pal {
 		p.pal2 = pxl.pal
 	}
 	if p.pal1 == -1 {
@@ -73,6 +73,8 @@ func dist(r1, g1, b1, r2, g2, b2 int) float64 {
 	c := float64(b2 - b1)
 	return math.Sqrt(a*a + b*b + c*c)
 }
+
+var test = 0
 
 func nearistPixel(r, g, b int) pixel {
 	minDist := 65535.0
@@ -112,7 +114,7 @@ func main() {
 	for y := minY; y < maxY; y++ {
 		for x := minX; x < maxX; x++ {
 			r, g, b, _ := img.At(x, y).RGBA()
-			pxl := nearistPixel(int(r), int(g), int(b))
+			pxl := nearistPixel(int(r)/256, int(g)/256, int(b)/256)
 			image.addPixel(pxl)
 		}
 	}
@@ -130,12 +132,18 @@ func main() {
 	}
 
 	palBuff := []byte{}
-	for _, pxl := range image.pixels {
+	for i, pxl := range image.pixels {
+		shift := (i % 8)
+		index := i / 8
+		if shift == 0 {
+			palBuff = append(palBuff, 0)
+		}
+
 		p := byte(0)
 		if pxl.pal == image.pal2 {
 			p = byte(1)
 		}
-		palBuff = append(palBuff, p)
+		palBuff[index] |= p << shift
 	}
 
 	outputFile := os.Args[2]

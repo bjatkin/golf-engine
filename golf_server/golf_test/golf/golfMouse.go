@@ -16,13 +16,6 @@ const (
 	RightClick  = MouseBtn(2)
 )
 
-// Mouse Data addresses
-const (
-	mouseBase = uint16(0x3610)
-	mouseX    = uint16(0x360E)
-	mouseY    = uint16(0x360F)
-)
-
 func (e *Engine) initMouseListener(canvas js.Value) {
 	mouseMove := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		height := canvas.Get("offsetHeight").Int()
