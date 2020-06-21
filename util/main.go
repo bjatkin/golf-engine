@@ -166,9 +166,9 @@ func main() {
 		bytes = append(bytes, bStr)
 	}
 
-	content := fmt.Sprintf("[%d]byte {", len(bytes))
+	content := fmt.Sprintf("package main\n\nvar spriteSheet = [%d]byte {\n", len(bytes))
 	content += strings.Join(bytes, ",")
-	content += "}"
+	content += ",\n}"
 
 	err = ioutil.WriteFile(outputFile, []byte(content), 0644)
 	if err != nil {

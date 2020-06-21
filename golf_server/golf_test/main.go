@@ -16,7 +16,6 @@ func main() {
 	g.LoadSprs(spriteSheet)
 	g.PalA(5)
 	g.PalB(4)
-	g.Camera(-50, 50)
 	g.Run()
 }
 
@@ -86,4 +85,5 @@ func draw() {
 	g.Spr((g.Frames()/30%2)*2+1, 50, 27, golf.SprOpts{Width: 2, Height: 2, Transparent: golf.Col2, Fixed: true})
 	frames := []int{65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 67, 69, 67, 69, 67}
 	g.Spr(frames[(g.Frames()/5%20)], 70, 10, golf.SprOpts{Width: 2, Height: 2, Transparent: golf.Col2})
+	g.Text("BiBi Duck!", 60, 180, golf.TextOpts{Col: golf.Col0})
 }

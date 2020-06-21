@@ -132,7 +132,7 @@ func (e *Engine) initKeyListener(doc js.Value) {
 			0b11000000,
 		}
 
-		addr := keyBase + uint16(k/4)
+		addr := keyBase + int(k/4)
 		b := e.RAM[addr]
 		m := masks[k%4]
 		shift := (k % 4) * 2
@@ -152,7 +152,7 @@ func (e *Engine) initKeyListener(doc js.Value) {
 			0b11000000,
 		}
 
-		addr := keyBase + uint16(k/4)
+		addr := keyBase + int(k/4)
 		b := e.RAM[addr]
 		m := masks[k%4]
 		shift := (k % 4) * 2
@@ -177,7 +177,7 @@ func (e *Engine) tickKeyboard() {
 	}
 	for i := Backspace; i < Quotes; i++ {
 		k := byte(i - Backspace)
-		addr := keyBase + uint16(k/4)
+		addr := keyBase + int(k/4)
 		b := e.RAM[addr]
 		m := masks[k%4]
 		shift := (k % 4) * 2
@@ -208,7 +208,7 @@ func (e *Engine) Btn(key Key) bool {
 	}
 
 	k := key - Backspace
-	addr := keyBase + uint16(k/4)
+	addr := keyBase + int(k/4)
 	b := e.RAM[addr]
 	m := masks[k%4]
 	shift := (k % 4) * 2
@@ -229,7 +229,7 @@ func (e *Engine) Btnp(key Key) bool {
 	}
 
 	k := key - Backspace
-	addr := keyBase + uint16(k/4)
+	addr := keyBase + int(k/4)
 	b := e.RAM[addr]
 	m := masks[k%4]
 	shift := (k % 4) * 2
@@ -250,7 +250,7 @@ func (e *Engine) Btnr(key Key) bool {
 	}
 
 	k := key - Backspace
-	addr := keyBase + uint16(k/4)
+	addr := keyBase + int(k/4)
 	b := e.RAM[addr]
 	m := masks[k%4]
 	shift := (k % 4) * 2
