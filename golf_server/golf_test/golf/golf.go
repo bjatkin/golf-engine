@@ -226,18 +226,15 @@ func (e *Engine) RClip() {
 	e.RAM[clipH] = 192
 }
 
-// Pset sets a pixel on the screen
-func (e *Engine) Pset(x, y int, col Col) {
-	if x < int(e.RAM[clipX]) || x >= int(e.RAM[clipX]+e.RAM[clipW]) ||
-		y < int(e.RAM[clipY]) || y >= int(e.RAM[clipY]+e.RAM[clipH]) {
-		return
-	}
-
+// sets a pixel in abitrary memory
+// cBase is the start of the pallet memory buffer
+// pBase is the start of the color memory buffer
+func (e *Engine) pset(x, y int, col Col, cBase, pBase int) {
 	cshift := x % 4
 	pshift := x % 8
 	i := (x / 4) + y*48
 	j := (x / 8) + y*24
-	pixel := e.RAM[i]
+	pixel := e.RAM[cBase+i]
 
 	masks := []byte{
 		0b11111100,
@@ -248,24 +245,32 @@ func (e *Engine) Pset(x, y int, col Col) {
 
 	newCol := byte(col&0b00000011) << (cshift * 2)
 	newPix := (pixel & masks[cshift]) | newCol
-	e.RAM[i] = newPix
+	e.RAM[cBase+i] = newPix
 
 	newPal := byte((col&0b00000100)>>2) << pshift
-	e.RAM[j+0x2400] &= ((0b00000001 << pshift) ^ 0b11111111)
-	e.RAM[j+0x2400] |= newPal
+	e.RAM[pBase+j] &= ((0b00000001 << pshift) ^ 0b11111111)
+	e.RAM[pBase+j] |= newPal
 }
 
-// Pget gets the color of a pixel on the screen
-func (e *Engine) Pget(x, y int) Col {
-	if x < 0 || x > 192 || y < 0 || y >= 192 {
-		return Col0
+// Pset sets a pixel on the screen
+func (e *Engine) Pset(x, y int, col Col) {
+	if x < int(e.RAM[clipX]) || x >= int(e.RAM[clipX]+e.RAM[clipW]) ||
+		y < int(e.RAM[clipY]) || y >= int(e.RAM[clipY]+e.RAM[clipH]) {
+		return
 	}
+	e.pset(x, y, col, 0, screenPalBuffBase)
+}
+
+// gets a pixel from abitrary memory
+// cBase is the start of the pallet memory buffer
+// pBase is the start of the color memory buffer
+func (e *Engine) pget(x, y, cBase, pBase int) Col {
 	cshift := x % 4
 	pshift := x % 8
-	i := (x / 4) + y*48
-	j := (x / 8) + y*24
-	pixel := e.RAM[i]
-	pal := (e.RAM[j+screenPalBuffBase] >> pshift) & 0b00000001
+	i := (x / 4) + y*64
+	j := (x / 8) + y*32
+	pixel := e.RAM[cBase+i]
+	pal := (e.RAM[pBase+j] >> pshift) & 0b00000001
 
 	masks := []byte{
 		0b00000011,
@@ -276,7 +281,15 @@ func (e *Engine) Pget(x, y int) Col {
 	pixel &= masks[cshift]
 	pixel >>= (cshift * 2)
 
-	return Col((pixel & (pal << 2)) | 0b10000000)
+	return Col((pixel | (pal << 2)) | 0b10000000)
+}
+
+// Pget gets the color of a pixel on the screen
+func (e *Engine) Pget(x, y int) Col {
+	if x < 0 || x > 192 || y < 0 || y >= 192 {
+		return Col0
+	}
+	return e.pget(x, y, 0, screenPalBuffBase)
 }
 
 // LoadSprs loads the sprite sheet into memory
@@ -338,9 +351,13 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SprOpts) {
 		dx -= toInt(e.RAM[cameraX:cameraX+2], true)
 		dy -= toInt(e.RAM[cameraY:cameraY+2], true)
 	}
+
+	cBase := toInt(e.RAM[activeSpriteColBuff:activeSpriteColBuff+2], false)
+	pBase := toInt(e.RAM[activeSpritePalBuff:activeSpritePalBuff+2], false)
+
 	for x := 0; x < sw; x++ {
 		for y := 0; y < sh; y++ {
-			pxl := e.spritePget(sx+x, sy+y)
+			pxl := e.pget(sx+x, sy+y, cBase, pBase)
 			if pxl != opt.Transparent {
 				pxl = subPixels(opt.PalFrom, opt.PalTo, pxl)
 				fx := 0
@@ -355,28 +372,6 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SprOpts) {
 			}
 		}
 	}
-}
-
-func (e *Engine) spritePget(x, y int) Col {
-	cBase := toInt(e.RAM[activeSpriteColBuff:activeSpriteColBuff+2], false)
-	pBase := toInt(e.RAM[activeSpritePalBuff:activeSpritePalBuff+2], false)
-	cshift := x % 4
-	pshift := x % 8
-	i := (x / 4) + y*64
-	j := (x / 8) + y*32
-	pixel := e.RAM[cBase+i]
-	pal := (e.RAM[pBase+j] >> pshift) & 0b00000001
-
-	masks := []byte{
-		0b00000011,
-		0b00001100,
-		0b00110000,
-		0b11000000,
-	}
-	pixel &= masks[cshift]
-	pixel >>= (cshift * 2)
-
-	return Col((pixel | (pal << 2)) | 0b10000000)
 }
 
 // subPixels is used to swap pixels based on a pallet swap
@@ -539,6 +534,8 @@ const (
 	Pal15 = Pal(0b00001111)
 )
 
+// toInt converts a byte array to an integer
+// byte arrays from len 1 to 4 are supported
 func toInt(b []byte, signed bool) int {
 	pad := []byte{0, 0, 0, 0}
 	l := len(b)
@@ -563,6 +560,8 @@ func toInt(b []byte, signed bool) int {
 	return ret
 }
 
+// toBytes converts an integer into a byte array
+// signed bytes do not use twos complement
 func toBytes(i int, l int, signed bool) []byte {
 	neg := false
 	if signed && i < 0 {
