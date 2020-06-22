@@ -588,6 +588,29 @@ func (e *Engine) Mset(x, y, t int) {
 	e.RAM[mapBase-j] |= byte(t>>1&0b10000000) >> shift
 }
 
+// Fget gets the fth flag on the nth sprite
+func (e *Engine) Fget(n, f int) bool {
+	return e.RAM[spriteFlags+n]&(0b00000001<<f) > 0
+}
+
+// FgetByte gets the byte flag on the nth sprite
+func (e *Engine) FgetByte(n int) byte {
+	return e.RAM[spriteFlags+n]
+}
+
+// Fset sets the fth flag on the nth sprite to s
+func (e *Engine) Fset(n, f int, s bool) {
+	e.RAM[spriteFlags+n] &= (0b00000001<<f ^ 0b11111111)
+	if s {
+		e.RAM[spriteFlags+n] |= (0b00000001 << f)
+	}
+}
+
+// FsetByte sets the byte flag on the nth sprite
+func (e *Engine) FsetByte(n int, b byte) {
+	e.RAM[spriteFlags+n] = b
+}
+
 // toInt converts a byte array to an integer
 // byte arrays from len 1 to 4 are supported
 func toInt(b []byte, signed bool) int {

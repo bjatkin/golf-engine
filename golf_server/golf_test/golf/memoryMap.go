@@ -66,6 +66,9 @@ const activeSpritePalBuff = 0x6F4B
 // MapData (256x64 / 512 8x8): 0x6F4D - 0xB74D
 const mapBase = 0xB74D //Start from the high memory so the map grows down
 
+// SpriteFlags (512 8x8): 0xB74E - B94E
+const spriteFlags = 0xB74E
+
 //My Guess Is that i'll need about 10-20k bytes for music
 
 /* TODO:
@@ -76,9 +79,15 @@ const mapBase = 0xB74D //Start from the high memory so the map grows down
 [x] Add in func to draw the map [ Map(mx, my, mw, mh, dx, dy) ]
 [x] Add in func to get a map tile [ Mget(x, y) ]
 [x] Add in func to set a map tile [ Mset(x, y, t) ]
-[] Add in sprite flag (1 byte per 8x8 sprite)
-[] Add in func to get a sprites flags [ Fget(n, f) ]
-[] Add in func to set a sprites flags [ Fset(n, f, v) ]
-[] Add in func to get a sprites byte flag [ FbyteGet(n, b) ]
-[] Add in func to set a sprites byte flag [ FbyteSet(n, b) ]
+[x] Add in sprite flag (1 byte per 8x8 sprite)
+[x] Add in func to get a sprites flags [ Fget(n, f) ]
+[x] Add in func to set a sprites flags [ Fset(n, f, v) ]
+[x] Add in func to get a sprites byte flag [ FbyteGet(n, b) ]
+[x] Add in func to set a sprites byte flag [ FbyteSet(n, b) ]
+[] Add a textF function? for formated text?
+[] Change the map to be 128x128? The current map is very short and long...
+[] Add startup animation? How to display logo?
+[] Add function to load map data (Make sure to load it in reverse)
+[] Interleave pixel data the same way the map is done to make the map sprite swap easier
+	- col0[00112233] col1[44556677] pal[01234567]
 */
