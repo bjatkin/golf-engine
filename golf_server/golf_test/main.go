@@ -70,6 +70,11 @@ func draw() {
 		frameDiff = diff * 4
 	}
 
+	g.Mset(0, 0, 1)
+	g.Mset(1, 0, 2)
+	g.Mset(0, 1, 33)
+	g.Mset(1, 1, 34)
+	g.Map(0, 0, 256, 64, 0, 0, golf.SprOpts{Transparent: golf.Col2})
 	g.Camera(cx, cy)
 	g.Rect(1, 10, 190, 181, golf.Col0)
 	g.TextR(fmt.Sprintf("FPS: %d", frameDiff), golf.TextOpts{Col: golf.Col0, Fixed: true})

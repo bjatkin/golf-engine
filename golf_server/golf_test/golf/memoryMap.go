@@ -59,8 +59,26 @@ const internalSpritePalBase = 0x3C47
 const spriteColBase = 0x3F48
 const spritePalBase = 0x5F48
 
-// ActiveSpriteBuff: 0x6F49-0x6FB
+// ActiveSpriteBuff: 0x6F49-0x6F4B
 const activeSpriteColBuff = 0x6F49
 const activeSpritePalBuff = 0x6F4B
 
-//My Guess Is that i'll need about 10k bytes for music
+// MapData (256x64 / 512 8x8): 0x6F4D - 0xB74D
+const mapBase = 0xB74D //Start from the high memory so the map grows down
+
+//My Guess Is that i'll need about 10-20k bytes for music
+
+/* TODO:
+[x] Add in map memory (256x64 tiles, indexing 512 8x8 sprites) 0x4800 bytes interlaced
+	- Map should be ready high to low rather than low to high so that it grows into the
+		 sprite sheet and vis versa
+
+[x] Add in func to draw the map [ Map(mx, my, mw, mh, dx, dy) ]
+[x] Add in func to get a map tile [ Mget(x, y) ]
+[x] Add in func to set a map tile [ Mset(x, y, t) ]
+[] Add in sprite flag (1 byte per 8x8 sprite)
+[] Add in func to get a sprites flags [ Fget(n, f) ]
+[] Add in func to set a sprites flags [ Fset(n, f, v) ]
+[] Add in func to get a sprites byte flag [ FbyteGet(n, b) ]
+[] Add in func to set a sprites byte flag [ FbyteSet(n, b) ]
+*/
