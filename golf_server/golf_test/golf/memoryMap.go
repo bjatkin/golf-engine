@@ -72,19 +72,8 @@ const spriteFlags = 0xB74E
 //My Guess Is that i'll need about 10-20k bytes for music
 
 /* TODO:
-[x] Add in map memory (256x64 tiles, indexing 512 8x8 sprites) 0x4800 bytes interlaced
-	- Map should be ready high to low rather than low to high so that it grows into the
-		 sprite sheet and vis versa
-
-[x] Add in func to draw the map [ Map(mx, my, mw, mh, dx, dy) ]
-[x] Add in func to get a map tile [ Mget(x, y) ]
-[x] Add in func to set a map tile [ Mset(x, y, t) ]
-[x] Add in sprite flag (1 byte per 8x8 sprite)
-[x] Add in func to get a sprites flags [ Fget(n, f) ]
-[x] Add in func to set a sprites flags [ Fset(n, f, v) ]
-[x] Add in func to get a sprites byte flag [ FbyteGet(n, b) ]
-[x] Add in func to set a sprites byte flag [ FbyteSet(n, b) ]
 [] Add a textF function? for formated text?
+[] Add button and other special characters
 [] Change the map to be 128x128? The current map is very short and long...
 [] Add startup animation? How to display logo?
 [] Add function to load map data (Make sure to load it in reverse)

@@ -429,12 +429,21 @@ func (e *Engine) TextR(text string, opts ...TextOpts) {
 
 // the Text font reference
 const textRef = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+={}[]\\:;\"<>,./?|"
+const btnRef = "(<)(>)(^)(v)(x)(o)(l)(r)(+)(-)"
+const specialRef = ":):(x(:|=[|^|v<-->$$oo<|<3<4+1-1pi()[]:;**"
+
+// press (x) to continue
+// use the (^) key to jump
+// -1 :(
+// ^-1 attack
+// +1 :)
+// ^:|:
+// ** You Win :) **
 
 // Text prints text at the x, y coords on the screen
 func (e *Engine) Text(text string, x, y int, opts ...TextOpts) {
 	text = strings.ToLower(text)
-	px := x
-	py := y
+	px, py := x, y
 	opt := TextOpts{}
 	sopt := SprOpts{Transparent: Col3}
 	if len(opts) > 0 {
@@ -458,8 +467,12 @@ func (e *Engine) Text(text string, x, y int, opts ...TextOpts) {
 			continue
 		}
 		if c == ' ' {
+			// TODO this should print a bg. Should I just use the sprite sheet for this?
 			px += 6
 			continue
+		}
+		if c == '(' {
+			// TODO check the btn ref an potentiall print the btn image
 		}
 		i := strings.Index(textRef, string(c))
 		if i == -1 {
