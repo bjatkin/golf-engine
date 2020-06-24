@@ -60,7 +60,7 @@ func (e *Engine) Run() {
 		e.tickMouse()
 
 		js.CopyBytesToJS(e.screenBufHook, e.RAM[:screenPalSet+1])
-		js.Global().Call("drawScreen")
+		js.Global().Call("drawScreen2")
 		js.Global().Call("requestAnimationFrame", renderFrame)
 
 		return nil
@@ -101,7 +101,7 @@ func (e *Engine) drawMouse() {
 	e.setActiveSpriteBuff(internalSpriteColBase, internalSpritePalBase)
 
 	cursor := e.RAM[mouseBase] >> 6
-	opt := SprOpts{Fixed: true}
+	opt := SprOpts{Fixed: true, Transparent: Col7}
 
 	if cursor == 1 {
 		e.Spr(18, int(e.RAM[mouseX]), int(e.RAM[mouseY]), opt)
@@ -138,12 +138,18 @@ func (e *Engine) Cls() {
 		palBG = 0b11111111
 	}
 
-	for i := 0; i < 0x2400; i++ {
+	for i := 0; i < screenPalSet; i++ {
 		e.RAM[i] = colBG
+		if (i+1)%3 == 0 {
+			e.RAM[i] = palBG
+		}
 	}
-	for i := screenPalBuffBase; i < screenPalSet; i++ {
-		e.RAM[i] = palBG
-	}
+	// for i := 0; i < 0x2400; i++ {
+	// 	e.RAM[i] = colBG
+	// }
+	// for i := screenPalBuffBase; i < screenPalSet; i++ {
+	// 	e.RAM[i] = palBG
+	// }
 }
 
 // Camera moves the camera which modifies all draw functions
@@ -277,27 +283,19 @@ func (e *Engine) RClip() {
 // sets a pixel in abitrary memory
 // cBase is the start of the pallet memory buffer
 // pBase is the start of the color memory buffer
-func (e *Engine) pset(x, y int, col Col, cBase, pBase int) {
-	cshift := x % 4
+func (e *Engine) pset(x, y int, col Col, buffBase, pxlWidth int) {
+	i := x + y*pxlWidth
+	index := int(float64(i/4) / 2 * 3)
+	pIndex := index + (2 - index%3)
+	cshift := (x % 4) * 2
 	pshift := x % 8
-	i := (x / 4) + y*48
-	j := (x / 8) + y*24
-	pixel := e.RAM[cBase+i]
+	color := byte(col&0b00000011) << cshift
+	pallet := byte(col&0b00000001) << pshift
 
-	masks := []byte{
-		0b11111100,
-		0b11110011,
-		0b11001111,
-		0b00111111,
-	}
-
-	newCol := byte(col&0b00000011) << (cshift * 2)
-	newPix := (pixel & masks[cshift]) | newCol
-	e.RAM[cBase+i] = newPix
-
-	newPal := byte((col&0b00000100)>>2) << pshift
-	e.RAM[pBase+j] &= ((0b00000001 << pshift) ^ 0b11111111)
-	e.RAM[pBase+j] |= newPal
+	e.RAM[buffBase+index] &= (0b00000011 << cshift) ^ 0b11111111
+	e.RAM[buffBase+index] |= color
+	e.RAM[buffBase+pIndex] &= (0b00000001 << pshift) ^ 0b11111111
+	e.RAM[buffBase+pIndex] |= pallet
 }
 
 // Pset sets a pixel on the screen
@@ -306,30 +304,22 @@ func (e *Engine) Pset(x, y int, col Col) {
 		y < int(e.RAM[clipY]) || y >= int(e.RAM[clipY]+e.RAM[clipH]) {
 		return
 	}
-	e.pset(x, y, col, 0, screenPalBuffBase)
+	e.pset(x, y, col, 0, 192)
 }
 
 // gets a pixel from abitrary memory
 // cBase is the start of the pallet memory buffer
 // pBase is the start of the color memory buffer
-func (e *Engine) pget(x, y, cBase, pBase int) Col {
-	cshift := x % 4
+func (e *Engine) pget(x, y, buffBase, pxlWidth int) Col {
+	i := x + y*pxlWidth
+	index := int(float64(i/4) / 2 * 3)
+	pIndex := index + (2 - index%3)
+	cshift := (x % 4) * 2
 	pshift := x % 8
-	i := (x / 4) + y*64
-	j := (x / 8) + y*32
-	pixel := e.RAM[cBase+i]
-	pal := (e.RAM[pBase+j] >> pshift) & 0b00000001
+	color := (e.RAM[buffBase+index] >> cshift) & 0b00000011
+	pallet := (e.RAM[buffBase+pIndex] >> pshift) & 0b00000001
 
-	masks := []byte{
-		0b00000011,
-		0b00001100,
-		0b00110000,
-		0b11000000,
-	}
-	pixel &= masks[cshift]
-	pixel >>= (cshift * 2)
-
-	return Col((pixel | (pal << 2)) | 0b10000000)
+	return Col((color | (pallet << 2)) | 0b10000000)
 }
 
 // Pget gets the color of a pixel on the screen
@@ -337,7 +327,7 @@ func (e *Engine) Pget(x, y int) Col {
 	if x < 0 || x > 192 || y < 0 || y >= 192 {
 		return Col0
 	}
-	return e.pget(x, y, 0, screenPalBuffBase)
+	return e.pget(x, y, 0, 192)
 }
 
 // TextOpts additional options for drawing text
@@ -356,9 +346,9 @@ func (e *Engine) TextL(text string, opts ...TextOpts) {
 	splitText := strings.Split(text, "\n")
 	for _, line := range splitText {
 		if len(opts) > 0 {
-			e.Text(line, 1, 1+6*textLline, opts[0])
+			e.Text(1, 1+6*textLline, line, opts[0])
 		} else {
-			e.Text(line, 1, 1+6*textLline)
+			e.Text(1, 1+6*textLline, line)
 		}
 		textLline++
 	}
@@ -371,9 +361,9 @@ func (e *Engine) TextR(text string, opts ...TextOpts) {
 	for _, line := range splitText {
 		x := ScreenWidth - 1 - len(line)*6
 		if len(opts) > 0 {
-			e.Text(line, x, 1+6*textRline, opts[0])
+			e.Text(x, 1+6*textRline, line, opts[0])
 		} else {
-			e.Text(line, x, 1+6*textRline)
+			e.Text(x, 1+6*textRline, line)
 		}
 		textRline++
 	}
@@ -385,7 +375,7 @@ const btnRef = "(<)(>)(^)(v)(x)(o)(l)(r)(+)(-)"
 const specialRef = ":):(x(:|=[|^|v<-->$$oo<|<3<4+1-1pi()[]:;**"
 
 // Text prints text at the x, y coords on the screen
-func (e *Engine) Text(text string, x, y int, opts ...TextOpts) {
+func (e *Engine) Text(x, y int, text string, opts ...TextOpts) {
 	text = strings.ToLower(text)
 	px, py := x, y
 	opt := TextOpts{}

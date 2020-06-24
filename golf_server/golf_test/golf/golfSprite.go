@@ -68,12 +68,11 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SprOpts) {
 		opt.ScaleW = 1
 	}
 
-	cBase := toInt(e.RAM[activeSpriteColBuff:activeSpriteColBuff+2], false)
-	pBase := toInt(e.RAM[activeSpritePalBuff:activeSpritePalBuff+2], false)
+	buffBase := toInt(e.RAM[activeSpriteColBuff:activeSpriteColBuff+2], false)
 
 	for x := 0; x < sw; x++ {
 		for y := 0; y < sh; y++ {
-			pxl := e.pget(sx+x, sy+y, cBase, pBase)
+			pxl := e.pget(sx+x, sy+y, buffBase, 256)
 			if pxl != opt.Transparent {
 				pxl = subPixels(opt.PalFrom, opt.PalTo, pxl)
 				fx := 0

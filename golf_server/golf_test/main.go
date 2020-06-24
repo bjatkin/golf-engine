@@ -10,22 +10,18 @@ import (
 var g *golf.Engine
 
 func main() {
-	g = golf.NewEngine(demo2Update, demo2Draw)
-	g.PalA(0)
-	g.PalB(3)
-	g.Run()
-
-	// lastFrameTime = time.Now().UnixNano()
-	// g = golf.NewEngine(update, draw)
-	// g.LoadSprs(spriteSheet)
-
-	// g.BG(golf.Col3)
+	// g = golf.NewEngine(demo2Update, demo2Draw)
 	// g.PalA(0)
 	// g.PalB(3)
-
-	// g.DrawMouse(1)
-
 	// g.Run()
+
+	lastFrameTime = time.Now().UnixNano()
+	g = golf.NewEngine(update, draw)
+
+	g.LoadSprs(spriteSheet)
+	g.BG(golf.Col3)
+	g.DrawMouse(1)
+	g.Run()
 }
 
 var cx, cy int
@@ -48,9 +44,12 @@ func update() {
 		if clipped {
 			g.RClip()
 		} else {
-			g.Clip(10, 30, 172, 152)
+			g.Clip(10, 50, 172, 80)
 		}
 		clipped = !clipped
+	}
+	if g.Btnp(golf.PKey) {
+		fmt.Printf("(0,0): %b (1,1): %b\n", g.Pget(0, 0), g.Pget(1, 1))
 	}
 }
 
@@ -84,7 +83,7 @@ func draw() {
 	g.RAM[0x6F4B], g.RAM[0x6F4C] = 0x3C, 0x47
 
 	// Draw the logo
-	g.SSpr(152, 0, 64, 24, 64, 64, golf.SprOpts{Transparent: golf.Col2})
+	g.SSpr(152, 0, 64, 24, 64, 64, golf.SprOpts{Transparent: golf.Col7})
 
 	// Draw a scaled sprite
 	scale := (math.Sin(float64(g.Frames()) / 60)) + 1
@@ -104,9 +103,13 @@ func demo2Update() {
 			bgCol = golf.Col0
 		}
 		g.BG(bgCol)
+		fmt.Printf("Swap BGCol: %v\n", bgCol)
 	}
 }
 
 func demo2Draw() {
 	g.Cls()
+	for i := 0; i < 192; i++ {
+		g.Pset(i, i, golf.Col0)
+	}
 }

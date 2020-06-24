@@ -72,18 +72,24 @@ const spriteFlags = 0xB74E
 //My Guess Is that i'll need about 10-20k bytes for music
 
 /* TODO:
-[x] Fix fantasyfong.png
-[] Add a textF function? for formated text?
+[] how should the code be structured? so that it just works?
+ 	- when you download the github you should be able to __ go run [golf_term] __ in any directory in order to
+		set up a project or projects in that directory
+[] golf_term should have a map editor, sprite editor, sprite flag editor and be able to save those to files
+	[] golf_term can save files
+	[] map editor
+	[] sprite viewer
+	[] sprite editor
+	[] sprite flag editor
+
 [] Add startup animation? How to display logo?
 [] Add function to load map data (Make sure to load it in reverse)
-[] Interleave pixel data the same way the map is done to make the map sprite swap easier
-	- col0[00112233] col1[44556677] pal[01234567]
-[] Fix sprite importing
-[] how should the code be structured? so that it just works?
+[] Add all the current color pallets to the sprite import code
+[] Add sprite flag header to the top of a converted sprite sheet modify load spr func to support this
+[] Add a scripting lang, GolfScript? simple types like number, string, and bool, make setup super easy
+
+[] implement a peek and poke function and make ram private so that messing with the internal system is possible
+	but more expensive than if you just use what's alreay in memory (again I'm thinking no)
 [] Add in a penalty for the load sprites and load map (60-120 frames?) to prevent new users from
-	messing with multiple sprite sheets
-[] when you download the github you should be able to __ go run [golf_term] __ in any directory in order to
-	set up a project or projects in that directory
-[] golf_term should have a map editor, sprite editor, sprite flag editor and be able to save those to files
-[] Add func to load sprite flags? Or can this be part of loading the sprites? (maybe just a 512 byte header???)
+	messing with multiple sprite sheets (I'm thinking no)
 */

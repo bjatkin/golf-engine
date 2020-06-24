@@ -156,3 +156,32 @@ function drawHiResPixel(x, y, rgb) {
         }
     }
 }
+
+function drawScreen2() {
+    // Set the pallets from the first byte of data
+    a = pallets[(screenBuff[screenCol+screenPal] & 0b11110000) / 16];
+    b = pallets[(screenBuff[screenCol+screenPal] & 0b00001111)];
+    for (let i = 0; i < 4; i++) {
+        fPallet[i] = a[i];
+        fPallet[i+4] = b[i];
+    }
+
+    // Fill the Screen Buffer with pixels
+    for (let i=0; i < 192*192; i++) {
+        let index = Math.floor(Math.floor(i/4) / 2 * 3)
+        let pIndex = index + (2-index%3)
+        let shift = (i % 4) * 2
+        let pShift = i % 8
+
+        let c = (0b00000011 << shift  & screenBuff[index]) >> shift
+        let p = (0b00000001 << pShift & screenBuff[pIndex]) >> pShift
+        let color = fPallet[c + p*4]
+        x = Math.floor(i % 192)
+        y = Math.floor(i / 192)
+
+        drawHiResPixel(x, y, color)
+    }
+ 
+    // Draw the image data to the canvas
+    context.putImageData(imagedata, 0, 0);
+}

@@ -24,6 +24,12 @@ var pallets = []pallet{
 		color{255, 255, 255}, // white
 	},
 	pallet{
+		color{54, 36, 26},    // Brown
+		color{119, 97, 65},   // Cream
+		color{181, 165, 125}, // Light Cream
+		color{218, 207, 190}, // Pale
+	},
+	pallet{
 		color{21, 25, 18},  // GB 0
 		color{41, 50, 36},  // GB 1
 		color{62, 75, 54},  // GB 2
@@ -148,22 +154,14 @@ func main() {
 
 	outputFile := os.Args[2]
 	bytes := []string{}
-	for _, b := range colorBuff {
-		bStr := fmt.Sprintf("%b", b)
-		for i := len(bStr); i < 8; i++ {
-			bStr = "0" + bStr
-		}
-		bStr = "0b" + bStr
-		bytes = append(bytes, bStr)
-	}
 
-	for _, b := range palBuff {
-		bStr := fmt.Sprintf("%b", b)
-		for i := len(bStr); i < 8; i++ {
-			bStr = "0" + bStr
+	j := 0
+	for i := 0; i < len(colorBuff); i++ {
+		bytes = append(bytes, printByte(colorBuff[i]))
+		if (i+1)%2 == 0 {
+			bytes = append(bytes, printByte(palBuff[j]))
+			j++
 		}
-		bStr = "0b" + bStr
-		bytes = append(bytes, bStr)
 	}
 
 	content := fmt.Sprintf("package main\n\nvar spriteSheet = [%d]byte {\n", len(bytes))
@@ -175,4 +173,12 @@ func main() {
 		fmt.Printf("Error 3: %s\n", err.Error())
 		return
 	}
+}
+
+func printByte(b byte) string {
+	ret := fmt.Sprintf("%b", b)
+	for i := len(ret); i < 8; i++ {
+		ret = "0" + ret
+	}
+	return "0b" + ret
 }
