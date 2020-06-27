@@ -10,18 +10,20 @@ import (
 var g *golf.Engine
 
 func main() {
-	// g = golf.NewEngine(demo2Update, demo2Draw)
-	// g.PalA(0)
-	// g.PalB(3)
-	// g.Run()
-
-	lastFrameTime = time.Now().UnixNano()
-	g = golf.NewEngine(update, draw)
-
+	g = golf.NewEngine(bibiDuckUpdate, bibiDuckDraw)
+	g.BG(golf.Col5)
+	g.PalA(5)
+	g.PalB(6)
 	g.LoadSprs(spriteSheet)
-	g.BG(golf.Col3)
-	g.DrawMouse(1)
 	g.Run()
+
+	// lastFrameTime = time.Now().UnixNano()
+	// g = golf.NewEngine(update, draw)
+
+	// g.LoadSprs(spriteSheet)
+	// g.BG(golf.Col3)
+	// g.DrawMouse(1)
+	// g.Run()
 }
 
 var cx, cy int
@@ -40,6 +42,18 @@ func update() {
 	if g.Btn(golf.DKey) {
 		cx += 10
 	}
+	if g.Btnp(golf.PKey) {
+		a, _ := g.PalGet()
+		a++
+		if a > golf.Pal15 {
+			a = golf.Pal0
+		}
+		g.PalA(a)
+		g.PalB(a)
+	}
+	if g.Btnp(golf.RKey) {
+		cx, cy = 0, 0
+	}
 	if g.Btnp(golf.Space) {
 		if clipped {
 			g.RClip()
@@ -47,9 +61,6 @@ func update() {
 			g.Clip(10, 50, 172, 80)
 		}
 		clipped = !clipped
-	}
-	if g.Btnp(golf.PKey) {
-		fmt.Printf("(0,0): %b (1,1): %b\n", g.Pget(0, 0), g.Pget(1, 1))
 	}
 }
 
@@ -112,4 +123,13 @@ func demo2Draw() {
 	for i := 0; i < 192; i++ {
 		g.Pset(i, i, golf.Col0)
 	}
+}
+
+func bibiDuckUpdate() {
+
+}
+
+func bibiDuckDraw() {
+	g.Cls()
+	g.Spr(1, 50, 50, golf.SprOpts{Width: 2, Height: 2, Transparent: golf.Col7})
 }

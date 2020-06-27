@@ -290,7 +290,7 @@ func (e *Engine) pset(x, y int, col Col, buffBase, pxlWidth int) {
 	cshift := (x % 4) * 2
 	pshift := x % 8
 	color := byte(col&0b00000011) << cshift
-	pallet := byte(col&0b00000001) << pshift
+	pallet := byte(col&0b00000100) >> 2 << pshift
 
 	e.RAM[buffBase+index] &= (0b00000011 << cshift) ^ 0b11111111
 	e.RAM[buffBase+index] |= color
@@ -307,9 +307,9 @@ func (e *Engine) Pset(x, y int, col Col) {
 	e.pset(x, y, col, 0, 192)
 }
 
-// gets a pixel from abitrary memory
-// cBase is the start of the pallet memory buffer
-// pBase is the start of the color memory buffer
+// pget gets a pixel from abitrary memory
+// buffBase is the start of the memory buffer
+// pxlWidth is the width of the buffer in pixels
 func (e *Engine) pget(x, y, buffBase, pxlWidth int) Col {
 	i := x + y*pxlWidth
 	index := int(float64(i/4) / 2 * 3)

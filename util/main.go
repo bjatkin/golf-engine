@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"image/png"
 	"io/ioutil"
@@ -17,30 +16,70 @@ type color struct {
 type pallet [4]color
 
 var pallets = []pallet{
-	pallet{
-		color{0, 0, 0},       // black
-		color{84, 84, 84},    // dark gray
-		color{168, 168, 168}, // light gray
-		color{255, 255, 255}, // white
-	},
-	pallet{
-		color{54, 36, 26},    // Brown
-		color{119, 97, 65},   // Cream
-		color{181, 165, 125}, // Light Cream
-		color{218, 207, 190}, // Pale
-	},
-	pallet{
-		color{21, 25, 18},  // GB 0
-		color{41, 50, 36},  // GB 1
-		color{62, 75, 54},  // GB 2
-		color{82, 100, 71}, // GB 3
-	},
-	pallet{
-		color{103, 125, 89},  // GB 4
-		color{124, 149, 107}, // GB 5
-		color{145, 175, 125}, // GB 6
-		color{165, 199, 142}, // GB 7
-	},
+	pallet{{0, 0, 0},
+		{224, 60, 40},
+		{255, 255, 255},
+		{215, 215, 215}},
+	pallet{{168, 168, 168},
+		{123, 123, 123},
+		{52, 52, 52},
+		{21, 21, 21}},
+	pallet{{13, 32, 48},
+		{65, 93, 102},
+		{113, 166, 161},
+		{189, 255, 202}},
+	pallet{{37, 226, 205},
+		{10, 152, 172},
+		{0, 82, 128},
+		{0, 96, 75}},
+	pallet{{32, 181, 98},
+		{88, 211, 50},
+		{19, 157, 8},
+		{0, 78, 0}},
+	pallet{{23, 40, 8},
+		{55, 109, 3},
+		{106, 180, 23},
+		{140, 214, 18}},
+	pallet{{190, 235, 113},
+		{238, 255, 169},
+		{182, 193, 33},
+		{147, 151, 23}},
+	pallet{{204, 143, 21},
+		{255, 187, 49},
+		{255, 231, 55},
+		{246, 143, 55}},
+	pallet{{173, 78, 26},
+		{35, 23, 18},
+		{92, 60, 13},
+		{174, 108, 55}},
+	pallet{{197, 151, 130},
+		{226, 215, 181},
+		{79, 21, 7},
+		{130, 60, 61}},
+	pallet{{218, 101, 94},
+		{225, 130, 137},
+		{245, 183, 132},
+		{255, 233, 197}},
+	pallet{{255, 130, 206},
+		{207, 60, 113},
+		{135, 22, 70},
+		{163, 40, 179}},
+	pallet{{204, 105, 228},
+		{213, 156, 252},
+		{254, 201, 237},
+		{226, 201, 255}},
+	pallet{{166, 117, 254},
+		{106, 49, 202},
+		{90, 25, 145},
+		{33, 22, 64}},
+	pallet{{61, 52, 165},
+		{98, 100, 220},
+		{155, 160, 239},
+		{152, 220, 255}},
+	pallet{{91, 168, 255},
+		{10, 137, 255},
+		{2, 74, 202},
+		{0, 23, 125}},
 }
 
 type pixel struct {
@@ -62,12 +101,17 @@ func newPixelArray() pixelArray {
 func (p *pixelArray) addPixel(pxl pixel) error {
 	if p.pal2 == -1 && p.pal1 != -1 && p.pal1 != pxl.pal {
 		p.pal2 = pxl.pal
+		if p.pal2 < p.pal1 {
+			p.pal1, p.pal2 = p.pal2, p.pal1
+		}
+		fmt.Printf("Pal1: %v Pal2: %v\n", p.pal1, p.pal2)
 	}
 	if p.pal1 == -1 {
 		p.pal1 = pxl.pal
+		fmt.Printf("Pal1: %v\n", p.pal1)
 	}
 	if pxl.pal != p.pal1 && pxl.pal != p.pal2 {
-		return errors.New("More than 2 pallets detected")
+		return fmt.Errorf("more than 2 pallets detected, Pal1: %d, Pal2: %d, NewPal: %d, NewCol: %v", p.pal1, p.pal2, pxl.pal, pxl.col)
 	}
 	p.pixels = append(p.pixels, pxl)
 	return nil
@@ -117,13 +161,42 @@ func main() {
 	minY := img.Bounds().Min.Y
 	maxY := img.Bounds().Max.Y
 	image := newPixelArray()
+	fmt.Printf("\nminX: %d minY: %d maxX: %d maxY: %d\n", minX, minY, maxX, maxY)
 	for y := minY; y < maxY; y++ {
 		for x := minX; x < maxX; x++ {
 			r, g, b, _ := img.At(x, y).RGBA()
 			pxl := nearistPixel(int(r)/256, int(g)/256, int(b)/256)
-			image.addPixel(pxl)
+			err := image.addPixel(pxl)
+			if err != nil {
+				fmt.Printf("Error: %s\n", err.Error())
+				fmt.Printf("R: %d, G: %d, B: %d\n", int(r)/256, int(g)/256, int(b)/256)
+				fmt.Printf("X: %d, Y: %d", x, y)
+				return
+			}
+			if x == 20 && y == 2 {
+				fmt.Printf("Len: %d, Col %d\n", len(image.pixels), image.pixels[len(image.pixels)-1])
+			}
+			// if x == 20 && y == 1 {
+			// 	// fmt.Printf("rgb: (%d, %d, %d)\n", int(r)/256, int(g)/256, int(b)/256)
+			// 	fmt.Printf("Pal 5 = %d, Col 3 = %d\n", pxl.pal, pxl.col)
+			// 	minDist := 99999999999.0
+			// 	bestPixel := pixel{}
+			// 	for p, pal := range pallets {
+			// 		for c, col := range pal {
+			// 			dist := dist(int(r)/256, int(g)/256, int(b)/256, int(col.r), int(col.g), int(col.b))
+			// 			if dist < minDist {
+			// 				fmt.Printf("Dist: %.2f Col: %d, Pal: %d\n", dist, c, p)
+			// 				fmt.Printf("rgb: (%d, %d, %d) == (%d, %d, %d)\n", int(r)/256, int(g)/256, int(b)/256, col.r, col.g, col.b)
+			// 				bestPixel.pal = p
+			// 				bestPixel.col = c
+			// 				minDist = dist
+			// 			}
+			// 		}
+			// 	}
+			// }
 		}
 	}
+	fmt.Printf("Image Size 256x128: %d\n", len(image.pixels))
 
 	colorBuff := []byte{}
 	for i, pxl := range image.pixels {
@@ -134,7 +207,14 @@ func main() {
 		}
 
 		col := pxl.col
+		// if i == 530 {
+		// 	fmt.Printf("COl %v \n", pxl.col)
+		// 	fmt.Printf("Before: colorBuff: %b, Col: %b, Shift: %d\n", colorBuff[index], col, shift)
+		// }
 		colorBuff[index] |= (byte(col) << shift)
+		// if i == 530 {
+		// 	fmt.Printf("After: colorBuff: %b, Col: %b, Shift: %d\n", colorBuff[index], col, shift)
+		// }
 	}
 
 	palBuff := []byte{}
@@ -149,7 +229,14 @@ func main() {
 		if pxl.pal == image.pal2 {
 			p = byte(1)
 		}
+		if i == 533 {
+			fmt.Printf("pal %v \n", pxl.pal)
+			fmt.Printf("Before: palBuff: %b, pal: %b, Shift: %d\n", palBuff[index], p, shift)
+		}
 		palBuff[index] |= p << shift
+		if i == 533 {
+			fmt.Printf("After: palBuff: %b, pal: %b, Shift: %d\n", palBuff[index], p, shift)
+		}
 	}
 
 	outputFile := os.Args[2]
@@ -164,6 +251,7 @@ func main() {
 		}
 	}
 
+	fmt.Printf("colBuff: %d, palBuff: %d,total bytes: %d\n", len(colorBuff), len(palBuff), len(bytes))
 	content := fmt.Sprintf("package main\n\nvar spriteSheet = [%d]byte {\n", len(bytes))
 	content += strings.Join(bytes, ",")
 	content += ",\n}"
