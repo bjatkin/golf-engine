@@ -10,20 +10,20 @@ import (
 var g *golf.Engine
 
 func main() {
-	g = golf.NewEngine(bibiDuckUpdate, bibiDuckDraw)
-	g.BG(golf.Col5)
-	g.PalA(5)
-	g.PalB(6)
-	g.LoadSprs(spriteSheet)
-	g.Run()
-
-	// lastFrameTime = time.Now().UnixNano()
-	// g = golf.NewEngine(update, draw)
-
+	// g = golf.NewEngine(bibiDuckUpdate, bibiDuckDraw)
+	// g.BG(golf.Col5)
+	// g.PalA(5)
+	// g.PalB(6)
 	// g.LoadSprs(spriteSheet)
-	// g.BG(golf.Col3)
-	// g.DrawMouse(1)
 	// g.Run()
+
+	lastFrameTime = time.Now().UnixNano()
+	g = golf.NewEngine(update, draw)
+
+	g.LoadSprs(spriteSheet)
+	g.BG(golf.Col3)
+	g.DrawMouse(1)
+	g.Run()
 }
 
 var cx, cy int
@@ -103,6 +103,10 @@ func draw() {
 		Transparent: golf.Col2,
 	})
 	g.TextL(fmt.Sprintf("Scale: %.2f", scale))
+
+	// Draw the current pallet
+	pal, _ := g.PalGet()
+	g.TextR(fmt.Sprintf("\nPal: %d ", pal))
 }
 
 var bgCol = golf.Col0

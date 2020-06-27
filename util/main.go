@@ -111,7 +111,8 @@ func (p *pixelArray) addPixel(pxl pixel) error {
 		fmt.Printf("Pal1: %v\n", p.pal1)
 	}
 	if pxl.pal != p.pal1 && pxl.pal != p.pal2 {
-		return fmt.Errorf("more than 2 pallets detected, Pal1: %d, Pal2: %d, NewPal: %d, NewCol: %v", p.pal1, p.pal2, pxl.pal, pxl.col)
+		return fmt.Errorf("more than 2 pallets detected, Pal1: %d, Pal2: %d, NewPal: %d, NewCol: %v",
+			p.pal1, p.pal2, pxl.pal, pxl.col)
 	}
 	p.pixels = append(p.pixels, pxl)
 	return nil
@@ -176,24 +177,6 @@ func main() {
 			if x == 20 && y == 2 {
 				fmt.Printf("Len: %d, Col %d\n", len(image.pixels), image.pixels[len(image.pixels)-1])
 			}
-			// if x == 20 && y == 1 {
-			// 	// fmt.Printf("rgb: (%d, %d, %d)\n", int(r)/256, int(g)/256, int(b)/256)
-			// 	fmt.Printf("Pal 5 = %d, Col 3 = %d\n", pxl.pal, pxl.col)
-			// 	minDist := 99999999999.0
-			// 	bestPixel := pixel{}
-			// 	for p, pal := range pallets {
-			// 		for c, col := range pal {
-			// 			dist := dist(int(r)/256, int(g)/256, int(b)/256, int(col.r), int(col.g), int(col.b))
-			// 			if dist < minDist {
-			// 				fmt.Printf("Dist: %.2f Col: %d, Pal: %d\n", dist, c, p)
-			// 				fmt.Printf("rgb: (%d, %d, %d) == (%d, %d, %d)\n", int(r)/256, int(g)/256, int(b)/256, col.r, col.g, col.b)
-			// 				bestPixel.pal = p
-			// 				bestPixel.col = c
-			// 				minDist = dist
-			// 			}
-			// 		}
-			// 	}
-			// }
 		}
 	}
 	fmt.Printf("Image Size 256x128: %d\n", len(image.pixels))
@@ -207,14 +190,7 @@ func main() {
 		}
 
 		col := pxl.col
-		// if i == 530 {
-		// 	fmt.Printf("COl %v \n", pxl.col)
-		// 	fmt.Printf("Before: colorBuff: %b, Col: %b, Shift: %d\n", colorBuff[index], col, shift)
-		// }
 		colorBuff[index] |= (byte(col) << shift)
-		// if i == 530 {
-		// 	fmt.Printf("After: colorBuff: %b, Col: %b, Shift: %d\n", colorBuff[index], col, shift)
-		// }
 	}
 
 	palBuff := []byte{}
@@ -229,14 +205,7 @@ func main() {
 		if pxl.pal == image.pal2 {
 			p = byte(1)
 		}
-		if i == 533 {
-			fmt.Printf("pal %v \n", pxl.pal)
-			fmt.Printf("Before: palBuff: %b, pal: %b, Shift: %d\n", palBuff[index], p, shift)
-		}
 		palBuff[index] |= p << shift
-		if i == 533 {
-			fmt.Printf("After: palBuff: %b, pal: %b, Shift: %d\n", palBuff[index], p, shift)
-		}
 	}
 
 	outputFile := os.Args[2]
@@ -251,7 +220,6 @@ func main() {
 		}
 	}
 
-	fmt.Printf("colBuff: %d, palBuff: %d,total bytes: %d\n", len(colorBuff), len(palBuff), len(bytes))
 	content := fmt.Sprintf("package main\n\nvar spriteSheet = [%d]byte {\n", len(bytes))
 	content += strings.Join(bytes, ",")
 	content += ",\n}"
