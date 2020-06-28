@@ -1,7 +1,7 @@
 # GOLF Engine
 the GoLang Fantasy Engine. Right now this is just a convient place for the todo list. No fun stuff yet.
 
-###TODO
+### TODO
 ---
 * Create the Golf ToolKit [x]
 * Add about and help commands [x]
@@ -14,7 +14,7 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 * Create csv format for the flags (Probably just 1's and 0's) [x]
 * Import sprite flag csv (Should be pretty easy) [x]
 
-###TODO long term
+### TODO long term
 ---
 * Make BiBi Duck Game to demo the engine
   * BiBi Duck is a platformer that plays like a mario game. run around, collect fethers and find all the eggs
