@@ -34,7 +34,7 @@ func NewEngine(updateFunc func(), draw func()) *Engine {
 	ret.RClip() // Reset the cliping box
 
 	// Set internal resources
-	base := internalSpriteColBase
+	base := internalSpriteBase
 	for i := 0; i < 0x0900; i++ {
 		ret.RAM[i+base] = internalSpriteSheet[i]
 	}
@@ -98,7 +98,7 @@ func (e *Engine) DrawMouse(style int) {
 
 // drawMouse draws the mouse on the screen
 func (e *Engine) drawMouse() {
-	e.setActiveSpriteBuff(internalSpriteColBase, internalSpritePalBase)
+	e.setActiveSpriteBuff(internalSpriteBase)
 
 	cursor := e.RAM[mouseBase] >> 6
 	opt := SprOpts{Fixed: true, Transparent: Col7}
@@ -113,7 +113,7 @@ func (e *Engine) drawMouse() {
 		e.Spr(82, int(e.RAM[mouseX]), int(e.RAM[mouseY]), opt)
 	}
 
-	e.setActiveSpriteBuff(spriteColBase, spritePalBase)
+	e.setActiveSpriteBuff(spriteBase)
 }
 
 // Mouse returns the X, Y coords of the mouse
@@ -392,7 +392,7 @@ func (e *Engine) Text(x, y int, text string, opts ...TextOpts) {
 	}
 	sopt.Fixed = opt.Fixed
 
-	e.setActiveSpriteBuff(internalSpriteColBase, internalSpritePalBase)
+	e.setActiveSpriteBuff(internalSpriteBase)
 
 	for i := 0; i < len(text); i++ {
 		if text[i] == '\n' {
@@ -441,7 +441,7 @@ func (e *Engine) Text(x, y int, text string, opts ...TextOpts) {
 		px += 6
 	}
 
-	e.setActiveSpriteBuff(spriteColBase, spritePalBase)
+	e.setActiveSpriteBuff(spriteBase)
 }
 
 func (e *Engine) drawChar(x, y, i int, opt SprOpts) {

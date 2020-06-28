@@ -7,18 +7,16 @@ import (
 
 // LoadSprs loads the sprite sheet into memory
 func (e *Engine) LoadSprs(sheet [0x3000]byte) {
-	base := spriteColBase
+	base := spriteBase
 	for i, b := range sheet {
 		e.RAM[i+base] = b
 	}
 }
 
-func (e *Engine) setActiveSpriteBuff(colAddr, palAddr int) {
-	c, p := toBytes(colAddr, 2, false), toBytes(palAddr, 2, false)
-	e.RAM[activeSpriteColBuff] = c[0]
-	e.RAM[activeSpriteColBuff+1] = c[1]
-	e.RAM[activeSpritePalBuff] = p[0]
-	e.RAM[activeSpritePalBuff+1] = p[1]
+func (e *Engine) setActiveSpriteBuff(colAddr int) {
+	c := toBytes(colAddr, 2, false)
+	e.RAM[activeSpriteBuff] = c[0]
+	e.RAM[activeSpriteBuff+1] = c[1]
 }
 
 // SprOpts additional options for drawing sprites
@@ -71,7 +69,7 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SprOpts) {
 		opt.ScaleW = 1
 	}
 
-	buffBase := toInt(e.RAM[activeSpriteColBuff:activeSpriteColBuff+2], false)
+	buffBase := toInt(e.RAM[activeSpriteBuff:activeSpriteBuff+2], false)
 
 	for x := 0; x < sw; x++ {
 		for y := 0; y < sh; y++ {
