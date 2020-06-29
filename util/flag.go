@@ -26,7 +26,7 @@ func convertFlag(inputFile, outputFile string) error {
 		conv[i] = b
 	}
 
-	content := "package main\n\nvar spriteFlags = [512]byte{\n"
+	content := "package main\n\nvar spriteFlags = [0x200]byte{\n"
 	for _, b := range conv {
 		content += printByte(b) + ","
 	}

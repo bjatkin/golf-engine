@@ -8,10 +8,12 @@ import (
 )
 
 var cmdDone = false
+var lastCmd = "help"
 
 func main() {
-	// Add help command to prevent an initializaiton loop
+	// Add help and bangbang command to prevent an initializaiton loop
 	commands = append(commands, helpCommand)
+	commands = append(commands, bangbangCommand)
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("\nWelcome to the Golf Toolkit!\ntype help for more info\n")
@@ -19,25 +21,33 @@ func main() {
 		printCommandLine()
 		cmd, _ := reader.ReadString('\n')
 		cmd = strings.Trim(cmd, " \t\n")
-		cmdRun := false
-		for _, command := range commands {
-			args := strings.Split(cmd, " ")
-			if args[0] == command.command {
-				cmdRun = true
-				if len(args) != command.argCount+1 {
-					printErrorLine("Incorrect arg count, usage: " + command.usage)
-					break
-				}
-				err := command.commandHandler(args[1:])
-				if err != nil {
-					printErrorLine(err.Error())
-				}
+		runCmd(cmd)
+		if cmd != bangbangCommand.command {
+			lastCmd = cmd
+		}
+	}
+}
+
+func runCmd(cmd string) {
+	cmdRun := false
+	for _, command := range commands {
+		args := strings.Split(cmd, " ")
+		if args[0] == command.command {
+			cmdRun = true
+			if len(args) != command.argCount+1 {
+				printErrorLine("Incorrect arg count, usage: " + command.usage)
 				break
 			}
+			err := command.commandHandler(args[1:])
+			if err != nil {
+				printErrorLine(err.Error())
+				break
+			}
+			break
 		}
-		if !cmdRun {
-			printErrorLine("Unrecognized command " + cmd + ", type help for more info")
-		}
+	}
+	if !cmdRun {
+		printErrorLine("Unrecognized command " + cmd + ", type help for more info")
 	}
 }
 

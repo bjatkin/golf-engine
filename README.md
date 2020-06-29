@@ -18,6 +18,7 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 * Import sprite flag csv (Should be pretty easy) [x]
 * Create the Golf ToolKit [x]
 * Add about and help commands [x]
+* Add clear and !! command to the go toolkit [x]
 
 ### TODO long term
 ---
@@ -39,3 +40,12 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
   * Maybe do celest hair on the character (should be bold red color)
   * Make red blood that you collect as enemies die
 * Add interpreted scripting language to make it more aproacable and to prevent golang from being an install requirement
+
+### To Consider
+* should the map size be configurable?
+  * the top 2 bytes could be used to configure the width and height (1-256)
+  * 128x128 might be a bit too narrow for some games
+  * 256x64 might be a bit too short for others
+  * additionally that would give more flexibility memorywise since you can load the map into the sprites
+  * however it could add a lot of unwanted complexity
+  * how woud this be implemented?

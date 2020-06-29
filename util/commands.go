@@ -3,6 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
+	"os/exec"
+	"strings"
 )
 
 type command struct {
@@ -13,7 +16,7 @@ type command struct {
 	commandHandler func([]string) error
 }
 
-// Help must be added in the main method to prevent
+// Help and BangBang must be added in the main method to prevent
 // circular reference in the initalization of commands
 var helpCommand = command{
 	"help",
@@ -21,17 +24,31 @@ var helpCommand = command{
 	"display all golf toolkit commands",
 	0,
 	func([]string) error {
+		cmds := []string{}
 		for _, command := range commands {
 			if command.description == "" {
 				continue
 			}
 			title := command.command
-			for len(title) < 8 {
+			for len(title) < 12 {
 				title += " "
 			}
 
-			fmt.Println("   " + title + command.description)
+			cmds = append(cmds, "   "+title+command.description)
 		}
+		fmt.Print(strings.Join(cmds, "\n"))
+		return nil
+	},
+}
+
+var bangbangCommand = command{
+	"!!",
+	"!!",
+	"re-run the last executed command",
+	0,
+	func(args []string) error {
+		fmt.Println(" >" + lastCmd)
+		runCmd(lastCmd)
 		return nil
 	},
 }
@@ -105,10 +122,6 @@ var commands = []command{
 	},
 
 	command{
-		command: "",
-	},
-
-	command{
 		"startserver",
 		"startserver",
 		"starts a server in the current directory that can be used to play your golf engine games",
@@ -126,5 +139,21 @@ var commands = []command{
 		func(args []string) error {
 			return errors.New("this function is not implemented yet")
 		},
+	},
+
+	command{
+		"clear",
+		"clear",
+		"clears the screen",
+		0,
+		func(args []string) error {
+			c := exec.Command("clear")
+			c.Stdout = os.Stdout
+			return c.Run()
+		},
+	},
+
+	command{
+		command: "",
 	},
 }
