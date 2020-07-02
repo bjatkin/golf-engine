@@ -243,6 +243,7 @@ func (e *Engine) Circ(xc, yc, r int, c Col) {
 // CircFill draws a filled circle using Bresenham's algorithm
 func (e *Engine) CircFill(xc, yc, r int, c Col) {
 	e.circ(xc, yc, r, c, true)
+	e.circ(xc, yc, r, c, false)
 }
 
 func (e *Engine) circ(xc, yc, r int, c Col, filled bool) {

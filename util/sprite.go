@@ -129,7 +129,7 @@ func convertSpriteSheet(inputFile, outputFile string) error {
 		}
 	}
 
-	content := fmt.Sprintf("package main\n\nvar spriteSheet = [0x%H]byte {\n", len(bytes))
+	content := fmt.Sprintf("package main\n\nvar spriteSheet = [0x%X]byte {\n", len(bytes))
 	content += strings.Join(bytes, ",")
 	content += ",\n}"
 

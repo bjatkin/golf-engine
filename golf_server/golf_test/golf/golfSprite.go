@@ -1,7 +1,6 @@
 package golf
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -74,9 +73,6 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SprOpts) {
 	for x := 0; x < sw; x++ {
 		for y := 0; y < sh; y++ {
 			pxl := e.pget(sx+x, sy+y, buffBase, 256)
-			if sx+x == 0 && sy+y == 0 {
-				fmt.Printf("pget: %b\n", pxl)
-			}
 			if pxl != opt.Transparent {
 				pxl = subPixels(opt.PalFrom, opt.PalTo, pxl)
 				fx := 0

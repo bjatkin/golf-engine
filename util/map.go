@@ -34,16 +34,14 @@ func convertCSVMap(inputFile, outputFile string) error {
 		csvFile = append(csvFile, cols)
 	}
 
-	count, linesct := 0, 0
 	for _, line := range csvFile {
-		linesct++
 		for _, tile := range line {
 			id, err := strconv.Atoi(tile)
 			if err != nil {
 				return err
 			}
 			h := byte(0)
-			if id > 512 {
+			if id > 511 {
 				return errors.New("tile indexes above 512 are not supported in the map")
 			}
 			if id > 255 {
@@ -51,13 +49,14 @@ func convertCSVMap(inputFile, outputFile string) error {
 			}
 			low = append(low, byte(id))
 			high = append(high, h)
-			count++
 		}
 	}
-	fmt.Printf("\n\nCount: %d(%d) Lines: %d\n\n", count, len(high), linesct)
+	return writeMapData(low, high, outputFile)
+}
 
+func writeMapData(low, high []byte, outputFile string) error {
 	conv := []byte{}
-	for i := 0; i < count; i++ {
+	for i := 0; i < len(high); i++ {
 		if (i+1)%8 == 0 {
 			top := i + 1
 			mashedHigh, err := packHighBytes(high[top-8 : top])
@@ -69,8 +68,12 @@ func convertCSVMap(inputFile, outputFile string) error {
 		conv = append(conv, low[i])
 	}
 
-	//TODO: this should print the file out
-	return nil
+	content := "package main\n\nvar map = [0x4800]byte{\n"
+	for _, b := range conv {
+		content += printByte(b) + ","
+	}
+	content += "\n}"
+	return ioutil.WriteFile(outputFile, []byte(content), 0666)
 }
 
 func packHighBytes(bytes []byte) (byte, error) {
