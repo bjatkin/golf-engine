@@ -3,14 +3,18 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
+* oo for the filled in circle is a bad letter sequence. Picke a sequence that is less common in regular words
+* restructure code. Delete bad old code. Make the repo nice and clean
+* restructure init so that starting code is nicer (e.g. js folder, assets folder etc.)
+* Create github for golfExamples games
 * Make the map tool respect SprOpts, or make a separete MapOpts for pallet swaping
 * Make tools for importings maps.
   * Import CSV as map
   * Import image as map
 * Add function to load map data (reverse order)
 * Add function to load sprite flag data
-* Determine final codebase structure (seperate repo for demo games that are linked in the readme)
 * Startup Animation?
+* Use ECS for blood (actors system, ui system, dialouge system etc.)
 
 ### DONE
 ---
@@ -19,6 +23,10 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 * Create the Golf ToolKit [x]
 * Add about and help commands [x]
 * Add clear and !! command to the go toolkit [x]
+* Fix Filled Circles so the look the same as hollo ones [x]
+* Code automatically recompiles on browsers refresh [x]
+* Start and Stop server with golf_toolkit (nonblocking) [x]
+* Add build and init to golf_toolkit [x]
 
 ### TODO long term
 ---
@@ -50,6 +58,3 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
   * additionally that would give more flexibility memorywise since you can load the map into the sprites
   * however it could add a lot of unwanted complexity
   * how woud this be implemented?
-
-### Fix
-* oo for the filled in circle is a bad letter sequence. Picke a sequence that is less common in regular words
