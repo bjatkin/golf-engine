@@ -60,7 +60,7 @@ func (e *Engine) Run() {
 		e.tickMouse()
 
 		js.CopyBytesToJS(e.screenBufHook, e.RAM[:screenPalSet+1])
-		js.Global().Call("drawScreen2")
+		js.Global().Call("drawScreen")
 		js.Global().Call("requestAnimationFrame", renderFrame)
 
 		return nil

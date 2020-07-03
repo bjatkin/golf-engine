@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 )
 
@@ -75,7 +76,23 @@ var commands = []command{
 		"exit the golf toolkit",
 		0,
 		func([]string) error {
-			fmt.Print("GoodByte!\n")
+			stopServer(nil)
+			serverSG.Wait()
+			fmt.Print("GoodBye!\n")
+			cmdDone = true
+			return nil
+		},
+	},
+
+	command{
+		"quit",
+		"quit",
+		"",
+		0,
+		func([]string) error {
+			stopServer(nil)
+			serverSG.Wait()
+			fmt.Print("GoodBye!\n")
 			cmdDone = true
 			return nil
 		},
@@ -126,9 +143,15 @@ var commands = []command{
 		"startserver",
 		"starts a server in the current directory that can be used to play your golf engine games",
 		0,
-		func(args []string) error {
-			return errors.New("This function is not implemented yet")
-		},
+		startServer,
+	},
+
+	command{
+		"stopserver",
+		"stopserver",
+		"stops the server if it's currently running",
+		0,
+		stopServer,
 	},
 
 	command{
@@ -142,18 +165,31 @@ var commands = []command{
 	},
 
 	command{
+		"init",
+		"init <project name>",
+		"<project name> creates a new project in the current folder.",
+		1,
+		func(args []string) error {
+			return errors.New("this function is not implemented yet")
+		},
+	},
+
+	command{
 		"clear",
 		"clear",
 		"clears the screen",
 		0,
 		func(args []string) error {
 			c := exec.Command("clear")
+			if runtime.GOOS == "windows" {
+				c = exec.Command("cmd", "/c", "cls")
+			}
 			c.Stdout = os.Stdout
 			return c.Run()
 		},
 	},
 
-	command{
+	command{ //Empty command is nessisary
 		command: "",
 	},
 }

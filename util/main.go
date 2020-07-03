@@ -3,17 +3,24 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
+	"sync"
 )
 
 var cmdDone = false
 var lastCmd = "help"
+var serverSG = &sync.WaitGroup{}
+var server = &http.Server{Addr: ":8080"}
 
 func main() {
 	// Add help and bangbang command to prevent an initializaiton loop
 	commands = append(commands, helpCommand)
 	commands = append(commands, bangbangCommand)
+
+	// Make the server serve the file server
+	http.Handle("/", http.FileServer(http.Dir(".")))
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("\nWelcome to the Golf Toolkit!\ntype help for more info\n")
