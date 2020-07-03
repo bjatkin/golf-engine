@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -156,12 +155,10 @@ var commands = []command{
 
 	command{
 		"build",
-		"build <output file>",
-		"<output file> builds the current golf project and creates a wasm file",
-		1,
-		func(args []string) error {
-			return errors.New("this function is not implemented yet")
-		},
+		"build",
+		"builds the current golf project and creates a wasm file",
+		0,
+		buildProject,
 	},
 
 	command{
@@ -169,9 +166,7 @@ var commands = []command{
 		"init <project name>",
 		"<project name> creates a new project in the current folder.",
 		1,
-		func(args []string) error {
-			return errors.New("this function is not implemented yet")
-		},
+		initProject,
 	},
 
 	command{

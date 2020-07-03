@@ -13,14 +13,29 @@ var cmdDone = false
 var lastCmd = "help"
 var serverSG = &sync.WaitGroup{}
 var server = &http.Server{Addr: ":8080"}
+var appDir = ""
 
+//go:generate generate/genTemplates packedTemplates.go templates
 func main() {
+	var err error
+	appDir, err = os.Getwd()
+	if err != nil {
+		fmt.Printf("Could not get the working directory %s\n", err.Error())
+		return
+	}
+
 	// Add help and bangbang command to prevent an initializaiton loop
 	commands = append(commands, helpCommand)
 	commands = append(commands, bangbangCommand)
 
 	// Make the server serve the file server
-	http.Handle("/", http.FileServer(http.Dir(".")))
+	fs := http.FileServer(http.Dir("."))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			buildProject(nil)
+		}
+		fs.ServeHTTP(w, r)
+	})
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("\nWelcome to the Golf Toolkit!\ntype help for more info\n")
