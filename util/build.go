@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os/exec"
 	"strings"
@@ -22,7 +23,10 @@ func buildProject(args []string) error {
 		return err
 	}
 
-	// TODO: pack in the sprite sheet
+	// pack in the map file
+	mapFileName := strings.Split(confData.mapFile, ".")[0]
+	err = convertMap("assets/"+confData.mapFile, "assets/"+confData.spriteFile, mapFileName+".go")
+
 	// TODO: pack in the sprite flags file
 
 	return runBuild()
@@ -31,7 +35,7 @@ func buildProject(args []string) error {
 func runBuild() error {
 	err := exec.Command(appDir + "/build.sh").Run()
 	if err != nil {
-		return errors.New(err.Error() + " perhaps try running init again")
+		return fmt.Errorf("%s, there may be a problem with your go code or you may need to run/re-run init", err)
 	}
 
 	return nil

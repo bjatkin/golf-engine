@@ -40,18 +40,18 @@ func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SprOpts) {
 
 // Mget gets the tile at the x, y coordinate on the map
 func (e *Engine) Mget(x, y int) int {
-	i := x + y*128
-	shift := i % 8
-	i = ((i / 8) * 9) + shift
-	j := ((i / 8) * 9) + 8
+	dex := x + y*128
+	shift := dex % 8
+	i := ((dex / 8) * 9) + shift
+	j := ((dex / 8) * 9) + 8
 	return int(e.RAM[mapBase-j])<<(shift+1)&0b100000000 | int(e.RAM[mapBase-i])
 }
 
 // Mset sets the tile at the x, y coordinate on the map
 func (e *Engine) Mset(x, y, t int) {
-	i := x + y*128
-	shift := i % 8
-	i = ((i / 8) * 9) + shift
+	dex := x + y*128
+	shift := dex % 8
+	i := ((dex / 8) * 9) + shift
 	j := ((i / 8) * 9) + 8
 
 	e.RAM[mapBase-i] = byte(t)

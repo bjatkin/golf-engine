@@ -146,7 +146,7 @@ func writeMapData(low, high []byte, outputFile string) error {
 	conv := []byte{}
 	for i := 0; i < len(high); i++ {
 		if i%8 == 0 && i != 0 {
-			top := i + 1
+			top := i
 			mashedHigh, err := packHighBytes(high[top-8 : top])
 			if err != nil {
 				return err
