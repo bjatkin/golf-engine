@@ -47,15 +47,17 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 * Sound? (I still have 20k memory for this)
 * Make BiBi Duck Game to demo the engine
   * BiBi Duck is a platformer that plays like a mario game. run around, collect fethers and find all the eggs
-  * Make sure to features the Go Gopher to demo a diologue like system
+  * Make sure to feature the Go Gopher to demo a diologue like system
+  * Collect eggs to get powerups
+    * Jump
+    * Hover
+    * Double Jump (use wings?)
+    * Peck (pick up bugs? to feed to mr frog?)
+    * Quack (wake up go gopher? or someone else?)
+  * 8x8 baby ducks will follow you when you get an egge
+  * Use powerups to progress and find new eggs.
+  * When you've found all the eggs and power-ups find MaMa duck with all her bibi's
+  * Collect fethers as a bonus for extra challenge
+  * Or maybe feathers should be health?
+  * Frog Obstical, You need to feed him in order to get him to move
 * Add interpreted scripting language to make it more aproacable and to prevent golang from being an install requirement
-
-### To Consider
----
-* should the map size be configurable?
-  * the top 2 bytes could be used to configure the width and height (1-256)
-  * 128x128 might be a bit too narrow for some games
-  * 256x64 might be a bit too short for others
-  * additionally that would give more flexibility memorywise since you can load the map into the sprites
-  * however it could add a lot of unwanted complexity
-  * how woud this be implemented?
