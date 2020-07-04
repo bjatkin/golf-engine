@@ -17,7 +17,7 @@ func buildProject(args []string) error {
 
 	// pack in the sprite sheet
 	spriteFileName := strings.Split(confData.spriteFile, ".")[0]
-	err = convertSpriteSheet(confData.spriteFile, spriteFileName+".go")
+	err = convertSpriteSheet("assets/"+confData.spriteFile, spriteFileName+".go")
 	if err != nil {
 		return err
 	}

@@ -55,12 +55,17 @@ func initProject(args []string) error {
 		return err
 	}
 
-	err = addFile("spritesheet.png", spritesheetTemplate, false)
+	err = createNewDir("assets")
 	if err != nil {
 		return err
 	}
 
-	err = addFile("map.png", mapTemplate, false)
+	err = addFile("assets/spritesheet.png", spritesheetTemplate, false)
+	if err != nil {
+		return err
+	}
+
+	err = addFile("assets/map.png", mapTemplate, false)
 	if err != nil {
 		return err
 	}
@@ -70,18 +75,23 @@ func initProject(args []string) error {
 		return err
 	}
 
+	err = createNewDir("web")
+	if err != nil {
+		return err
+	}
+
 	indexTemplate = []byte(strings.Replace(string(indexTemplate), "main.wasm", args[0]+".wasm", -1))
-	err = addFile("index.html", indexTemplate, false)
+	err = addFile("web/index.html", indexTemplate, false)
 	if err != nil {
 		return err
 	}
 
-	err = addFile("draw.js", drawTemplate, false)
+	err = addFile("web/draw.js", drawTemplate, false)
 	if err != nil {
 		return err
 	}
 
-	err = addFile("wasm_exec.js", wasm, true)
+	err = addFile("web/wasm_exec.js", wasm, true)
 	if err != nil {
 		return err
 	}
@@ -147,4 +157,13 @@ func getWASMjs() ([]byte, error) {
 	}
 
 	return ioutil.ReadFile(dir)
+}
+
+func createNewDir(dir string) error {
+	if _, err := os.Stat(dir); err == nil {
+		return nil
+	} else if !os.IsNotExist(err) {
+		return err
+	}
+	return os.MkdirAll(dir, 0777)
 }

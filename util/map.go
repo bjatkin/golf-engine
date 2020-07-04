@@ -3,13 +3,98 @@ package main
 import (
 	"errors"
 	"fmt"
+	"image/png"
 	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 )
 
-func convertMap(inputFile, spriteFile, outputFile string) error {
-	return errors.New("This function is not implemented yet")
+func convertMap(mapFile, spriteFile, outputFile string) error {
+	sprites, err := os.Open(spriteFile)
+	if err != nil {
+		return err
+	}
+
+	sprimg, err := png.Decode(sprites)
+	if err != nil {
+		return err
+	}
+
+	spriteKey := make(map[[128]byte]int)
+	spriteIndex := 0
+	minX := sprimg.Bounds().Min.X
+	maxX := sprimg.Bounds().Max.X
+	minY := sprimg.Bounds().Min.Y
+	maxY := sprimg.Bounds().Max.Y
+	for cy := minY; cy < maxY; cy += 8 {
+		for cx := minX; cx < maxX; cx += 8 {
+			key := [128]byte{}
+			i := 0
+			for x := 0; x < 8; x++ {
+				for y := 0; y < 8; y++ {
+					r, g, b, _ := sprimg.At(cx+x, cy+y).RGBA()
+					pxl := nearistPixel(int(r)/256, int(g)/256, int(b)/256)
+					key[i] = byte(pxl.pal)
+					i++
+					key[i] = byte(pxl.col)
+					i++
+				}
+			}
+			spriteKey[key] = spriteIndex
+			spriteIndex++
+		}
+	}
+
+	mapdata, err := os.Open(mapFile)
+	if err != nil {
+		return err
+	}
+
+	mpimg, err := png.Decode(mapdata)
+	if err != nil {
+		return err
+	}
+
+	tiles := []int{}
+
+	minX = mpimg.Bounds().Min.X
+	maxX = mpimg.Bounds().Max.X
+	minY = mpimg.Bounds().Min.Y
+	maxY = mpimg.Bounds().Max.Y
+	for cy := minY; cy < maxY; cy += 8 {
+		for cx := minX; cx < maxX; cx += 8 {
+			key := [128]byte{}
+			i := 0
+			for x := 0; x < 8; x++ {
+				for y := 0; y < 8; y++ {
+					r, g, b, _ := mpimg.At(cx+x, cy+y).RGBA()
+					pxl := nearistPixel(int(r)/256, int(g)/256, int(b)/256)
+					key[i] = byte(pxl.pal)
+					i++
+					key[i] = byte(pxl.col)
+					i++
+				}
+			}
+			tiles = append(tiles, spriteKey[key])
+		}
+	}
+
+	low := []byte{}
+	high := []byte{}
+	for _, tile := range tiles {
+		h := byte(0)
+		if tile > 511 {
+			return fmt.Errorf("tile with value %d found tile indexes above 512 are not supported in the map", tile)
+		}
+		if tile > 255 {
+			h = 1
+		}
+		low = append(low, byte(tile))
+		high = append(high, h)
+	}
+
+	return writeMapData(low, high, outputFile)
 }
 
 func convertCSVMap(inputFile, outputFile string) error {
@@ -49,6 +134,9 @@ func convertCSVMap(inputFile, outputFile string) error {
 			}
 			low = append(low, byte(id))
 			high = append(high, h)
+			// if id != 0 {
+			// fmt.Printf("low %d high %d\n", byte(id), h)
+			// }
 		}
 	}
 	return writeMapData(low, high, outputFile)
@@ -57,7 +145,7 @@ func convertCSVMap(inputFile, outputFile string) error {
 func writeMapData(low, high []byte, outputFile string) error {
 	conv := []byte{}
 	for i := 0; i < len(high); i++ {
-		if (i+1)%8 == 0 {
+		if i%8 == 0 && i != 0 {
 			top := i + 1
 			mashedHigh, err := packHighBytes(high[top-8 : top])
 			if err != nil {
@@ -68,7 +156,7 @@ func writeMapData(low, high []byte, outputFile string) error {
 		conv = append(conv, low[i])
 	}
 
-	content := "package main\n\nvar map = [0x4800]byte{\n"
+	content := "package main\n\nvar mapData = [0x4800]byte{\n"
 	for _, b := range conv {
 		content += printByte(b) + ","
 	}
@@ -82,7 +170,7 @@ func packHighBytes(bytes []byte) (byte, error) {
 	}
 	ret := byte(0)
 	for i := 0; i < 8; i++ {
-		ret |= bytes[i] << i
+		ret |= bytes[7-i] << i
 	}
 	return ret, nil
 }

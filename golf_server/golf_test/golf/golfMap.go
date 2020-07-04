@@ -1,5 +1,12 @@
 package golf
 
+// LoadMap loads the sprite sheet into memory
+func (e *Engine) LoadMap(mapData [0x4800]byte) {
+	for i, b := range mapData {
+		e.RAM[mapBase-i] = b
+	}
+}
+
 // Map draws the map on the screen starting from tile
 // mx, my with a size of mw and mh. The map is draw
 // at screen coordinate dx, dy
@@ -36,8 +43,7 @@ func (e *Engine) Mget(x, y int) int {
 	i := x + y*128
 	shift := i % 8
 	i = ((i / 8) * 9) + shift
-	j := ((i / 8) * 9) + 9
-
+	j := ((i / 8) * 9) + 8
 	return int(e.RAM[mapBase-j])<<(shift+1)&0b100000000 | int(e.RAM[mapBase-i])
 }
 
@@ -46,7 +52,7 @@ func (e *Engine) Mset(x, y, t int) {
 	i := x + y*128
 	shift := i % 8
 	i = ((i / 8) * 9) + shift
-	j := ((i / 8) * 9) + 9
+	j := ((i / 8) * 9) + 8
 
 	e.RAM[mapBase-i] = byte(t)
 	e.RAM[mapBase-j] &= (0b00000001 << (7 - shift)) ^ 0b11111111

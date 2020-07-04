@@ -54,11 +54,11 @@ const internalSpriteBase = 0x3647
 // SpriteSheet: 0x3F48-0x6F48 [0x3000]
 const spriteBase = 0x3F48
 
-// ActiveSpriteBuff: 0x6F49-0x6F4B
+// ActiveSpriteBuff: 0x6F49-0x6F4A
 const activeSpriteBuff = 0x6F49
 
 // MapData (128x128 / 512 8x8): 0x6F4B - 0xB74B [0x4800]
-const mapBase = 0xB74D //Start from the high memory so the map grows down
+const mapBase = 0xB74B //Start from the high memory so the map grows down
 
 // SpriteFlags (512 8x8): 0xB74C - B94C
 const spriteFlags = 0xB74E

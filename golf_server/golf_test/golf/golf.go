@@ -144,12 +144,6 @@ func (e *Engine) Cls() {
 			e.RAM[i] = palBG
 		}
 	}
-	// for i := 0; i < 0x2400; i++ {
-	// 	e.RAM[i] = colBG
-	// }
-	// for i := screenPalBuffBase; i < screenPalSet; i++ {
-	// 	e.RAM[i] = palBG
-	// }
 }
 
 // Camera moves the camera which modifies all draw functions
@@ -373,7 +367,7 @@ func (e *Engine) TextR(text string, opts ...TextOpts) {
 // the Text font reference
 const textRef = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+={}[]\\:;\"<>,./?|"
 const btnRef = "(<)(>)(^)(v)(x)(o)(l)(r)(+)(-)"
-const specialRef = ":):(x(:|=[|^|v<-->$$oo<|<3<4+1-1pi()[]:;**"
+const specialRef = ":):(x(:|=[|^|v<-->$$@@<|<3<4+1-1~~()[]:;**"
 
 // Text prints text at the x, y coords on the screen
 func (e *Engine) Text(x, y int, text string, opts ...TextOpts) {

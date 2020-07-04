@@ -29,7 +29,7 @@ func main() {
 	commands = append(commands, bangbangCommand)
 
 	// Make the server serve the file server
-	fs := http.FileServer(http.Dir("."))
+	fs := http.FileServer(http.Dir("./web"))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
 			buildProject(nil)
