@@ -9,14 +9,18 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 * Make the map tool respect SprOpts, or make a separete MapOpts for pallet swaping
 * Add function to load sprite flag data
 * Startup Animation?
-* Use ECS for blood (actors system, ui system, dialouge system etc.)
 * Make Blood The Game to demo the engine
-  * Black and white 1 bit diablo like game
+  * Add well and aditional tree to the sprite sheet
+  * Add demon enemy final boss
   * Use pallet swaps to go from day to night
   * Creppy story told though small conversations with the old man at the church
-  * Fight demony thingies
   * Maybe do celest hair on the character (should be bold red color)
   * Make red blood that you collect as enemies die
+  * Use ECS (actors system, ui system, dialouge system etc.)
+* Add function to save over the map file, sprite file or sprite flag file
+  * Make this fault tolerant so if these functions arent implemented on the server stuff dosent blow up
+* Add function to save and load cookies to the browser. Limit the number of 'bytes' that can be saved
+* Create and example golang server for using this framework for playing games online
 
 ### DONE
 ---
