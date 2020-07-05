@@ -3,10 +3,12 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
+* Check out Faith and Faith 2 itch.io
+* Add in command to modify the config file
+* Fix the gaps that start to form in the map file as you scale up (only a problem with scale w/h)
+
 * Better error message when building fails in the golf_toolkit
-* restructure code. Delete bad old code. Make the repo nice and clean
 * Create github for golfExamples games
-* Make the map tool respect SprOpts, or make a separete MapOpts for pallet swaping
 * Add function to load sprite flag data
 * Startup Animation?
 * Make Blood The Game to demo the engine
@@ -24,6 +26,11 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### DONE
 ---
+* Make the map tool respect SprOpts, or make a separete MapOpts for pallet swaping [x]
+* Make the build tool work with csv map files [x]
+* Make golf_config not a hidden file [x]
+* Use \n chars to seperate golf config files rather than commas. this will make it easier to read and use [x]
+* restructure code. Delete bad old code. Make the repo nice and clean [x]
 * Add function to load map data (reverse order) [x]
 * Make tools for importings maps. [x]
   * Import CSV as map [x]

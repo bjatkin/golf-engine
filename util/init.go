@@ -9,21 +9,32 @@ import (
 )
 
 type golfConfig struct {
-	name       string
-	spriteFile string
-	mapFile    string
-	flagFile   string
+	name             string
+	spriteFile       string
+	mapFile          string
+	flagFile         string
+	outputSpriteFile string
+	outputMapFile    string
+	outputFlagFile   string
 }
 
 func (g golfConfig) String() string {
-	return fmt.Sprintf("name=%s,spriteFile=%s,mapFile=%s,flagFile=%s",
-		g.name, g.spriteFile, g.mapFile, g.flagFile)
+	return "name=" + g.name + "\n" +
+		"spriteFile=" + g.spriteFile + "\n" +
+		"mapFile=" + g.mapFile + "\n" +
+		"flagFile=" + g.flagFile + "\n" +
+		"outputSpriteFile=" + g.outputSpriteFile + "\n" +
+		"outputMapFile=" + g.outputMapFile + "\n" +
+		"outputFlagFile=" + g.outputFlagFile
 }
 
 func toGolfConfig(data string) golfConfig {
-	pairs := strings.Split(data, ",")
+	pairs := strings.Split(data, "\n")
 	ret := golfConfig{}
 	for _, pair := range pairs {
+		if pair == "" {
+			continue
+		}
 		kv := strings.Split(pair, "=")
 		k, v := kv[0], kv[1]
 
@@ -36,6 +47,12 @@ func toGolfConfig(data string) golfConfig {
 			ret.mapFile = v
 		case "flagFile":
 			ret.flagFile = v
+		case "outputSpriteFile":
+			ret.outputSpriteFile = v
+		case "outputMapFile":
+			ret.outputMapFile = v
+		case "outputFlagFile":
+			ret.outputFlagFile = v
 		}
 	}
 	return ret
@@ -97,17 +114,16 @@ func initProject(args []string) error {
 	}
 
 	config := golfConfig{
-		name:       args[0],
-		spriteFile: "spritesheet.png",
-		mapFile:    "map.png",
-		flagFile:   "flag.csv",
-	}
-	err = addFile(".golf_config", []byte(config.String()), true)
-	if err != nil {
-		return err
+		name:             args[0],
+		spriteFile:       "assets/spritesheet.png",
+		mapFile:          "assets/map.png",
+		flagFile:         "assets/flag.csv",
+		outputSpriteFile: "spritesheet.go",
+		outputMapFile:    "map.go",
+		outputFlagFile:   "flag.go",
 	}
 
-	err = runBuild()
+	err = addFile("golf_config", []byte(config.String()), true)
 	if err != nil {
 		return err
 	}

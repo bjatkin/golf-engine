@@ -14,19 +14,28 @@ func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SprOpts) {
 	opt := SprOpts{}
 	if len(opts) > 0 {
 		opt = opts[0]
+		if opt.Width == 0 {
+			opt.Width = 1
+		}
+		if opt.Height == 0 {
+			opt.Height = 1
+		}
+		if opt.ScaleH == 0 {
+			opt.ScaleH = 1
+		}
+		if opt.ScaleW == 0 {
+			opt.ScaleW = 1
+		}
 	}
-	opt.Fixed = false //Fixed positions don't work with the map
 
 	for x := 0; x < mw; x++ {
-		sprX := (x + dx) * 8
-		checkX := sprX - toInt(e.RAM[cameraX:cameraX+2], true)
-		if checkX < -8 || checkX > 200 {
+		sprX := int(float64((x+dx)*8*opt.Width) * opt.ScaleW)
+		if !tileInboundsX(sprX, opt) {
 			continue
 		}
 		for y := 0; y < mh; y++ {
-			sprY := (y + dy) * 8
-			checkY := sprY - toInt(e.RAM[cameraY:cameraY+2], true)
-			if checkY < -8 || checkY > 200 {
+			sprY := int(float64((y+dy)*8*opt.Height) * opt.ScaleW)
+			if !tileInboundsY(sprY, opt) {
 				continue
 			}
 			s := e.Mget(x+mx, y+my)
@@ -36,6 +45,26 @@ func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SprOpts) {
 			e.Spr(s, sprX, sprY, opt)
 		}
 	}
+}
+
+func tileInboundsX(x int, opt SprOpts) bool {
+	w := int(float64(8*opt.Width) * opt.ScaleW)
+	return tileInbounds(x, 96, w, 0)
+}
+
+func tileInboundsY(y int, opt SprOpts) bool {
+	h := int(float64(8*opt.Height) * opt.ScaleH)
+	return tileInbounds(96, y, 0, h)
+}
+
+func tileInbounds(x, y, w, h int) bool {
+	if x < -w || x > 192+w {
+		return false
+	}
+	if x < -h || y > 192+h {
+		return false
+	}
+	return true
 }
 
 // Mget gets the tile at the x, y coordinate on the map
