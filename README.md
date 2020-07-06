@@ -3,14 +3,6 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
-* Check out Faith and Faith 2 itch.io
-* Add in command to modify the config file
-* Fix the gaps that start to form in the map file as you scale up (only a problem with scale w/h)
-
-* Better error message when building fails in the golf_toolkit
-* Create github for golfExamples games
-* Add function to load sprite flag data
-* Startup Animation?
 * Make Blood The Game to demo the engine
   * Add well and aditional tree to the sprite sheet
   * Add demon enemy final boss
@@ -19,6 +11,12 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
   * Maybe do celest hair on the character (should be bold red color)
   * Make red blood that you collect as enemies die
   * Use ECS (actors system, ui system, dialouge system etc.)
+* Better error message when building fails in the golf_toolkit
+* Add custom function for printing output in the golf_toolkit so that the server can output data
+* Check out Faith and Faith 2 itch.io
+* Create github for golfExamples games
+* Add function to load sprite flag data
+* Startup Animation?
 * Add function to save over the map file, sprite file or sprite flag file
   * Make this fault tolerant so if these functions arent implemented on the server stuff dosent blow up
 * Add function to save and load cookies to the browser. Limit the number of 'bytes' that can be saved
@@ -26,6 +24,8 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### DONE
 ---
+* Add in command to modify the config file [x]
+* Fix the gaps that start to form in the map file as you scale up (only a problem with scale w/h) [x]
 * Make the map tool respect SprOpts, or make a separete MapOpts for pallet swaping [x]
 * Make the build tool work with csv map files [x]
 * Make golf_config not a hidden file [x]

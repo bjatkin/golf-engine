@@ -8,56 +8,6 @@ import (
 	"strings"
 )
 
-type golfConfig struct {
-	name             string
-	spriteFile       string
-	mapFile          string
-	flagFile         string
-	outputSpriteFile string
-	outputMapFile    string
-	outputFlagFile   string
-}
-
-func (g golfConfig) String() string {
-	return "name=" + g.name + "\n" +
-		"spriteFile=" + g.spriteFile + "\n" +
-		"mapFile=" + g.mapFile + "\n" +
-		"flagFile=" + g.flagFile + "\n" +
-		"outputSpriteFile=" + g.outputSpriteFile + "\n" +
-		"outputMapFile=" + g.outputMapFile + "\n" +
-		"outputFlagFile=" + g.outputFlagFile
-}
-
-func toGolfConfig(data string) golfConfig {
-	pairs := strings.Split(data, "\n")
-	ret := golfConfig{}
-	for _, pair := range pairs {
-		if pair == "" {
-			continue
-		}
-		kv := strings.Split(pair, "=")
-		k, v := kv[0], kv[1]
-
-		switch k {
-		case "name":
-			ret.name = v
-		case "spriteFile":
-			ret.spriteFile = v
-		case "mapFile":
-			ret.mapFile = v
-		case "flagFile":
-			ret.flagFile = v
-		case "outputSpriteFile":
-			ret.outputSpriteFile = v
-		case "outputMapFile":
-			ret.outputMapFile = v
-		case "outputFlagFile":
-			ret.outputFlagFile = v
-		}
-	}
-	return ret
-}
-
 func initProject(args []string) error {
 	// do this first to make sure we can get the wasmjs file
 	// before we start adding other files

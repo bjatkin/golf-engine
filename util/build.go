@@ -21,7 +21,6 @@ func buildProject(args []string) error {
 	if err != nil {
 		return err
 	}
-	// fmt.Printf("   Converting " + confData.spriteFile + " \n")
 
 	// pack in the map file
 	mapFileType := strings.Split(confData.mapFile, ".")[1]
@@ -30,7 +29,6 @@ func buildProject(args []string) error {
 	} else {
 		err = convertCSVMap(confData.mapFile, confData.outputMapFile)
 	}
-	// fmt.Printf("   Converting " + confData.mapFile + " \n")
 
 	// TODO: pack in the sprite flags file
 

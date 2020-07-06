@@ -170,6 +170,22 @@ var commands = []command{
 	},
 
 	command{
+		"config",
+		"config <property>",
+		"<property> prints the current golf config property",
+		1,
+		getGolfProp,
+	},
+
+	command{
+		"setconfig",
+		"setconfig <property> <new value>",
+		"<property> <new value> sets the golf config property",
+		2,
+		setGolfProp,
+	},
+
+	command{
 		"clear",
 		"clear",
 		"clears the screen",

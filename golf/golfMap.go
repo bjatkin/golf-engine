@@ -14,27 +14,27 @@ func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SprOpts) {
 	opt := SprOpts{}
 	if len(opts) > 0 {
 		opt = opts[0]
-		if opt.Width == 0 {
-			opt.Width = 1
-		}
-		if opt.Height == 0 {
-			opt.Height = 1
-		}
-		if opt.ScaleH == 0 {
-			opt.ScaleH = 1
-		}
-		if opt.ScaleW == 0 {
-			opt.ScaleW = 1
-		}
+	}
+	if opt.Width == 0 {
+		opt.Width = 1
+	}
+	if opt.Height == 0 {
+		opt.Height = 1
+	}
+	if opt.ScaleH == 0 {
+		opt.ScaleH = 1
+	}
+	if opt.ScaleW == 0 {
+		opt.ScaleW = 1
 	}
 
 	for x := 0; x < mw; x++ {
-		sprX := int(float64((x+dx)*8*opt.Width) * opt.ScaleW)
+		sprX := int(float64((x+dx)*8*opt.Width) * roundPxl(opt.ScaleW, float64(8*opt.Width)))
 		if !tileInboundsX(sprX, opt) {
 			continue
 		}
 		for y := 0; y < mh; y++ {
-			sprY := int(float64((y+dy)*8*opt.Height) * opt.ScaleW)
+			sprY := int(float64((y+dy)*8*opt.Height) * roundPxl(opt.ScaleH, float64(8*opt.Height)))
 			if !tileInboundsY(sprY, opt) {
 				continue
 			}
@@ -47,16 +47,36 @@ func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SprOpts) {
 	}
 }
 
+// roundPxl rounds to the nearist pixel rather than the nearist number
+// number is the number to be rounded, size is the number of pixels
+func roundPxl(number, size float64) float64 {
+	inc := 1.0 / size
+	num := int(number)
+	frac := number - float64(num)
+	for i := 0.0; i < 8.0; i += inc {
+		if i > frac {
+			return float64(num) + (i - inc)
+		}
+	}
+	return float64(num)
+}
+
+// tileInboundsX checks if the x coordiante is in screen bounds
+// sprite opts are taken into consideration
 func tileInboundsX(x int, opt SprOpts) bool {
 	w := int(float64(8*opt.Width) * opt.ScaleW)
 	return tileInbounds(x, 96, w, 0)
 }
 
+// tileInboundsX checks if the y coordiante is in screen bounds
+// sprite opts are taken into consideration
 func tileInboundsY(y int, opt SprOpts) bool {
 	h := int(float64(8*opt.Height) * opt.ScaleH)
 	return tileInbounds(96, y, 0, h)
 }
 
+// tileInbounds checks if the x and y coordinates are in screen bounds
+// w and h ensure the tiles that are partially off screen are still drawn
 func tileInbounds(x, y, w, h int) bool {
 	if x < -w || x > 192+w {
 		return false
