@@ -27,15 +27,20 @@ func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SprOpts) {
 	if opt.ScaleW == 0 {
 		opt.ScaleW = 1
 	}
+	cx := toInt(e.RAM[cameraX:cameraX+2], true)
+	cy := toInt(e.RAM[cameraY:cameraY+2], true)
+	if opt.Fixed {
+		cx, cy = 0, 0
+	}
 
 	for x := 0; x < mw; x++ {
 		sprX := int(float64((x+dx)*8*opt.Width) * roundPxl(opt.ScaleW, float64(8*opt.Width)))
-		if !tileInboundsX(sprX, opt) {
+		if !tileInboundsX(sprX-cx, opt) {
 			continue
 		}
 		for y := 0; y < mh; y++ {
 			sprY := int(float64((y+dy)*8*opt.Height) * roundPxl(opt.ScaleH, float64(8*opt.Height)))
-			if !tileInboundsY(sprY, opt) {
+			if !tileInboundsY(sprY-cy, opt) {
 				continue
 			}
 			s := e.Mget(x+mx, y+my)
@@ -81,7 +86,7 @@ func tileInbounds(x, y, w, h int) bool {
 	if x < -w || x > 192+w {
 		return false
 	}
-	if x < -h || y > 192+h {
+	if y < -h || y > 192+h {
 		return false
 	}
 	return true

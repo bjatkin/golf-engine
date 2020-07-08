@@ -3,6 +3,7 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
+* Trow a waning when rebuilding on refresh fails
 * Make Blood The Game to demo the engine
   * Add well and aditional tree to the sprite sheet
   * Add demon enemy final boss

@@ -19,7 +19,7 @@ func buildProject(args []string) error {
 	// pack in the sprite sheet
 	err = convertSpriteSheet(confData.spriteFile, confData.outputSpriteFile)
 	if err != nil {
-		return err
+		return fmt.Errorf("spritesheet err %s", err.Error())
 	}
 
 	// pack in the map file
@@ -28,6 +28,9 @@ func buildProject(args []string) error {
 		err = convertMap(confData.mapFile, confData.spriteFile, confData.outputMapFile)
 	} else {
 		err = convertCSVMap(confData.mapFile, confData.outputMapFile)
+	}
+	if err != nil {
+		return fmt.Errorf("mapfile err %s", err.Error())
 	}
 
 	// TODO: pack in the sprite flags file
