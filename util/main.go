@@ -32,7 +32,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./web"))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
+			fmt.Println("build")
 			buildProject(nil)
+			printCommandLine()
 		}
 		fs.ServeHTTP(w, r)
 	})
