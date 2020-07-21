@@ -101,7 +101,7 @@ func (e *Engine) drawMouse() {
 	e.setActiveSpriteBuff(internalSpriteBase)
 
 	cursor := e.RAM[mouseBase] >> 6
-	opt := SprOpts{Fixed: true, Transparent: Col7}
+	opt := SOp{Fixed: true, TCol: Col7}
 
 	if cursor == 1 {
 		e.Spr(18, int(e.RAM[mouseX]), int(e.RAM[mouseY]), opt)
@@ -325,8 +325,8 @@ func (e *Engine) Pget(x, y int) Col {
 	return e.pget(x, y, 0, 192)
 }
 
-// TextOpts additional options for drawing text
-type TextOpts struct {
+// TOp additional options for drawing text
+type TOp struct {
 	Col   Col
 	Solid bool
 	Fixed bool
@@ -337,7 +337,7 @@ var textLline, textRline = 0, 0
 
 // TextL prints text at the top left of the screen
 // the cursor moves to a new line each time TextL is called
-func (e *Engine) TextL(text string, opts ...TextOpts) {
+func (e *Engine) TextL(text string, opts ...TOp) {
 	splitText := strings.Split(text, "\n")
 	for _, line := range splitText {
 		if len(opts) > 0 {
@@ -351,7 +351,7 @@ func (e *Engine) TextL(text string, opts ...TextOpts) {
 
 // TextR prints text at the top right of the screen
 // the cursor moves to a new line each time TextR is called
-func (e *Engine) TextR(text string, opts ...TextOpts) {
+func (e *Engine) TextR(text string, opts ...TOp) {
 	splitText := strings.Split(text, "\n")
 	for _, line := range splitText {
 		x := ScreenWidth - 1 - len(line)*6
@@ -370,20 +370,20 @@ const btnRef = "(<)(>)(^)(v)(x)(o)(l)(r)(+)(-)"
 const specialRef = ":):(x(:|=[|^|v<-->$$@@<|<3<4+1-1~~()[]:;**"
 
 // Text prints text at the x, y coords on the screen
-func (e *Engine) Text(x, y int, text string, opts ...TextOpts) {
+func (e *Engine) Text(x, y int, text string, opts ...TOp) {
 	text = strings.ToLower(text)
 	px, py := x, y
-	opt := TextOpts{}
-	sopt := SprOpts{Transparent: Col3}
+	opt := TOp{}
+	sopt := SOp{TCol: Col3}
 	if len(opts) > 0 {
 		opt = opts[0]
 	}
 	if opt.Solid {
-		sopt.Transparent = 0
+		sopt.TCol = 0
 	}
 	if opt.Col != 0 {
-		sopt.PalFrom = []Col{Col0}
-		sopt.PalTo = []Col{opt.Col}
+		sopt.PFrom = []Col{Col0}
+		sopt.PTo = []Col{opt.Col}
 	}
 	sopt.Fixed = opt.Fixed
 
@@ -439,7 +439,7 @@ func (e *Engine) Text(x, y int, text string, opts ...TextOpts) {
 	e.setActiveSpriteBuff(spriteBase)
 }
 
-func (e *Engine) drawChar(x, y, i int, opt SprOpts) {
+func (e *Engine) drawChar(x, y, i int, opt SOp) {
 	if i < 0 {
 		return
 	}

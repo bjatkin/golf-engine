@@ -18,33 +18,33 @@ func (e *Engine) setActiveSpriteBuff(colAddr int) {
 	e.RAM[activeSpriteBuff+1] = c[1]
 }
 
-// SprOpts additional options for drawing sprites
-type SprOpts struct {
-	FlipH, FlipV   bool
-	Transparent    Col
-	PalFrom        []Col
-	PalTo          []Col
-	Width, Height  int
-	ScaleW, ScaleH float64
-	Fixed          bool
+// SOp additional options for drawing sprites
+type SOp struct {
+	FH, FV bool
+	TCol   Col
+	PFrom  []Col
+	PTo    []Col
+	W, H   int
+	SW, SH float64
+	Fixed  bool
 }
 
 // Spr draws 8x8 sprite n from the sprite sheet to the
 // screen at x, y.
-func (e *Engine) Spr(n, x, y int, opts ...SprOpts) {
+func (e *Engine) Spr(n, x, y int, opts ...SOp) {
 	sx := n % 32
 	sy := n / 32
-	opt := SprOpts{}
+	opt := SOp{}
 	if len(opts) > 0 {
 		opt = opts[0]
 	}
 	w := 1
 	h := 1
-	if opt.Height > 1 {
-		h = opt.Height
+	if opt.H > 1 {
+		h = opt.H
 	}
-	if opt.Width > 1 {
-		w = opt.Width
+	if opt.W > 1 {
+		w = opt.W
 	}
 	e.SSpr(sx*8, sy*8, w*8, h*8, x, y, opt)
 }
@@ -52,8 +52,8 @@ func (e *Engine) Spr(n, x, y int, opts ...SprOpts) {
 // SSpr draw a rect from the sprite sheet to the screen
 // sx, sy, sw, and sh define the rect on the sprite sheet
 // dx, dy is the location to draw on the screen
-func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SprOpts) {
-	opt := SprOpts{}
+func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SOp) {
+	opt := SOp{}
 	if len(opts) > 0 {
 		opt = opts[0]
 	}
@@ -61,11 +61,11 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SprOpts) {
 		dx -= toInt(e.RAM[cameraX:cameraX+2], true)
 		dy -= toInt(e.RAM[cameraY:cameraY+2], true)
 	}
-	if opt.ScaleH == 0 {
-		opt.ScaleH = 1
+	if opt.SH == 0 {
+		opt.SH = 1
 	}
-	if opt.ScaleW == 0 {
-		opt.ScaleW = 1
+	if opt.SW == 0 {
+		opt.SW = 1
 	}
 
 	buffBase := toInt(e.RAM[activeSpriteBuff:activeSpriteBuff+2], false)
@@ -73,18 +73,18 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SprOpts) {
 	for x := 0; x < sw; x++ {
 		for y := 0; y < sh; y++ {
 			pxl := e.pget(sx+x, sy+y, buffBase, 256)
-			if pxl != opt.Transparent {
-				pxl = subPixels(opt.PalFrom, opt.PalTo, pxl)
+			if pxl != opt.TCol {
+				pxl = subPixels(opt.PFrom, opt.PTo, pxl)
 				fx := 0
-				if opt.FlipH {
-					fx = int(float64(sw) * opt.ScaleW)
+				if opt.FH {
+					fx = int(float64(sw) * opt.SW)
 				}
 				fy := 0
-				if opt.FlipV {
-					fy = int(float64(sh) * opt.ScaleH)
+				if opt.FV {
+					fy = int(float64(sh) * opt.SH)
 				}
-				for scaleX := int(float64(x) * opt.ScaleW); scaleX < int(float64(x+1)*opt.ScaleW); scaleX++ {
-					for scaleY := int(float64(y) * opt.ScaleH); scaleY < int(float64(y+1)*opt.ScaleH); scaleY++ {
+				for scaleX := int(float64(x) * opt.SW); scaleX < int(float64(x+1)*opt.SW); scaleX++ {
+					for scaleY := int(float64(y) * opt.SH); scaleY < int(float64(y+1)*opt.SH); scaleY++ {
 						e.Pset(dx+int(math.Abs(float64(fx-scaleX))), dy+int(math.Abs(float64(fy-scaleY))), pxl)
 					}
 				}

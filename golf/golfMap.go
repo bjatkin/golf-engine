@@ -10,22 +10,22 @@ func (e *Engine) LoadMap(mapData [0x4800]byte) {
 // Map draws the map on the screen starting from tile
 // mx, my with a size of mw and mh. The map is draw
 // at screen coordinate dx, dy
-func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SprOpts) {
-	opt := SprOpts{}
+func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SOp) {
+	opt := SOp{}
 	if len(opts) > 0 {
 		opt = opts[0]
 	}
-	if opt.Width == 0 {
-		opt.Width = 1
+	if opt.W == 0 {
+		opt.W = 1
 	}
-	if opt.Height == 0 {
-		opt.Height = 1
+	if opt.H == 0 {
+		opt.H = 1
 	}
-	if opt.ScaleH == 0 {
-		opt.ScaleH = 1
+	if opt.SH == 0 {
+		opt.SH = 1
 	}
-	if opt.ScaleW == 0 {
-		opt.ScaleW = 1
+	if opt.SW == 0 {
+		opt.SW = 1
 	}
 	cx := toInt(e.RAM[cameraX:cameraX+2], true)
 	cy := toInt(e.RAM[cameraY:cameraY+2], true)
@@ -34,12 +34,12 @@ func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SprOpts) {
 	}
 
 	for x := 0; x < mw; x++ {
-		sprX := int(float64((x+dx)*8*opt.Width) * roundPxl(opt.ScaleW, float64(8*opt.Width)))
+		sprX := int(float64((x+dx)*8*opt.W) * roundPxl(opt.SW, float64(8*opt.W)))
 		if !tileInboundsX(sprX-cx, opt) {
 			continue
 		}
 		for y := 0; y < mh; y++ {
-			sprY := int(float64((y+dy)*8*opt.Height) * roundPxl(opt.ScaleH, float64(8*opt.Height)))
+			sprY := int(float64((y+dy)*8*opt.H) * roundPxl(opt.SH, float64(8*opt.H)))
 			if !tileInboundsY(sprY-cy, opt) {
 				continue
 			}
@@ -68,15 +68,15 @@ func roundPxl(number, size float64) float64 {
 
 // tileInboundsX checks if the x coordiante is in screen bounds
 // sprite opts are taken into consideration
-func tileInboundsX(x int, opt SprOpts) bool {
-	w := int(float64(8*opt.Width) * opt.ScaleW)
+func tileInboundsX(x int, opt SOp) bool {
+	w := int(float64(8*opt.W) * opt.SW)
 	return tileInbounds(x, 96, w, 0)
 }
 
 // tileInboundsX checks if the y coordiante is in screen bounds
 // sprite opts are taken into consideration
-func tileInboundsY(y int, opt SprOpts) bool {
-	h := int(float64(8*opt.Height) * opt.ScaleH)
+func tileInboundsY(y int, opt SOp) bool {
+	h := int(float64(8*opt.H) * opt.SH)
 	return tileInbounds(96, y, 0, h)
 }
 

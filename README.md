@@ -3,23 +3,20 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
-* Make Blood The Game to demo the engine
-  * Add well and aditional tree to the sprite sheet
-  * Add demon enemy final boss
-  * Use pallet swaps to go from day to night
-  * Creppy story told though small conversations with the old man at the church
-  * Maybe do celest hair on the character (should be bold red color)
-  * Make red blood that you collect as enemies die
-  * Use ECS (actors system, ui system, dialouge system etc.)
+* Change the sprite functions from using ints to using floats
 * Add function to load sprite flag data
-* Startup Animation?
-* Add function to save over the map file, sprite file or sprite flag file
-  * Make this fault tolerant so if these functions arent implemented on the server stuff dosent blow up
-* Add function to save and load cookies to the browser. Limit the number of 'bytes' that can be saved
+* Add startup animation when you start the game
 * Create and example golang server for using this framework for playing games online
+* Build out the readme so there is good documentation for the API
+* Add instructions for installing and playing the golf examples
+* Test the golf toolkit on a windows machine
 
 ### DONE
 ---
+* Change the SprOpts and TextOpts to be Sop and Top to make the API more terse [x]
+* Add a save cart data function (save to a browser cookie) [x]
+* Read cart data function (read from the browsers cookies) [x]
+* Add readme to go examples [x]
 * Create github for golfExamples games [x]
 * Check out Faith and Faith 2 itch.io [x]
 * Better error message when building fails in the golf_toolkit [x]
@@ -56,19 +53,4 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
   * map editor and viewer
   * sprite flag editor 
 * Sound? (I still have 20k memory for this)
-* Make BiBi Duck Game to demo the engine
-  * BiBi Duck is a platformer that plays like a mario game. run around, collect fethers and find all the eggs
-  * Make sure to feature the Go Gopher to demo a diologue like system
-  * Collect eggs to get powerups
-    * Jump
-    * Hover
-    * Double Jump (use wings?)
-    * Peck (pick up bugs? to feed to mr frog?)
-    * Quack (wake up go gopher? or someone else?)
-  * 8x8 baby ducks will follow you when you get an egge
-  * Use powerups to progress and find new eggs.
-  * When you've found all the eggs and power-ups find MaMa duck with all her bibi's
-  * Collect fethers as a bonus for extra challenge
-  * Or maybe feathers should be health?
-  * Frog Obstical, You need to feed him in order to get him to move
 * Add interpreted scripting language to make it more aproacable and to prevent golang from being an install requirement
