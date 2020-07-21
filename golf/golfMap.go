@@ -10,7 +10,7 @@ func (e *Engine) LoadMap(mapData [0x4800]byte) {
 // Map draws the map on the screen starting from tile
 // mx, my with a size of mw and mh. The map is draw
 // at screen coordinate dx, dy
-func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SOp) {
+func (e *Engine) Map(mx, my, mw, mh int, dx, dy float64, opts ...SOp) {
 	opt := SOp{}
 	if len(opts) > 0 {
 		opt = opts[0]
@@ -34,12 +34,12 @@ func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SOp) {
 	}
 
 	for x := 0; x < mw; x++ {
-		sprX := int(float64((x+dx)*8*opt.W) * roundPxl(opt.SW, float64(8*opt.W)))
+		sprX := int(float64((x+int(dx))*8*opt.W) * roundPxl(opt.SW, float64(8*opt.W)))
 		if !tileInboundsX(sprX-cx, opt) {
 			continue
 		}
 		for y := 0; y < mh; y++ {
-			sprY := int(float64((y+dy)*8*opt.H) * roundPxl(opt.SH, float64(8*opt.H)))
+			sprY := int(float64((y+int(dy))*8*opt.H) * roundPxl(opt.SH, float64(8*opt.H)))
 			if !tileInboundsY(sprY-cy, opt) {
 				continue
 			}
@@ -47,7 +47,7 @@ func (e *Engine) Map(mx, my, mw, mh, dx, dy int, opts ...SOp) {
 			if s == 0 {
 				continue
 			}
-			e.Spr(s, sprX, sprY, opt)
+			e.Spr(s, float64(sprX), float64(sprY), opt)
 		}
 	}
 }

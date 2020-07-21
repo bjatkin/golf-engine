@@ -31,7 +31,7 @@ type SOp struct {
 
 // Spr draws 8x8 sprite n from the sprite sheet to the
 // screen at x, y.
-func (e *Engine) Spr(n, x, y int, opts ...SOp) {
+func (e *Engine) Spr(n int, x, y float64, opts ...SOp) {
 	sx := n % 32
 	sy := n / 32
 	opt := SOp{}
@@ -52,14 +52,14 @@ func (e *Engine) Spr(n, x, y int, opts ...SOp) {
 // SSpr draw a rect from the sprite sheet to the screen
 // sx, sy, sw, and sh define the rect on the sprite sheet
 // dx, dy is the location to draw on the screen
-func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SOp) {
+func (e *Engine) SSpr(sx, sy, sw, sh int, dx, dy float64, opts ...SOp) {
 	opt := SOp{}
 	if len(opts) > 0 {
 		opt = opts[0]
 	}
 	if !opt.Fixed {
-		dx -= toInt(e.RAM[cameraX:cameraX+2], true)
-		dy -= toInt(e.RAM[cameraY:cameraY+2], true)
+		dx -= toFloat(e.RAM[cameraX:cameraX+2], true)
+		dy -= toFloat(e.RAM[cameraY:cameraY+2], true)
 	}
 	if opt.SH == 0 {
 		opt.SH = 1
@@ -67,7 +67,6 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SOp) {
 	if opt.SW == 0 {
 		opt.SW = 1
 	}
-
 	buffBase := toInt(e.RAM[activeSpriteBuff:activeSpriteBuff+2], false)
 
 	for x := 0; x < sw; x++ {
@@ -85,7 +84,7 @@ func (e *Engine) SSpr(sx, sy, sw, sh, dx, dy int, opts ...SOp) {
 				}
 				for scaleX := int(float64(x) * opt.SW); scaleX < int(float64(x+1)*opt.SW); scaleX++ {
 					for scaleY := int(float64(y) * opt.SH); scaleY < int(float64(y+1)*opt.SH); scaleY++ {
-						e.Pset(dx+int(math.Abs(float64(fx-scaleX))), dy+int(math.Abs(float64(fy-scaleY))), pxl)
+						e.Pset(dx+math.Abs(float64(fx-scaleX)), dy+math.Abs(float64(fy-scaleY)), pxl)
 					}
 				}
 			}

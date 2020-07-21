@@ -3,7 +3,6 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
-* Change the sprite functions from using ints to using floats
 * Add function to load sprite flag data
 * Add startup animation when you start the game
 * Create and example golang server for using this framework for playing games online
@@ -13,6 +12,7 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### DONE
 ---
+* Change the sprite functions from using ints to using floats [x]
 * Change the SprOpts and TextOpts to be Sop and Top to make the API more terse [x]
 * Add a save cart data function (save to a browser cookie) [x]
 * Read cart data function (read from the browsers cookies) [x]

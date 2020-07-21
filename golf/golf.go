@@ -104,13 +104,13 @@ func (e *Engine) drawMouse() {
 	opt := SOp{Fixed: true, TCol: Col7}
 
 	if cursor == 1 {
-		e.Spr(18, int(e.RAM[mouseX]), int(e.RAM[mouseY]), opt)
+		e.Spr(18, float64(e.RAM[mouseX]), float64(e.RAM[mouseY]), opt)
 	}
 	if cursor == 2 {
-		e.Spr(50, int(e.RAM[mouseX]), int(e.RAM[mouseY]), opt)
+		e.Spr(50, float64(e.RAM[mouseX]), float64(e.RAM[mouseY]), opt)
 	}
 	if cursor == 3 {
-		e.Spr(82, int(e.RAM[mouseX]), int(e.RAM[mouseY]), opt)
+		e.Spr(82, float64(e.RAM[mouseX]), float64(e.RAM[mouseY]), opt)
 	}
 
 	e.setActiveSpriteBuff(spriteBase)
@@ -157,36 +157,36 @@ func (e *Engine) Camera(x, y int) {
 }
 
 // Rect draws a rectangle border on the screen
-func (e *Engine) Rect(x, y, w, h int, col Col) {
-	x -= toInt(e.RAM[cameraX:cameraX+2], true)
-	y -= toInt(e.RAM[cameraY:cameraY+2], true)
-	for r := 0; r < w; r++ {
+func (e *Engine) Rect(x, y, w, h float64, col Col) {
+	x -= toFloat(e.RAM[cameraX:cameraX+2], true)
+	y -= toFloat(e.RAM[cameraY:cameraY+2], true)
+	for r := 0.0; r < w; r++ {
 		e.Pset(x+r, y, col)
 		e.Pset(x+r, y+(h-1), col)
 	}
-	for c := 0; c < h; c++ {
+	for c := 0.0; c < h; c++ {
 		e.Pset(x, y+c, col)
-		e.Pset(x+(w-1), y+c, col)
+		e.Pset(x+(w-1), y+(c), col)
 	}
 }
 
 // RectFill draws a filled rectangle one the screen
-func (e *Engine) RectFill(x, y, w, h int, col Col) {
-	x -= toInt(e.RAM[cameraX:cameraX+2], true)
-	y -= toInt(e.RAM[cameraY:cameraY+2], true)
-	for r := 0; r < w; r++ {
-		for c := 0; c < h; c++ {
-			e.Pset(r+x, c+y, col)
+func (e *Engine) RectFill(x, y, w, h float64, col Col) {
+	x -= toFloat(e.RAM[cameraX:cameraX+2], true)
+	y -= toFloat(e.RAM[cameraY:cameraY+2], true)
+	for r := 0.0; r < w; r++ {
+		for c := 0.0; c < h; c++ {
+			e.Pset(x+r, y+c, col)
 		}
 	}
 }
 
 // Line draws a colored line
-func (e *Engine) Line(x1, y1, x2, y2 int, col Col) {
-	x1 -= toInt(e.RAM[cameraX:cameraX+2], true)
-	x2 -= toInt(e.RAM[cameraX:cameraX+2], true)
-	y1 -= toInt(e.RAM[cameraY:cameraY+2], true)
-	y2 -= toInt(e.RAM[cameraY:cameraY+2], true)
+func (e *Engine) Line(x1, y1, x2, y2 float64, col Col) {
+	x1 -= toFloat(e.RAM[cameraX:cameraX+2], true)
+	x2 -= toFloat(e.RAM[cameraX:cameraX+2], true)
+	y1 -= toFloat(e.RAM[cameraY:cameraY+2], true)
+	y2 -= toFloat(e.RAM[cameraY:cameraY+2], true)
 	if x2 < x1 {
 		x2, x1 = x1, x2
 	}
@@ -194,7 +194,7 @@ func (e *Engine) Line(x1, y1, x2, y2 int, col Col) {
 	dh := (float64(y2) - float64(y1)) / float64(w)
 	if w > 0 {
 		for x := x1; x < x2; x++ {
-			e.Pset(x, y1+int(dh*float64(x-x1)), col)
+			e.Pset(x, y1+dh*(x-x1), col)
 		}
 		return
 	}
@@ -205,13 +205,13 @@ func (e *Engine) Line(x1, y1, x2, y2 int, col Col) {
 	dw := (float64(x2) - float64(x1)) / float64(h)
 	if h > 0 {
 		for y := y1; y < y2; y++ {
-			e.Pset(x1+int(dw*float64(y-y1)), y, col)
+			e.Pset(x1+(dw*(y-y1)), y, col)
 		}
 	}
 }
 
 // drawCirc8 draws 8 points on a circle
-func (e *Engine) drawCirc8(xc, yc, x, y int, c Col, filled bool) {
+func (e *Engine) drawCirc8(xc, yc, x, y float64, c Col, filled bool) {
 	if filled {
 		e.Line(xc+x, yc+y, xc+x, yc-y, c)
 		e.Line(xc-x, yc+y, xc-x, yc-y, c)
@@ -230,21 +230,21 @@ func (e *Engine) drawCirc8(xc, yc, x, y int, c Col, filled bool) {
 }
 
 // Circ draws a circle using Bresenham's algorithm
-func (e *Engine) Circ(xc, yc, r int, c Col) {
+func (e *Engine) Circ(xc, yc, r float64, c Col) {
 	e.circ(xc, yc, r, c, false)
 }
 
 // CircFill draws a filled circle using Bresenham's algorithm
-func (e *Engine) CircFill(xc, yc, r int, c Col) {
+func (e *Engine) CircFill(xc, yc, r float64, c Col) {
 	e.circ(xc, yc, r, c, true)
 	e.circ(xc, yc, r, c, false)
 }
 
-func (e *Engine) circ(xc, yc, r int, c Col, filled bool) {
+func (e *Engine) circ(xc, yc, r float64, c Col, filled bool) {
 	if r == 0 {
 		return
 	}
-	x, y := 0, r
+	x, y := 0.0, r
 	d := 3 - 2*r
 	e.drawCirc8(xc, yc, x, y, c, filled)
 	for y >= x {
@@ -278,12 +278,13 @@ func (e *Engine) RClip() {
 // sets a pixel in abitrary memory
 // cBase is the start of the pallet memory buffer
 // pBase is the start of the color memory buffer
-func (e *Engine) pset(x, y int, col Col, buffBase, pxlWidth int) {
-	i := x + y*pxlWidth
+func (e *Engine) pset(x, y float64, col Col, buffBase, pxlWidth int) {
+	ix, iy := int(x), int(y)
+	i := ix + iy*pxlWidth
 	index := int(float64(i/4) / 2 * 3)
 	pIndex := index + (2 - index%3)
-	cshift := (x % 4) * 2
-	pshift := x % 8
+	cshift := (ix % 4) * 2
+	pshift := ix % 8
 	color := byte(col&0b00000011) << cshift
 	pallet := byte(col&0b00000100) >> 2 << pshift
 
@@ -294,9 +295,9 @@ func (e *Engine) pset(x, y int, col Col, buffBase, pxlWidth int) {
 }
 
 // Pset sets a pixel on the screen
-func (e *Engine) Pset(x, y int, col Col) {
-	if x < int(e.RAM[clipX]) || x >= int(e.RAM[clipX]+e.RAM[clipW]) ||
-		y < int(e.RAM[clipY]) || y >= int(e.RAM[clipY]+e.RAM[clipH]) {
+func (e *Engine) Pset(x, y float64, col Col) {
+	if x < float64(e.RAM[clipX]) || x >= float64(e.RAM[clipX]+e.RAM[clipW]) ||
+		y < float64(e.RAM[clipY]) || y >= float64(e.RAM[clipY]+e.RAM[clipH]) {
 		return
 	}
 	e.pset(x, y, col, 0, 192)
@@ -341,9 +342,9 @@ func (e *Engine) TextL(text string, opts ...TOp) {
 	splitText := strings.Split(text, "\n")
 	for _, line := range splitText {
 		if len(opts) > 0 {
-			e.Text(1, 1+6*textLline, line, opts[0])
+			e.Text(1, float64(1+6*textLline), line, opts[0])
 		} else {
-			e.Text(1, 1+6*textLline, line)
+			e.Text(1, float64(1+6*textLline), line)
 		}
 		textLline++
 	}
@@ -356,9 +357,9 @@ func (e *Engine) TextR(text string, opts ...TOp) {
 	for _, line := range splitText {
 		x := ScreenWidth - 1 - len(line)*6
 		if len(opts) > 0 {
-			e.Text(x, 1+6*textRline, line, opts[0])
+			e.Text(float64(x), float64(1+6*textRline), line, opts[0])
 		} else {
-			e.Text(x, 1+6*textRline, line)
+			e.Text(float64(x), float64(1+6*textRline), line)
 		}
 		textRline++
 	}
@@ -370,7 +371,7 @@ const btnRef = "(<)(>)(^)(v)(x)(o)(l)(r)(+)(-)"
 const specialRef = ":):(x(:|=[|^|v<-->$$@@<|<3<4+1-1~~()[]:;**"
 
 // Text prints text at the x, y coords on the screen
-func (e *Engine) Text(x, y int, text string, opts ...TOp) {
+func (e *Engine) Text(x, y float64, text string, opts ...TOp) {
 	text = strings.ToLower(text)
 	px, py := x, y
 	opt := TOp{}
@@ -439,7 +440,7 @@ func (e *Engine) Text(x, y int, text string, opts ...TOp) {
 	e.setActiveSpriteBuff(spriteBase)
 }
 
-func (e *Engine) drawChar(x, y, i int, opt SOp) {
+func (e *Engine) drawChar(x, y float64, i int, opt SOp) {
 	if i < 0 {
 		return
 	}
@@ -533,6 +534,12 @@ func toInt(b []byte, signed bool) int {
 		return ret * -1
 	}
 	return ret
+}
+
+// toFloat converts a byte arra to float64
+// byte arrays from len 1 to 4 are supported
+func toFloat(b []byte, signed bool) float64 {
+	return float64(toInt(b, signed))
 }
 
 // toBytes converts an integer into a byte array
