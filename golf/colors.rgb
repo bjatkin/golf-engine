@@ -1,0 +1,71 @@
+Pal0
+black: rgba(0, 0, 0, 1)
+onyx: rgba(64, 64, 64, 1)
+dim-gray: rgba(96, 96, 96, 1)
+gray-web: rgba(128, 128, 128, 1)
+
+Pal1
+spanish-gray: rgba(144, 144, 144, 1)
+quick-silver: rgba(160, 160, 160, 1)
+silver: rgba(192, 192, 192, 1)
+white: rgba(255, 255, 255, 1)
+
+Pal2
+xiketic: rgba(21, 3, 7, 1)
+dark-sienna-2: rgba(48, 11, 14, 1)
+dark-sienna: rgba(74, 18, 21, 1)
+persian-plum: rgba(126, 33, 35, 1)
+
+Pal3
+sweet-brown: rgba(178, 48, 49, 1)
+imperial-red: rgba(230, 63, 63, 1)
+light-coral: rgba(236, 126, 124, 1)
+spanish-pink: rgba(242, 189, 184, 1)
+
+Pal4
+smoky-black: rgba(22, 6, 2, 1)
+bistre: rgba(47, 25, 7, 1)
+cafe-noir: rgba(72, 44, 11, 1)
+brown: rgba(121, 81, 19, 1)
+
+Pal5
+gamboge: rgba(220, 155, 35, 1)
+goldenrod: rgba(228, 170, 58, 1)
+maximum-yellow-red: rgba(235, 185, 81, 1)
+orange-yellow-crayola: rgba(250, 215, 126, 1)
+
+Pal6
+dark-jungle-green: rgba(2, 24, 12, 1)
+hunter-green: rgba(50, 76, 45, 1)
+hunter-green-2: rgba(74, 102, 61, 1)
+fern-green: rgba(97, 128, 77, 1)
+
+Pal7
+moss-green: rgba(124, 153, 100, 1)
+olivine: rgba(151, 178, 122, 1)
+olivine-2: rgba(178, 203, 144, 1)
+tea-green: rgba(205, 227, 166, 1)
+
+Pal8
+rich-black-fogra-29: rgba(7, 13, 17, 1)
+dark-slate-gray: rgba(33, 66, 72, 1)
+ming: rgba(58, 119, 126, 1)
+cadet-blue: rgba(83, 172, 180, 1)
+
+Pal9
+sky-blue-crayola: rgba(108, 225, 234, 1)
+electric-blue: rgba(128, 229, 232, 1)
+celeste: rgba(148, 232, 230, 1)
+aero-blue: rgba(188, 238, 226, 1)
+
+Pal10
+xiketic: rgba(7, 1, 26, 1)
+oxford-blue: rgba(14, 18, 55, 1)
+space-cadet: rgba(21, 34, 83, 1)
+st-patricks-blue: rgba(28, 50, 111, 1)
+
+Pal11
+dark-cornflower-blue: rgba(35, 66, 139, 1)
+bdazzled-blue: rgba(47, 85, 165, 1)
+true-blue: rgba(59, 104, 191, 1)
+united-nations-blue: rgba(82, 141, 242, 1)

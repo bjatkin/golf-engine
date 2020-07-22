@@ -51,6 +51,18 @@ func (e *Engine) Run() {
 	renderFrame = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e.addFrame()
 
+		if e.Frames() < 250 {
+			tmpA, tmpB := e.PalGet()
+			e.startupAnim()
+			e.PalA(tmpA)
+			e.PalB(tmpB)
+
+			js.CopyBytesToJS(e.screenBufHook, e.RAM[:screenPalSet+1])
+			js.Global().Call("drawScreen")
+			js.Global().Call("requestAnimationFrame", renderFrame)
+			return nil
+		}
+
 		e.Update()
 		e.Draw()
 
@@ -121,8 +133,13 @@ func (e *Engine) Mouse() (int, int) {
 	return int(e.RAM[mouseX]), int(e.RAM[mouseY])
 }
 
-// BG sets the bg color of the engine
-func (e *Engine) BG(col Col) {
+// BG returns the current clear color of the screen
+func (e *Engine) BG() Col {
+	return Col(e.RAM[bgColor] & 0b11100000 >> 5)
+}
+
+// SetBG sets the bg color of the screen
+func (e *Engine) SetBG(col Col) {
 	e.RAM[bgColor] &= 0b00011111
 	e.RAM[bgColor] |= byte(col << 5)
 }

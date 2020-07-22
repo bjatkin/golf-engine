@@ -12,6 +12,14 @@ func (e *Engine) LoadSprs(sheet [0x3000]byte) {
 	}
 }
 
+// LoadFlags load the sprite flags into memory
+func (e *Engine) LoadFlags(flags [0x200]byte) {
+	base := spriteFlags
+	for i, b := range flags {
+		e.RAM[i+base] = b
+	}
+}
+
 func (e *Engine) setActiveSpriteBuff(colAddr int) {
 	c := toBytes(colAddr, 2, false)
 	e.RAM[activeSpriteBuff] = c[0]

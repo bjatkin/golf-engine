@@ -3,8 +3,8 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
-* Add function to load sprite flag data
-* Add startup animation when you start the game
+* Add last 4 color pallets
+* Fix color pallet swapping caused by the startup anim
 * Create and example golang server for using this framework for playing games online
 * Build out the readme so there is good documentation for the API
 * Add instructions for installing and playing the golf examples
@@ -12,6 +12,9 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### DONE
 ---
+* Add startup animation when you start the game [x]
+* Fix the color pallet [x]
+* Add function to load sprite flag data [x]
 * Change the sprite functions from using ints to using floats [x]
 * Change the SprOpts and TextOpts to be Sop and Top to make the API more terse [x]
 * Add a save cart data function (save to a browser cookie) [x]
