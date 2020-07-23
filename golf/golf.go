@@ -1,7 +1,6 @@
 package golf
 
 import (
-	"strings"
 	"syscall/js"
 )
 
@@ -52,24 +51,16 @@ func (e *Engine) Run() {
 		e.addFrame()
 
 		if e.Frames() < 250 {
-			tmpA, tmpB := e.PalGet()
 			e.startupAnim()
-			e.PalA(tmpA)
-			e.PalB(tmpB)
+		} else {
+			e.Update()
+			e.Draw()
 
-			js.CopyBytesToJS(e.screenBufHook, e.RAM[:screenPalSet+1])
-			js.Global().Call("drawScreen")
-			js.Global().Call("requestAnimationFrame", renderFrame)
-			return nil
+			e.drawMouse()
+
+			e.tickKeyboard()
+			e.tickMouse()
 		}
-
-		e.Update()
-		e.Draw()
-
-		e.drawMouse()
-
-		e.tickKeyboard()
-		e.tickMouse()
 
 		js.CopyBytesToJS(e.screenBufHook, e.RAM[:screenPalSet+1])
 		js.Global().Call("drawScreen")
@@ -341,129 +332,6 @@ func (e *Engine) Pget(x, y int) Col {
 		return Col0
 	}
 	return e.pget(x, y, 0, 192)
-}
-
-// TOp additional options for drawing text
-type TOp struct {
-	Col   Col
-	Solid bool
-	Fixed bool
-}
-
-// the TextLine for TextL and TextR
-var textLline, textRline = 0, 0
-
-// TextL prints text at the top left of the screen
-// the cursor moves to a new line each time TextL is called
-func (e *Engine) TextL(text string, opts ...TOp) {
-	splitText := strings.Split(text, "\n")
-	for _, line := range splitText {
-		if len(opts) > 0 {
-			e.Text(1, float64(1+6*textLline), line, opts[0])
-		} else {
-			e.Text(1, float64(1+6*textLline), line)
-		}
-		textLline++
-	}
-}
-
-// TextR prints text at the top right of the screen
-// the cursor moves to a new line each time TextR is called
-func (e *Engine) TextR(text string, opts ...TOp) {
-	splitText := strings.Split(text, "\n")
-	for _, line := range splitText {
-		x := ScreenWidth - 1 - len(line)*6
-		if len(opts) > 0 {
-			e.Text(float64(x), float64(1+6*textRline), line, opts[0])
-		} else {
-			e.Text(float64(x), float64(1+6*textRline), line)
-		}
-		textRline++
-	}
-}
-
-// the Text font reference
-const textRef = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+={}[]\\:;\"<>,./?|"
-const btnRef = "(<)(>)(^)(v)(x)(o)(l)(r)(+)(-)"
-const specialRef = ":):(x(:|=[|^|v<-->$$@@<|<3<4+1-1~~()[]:;**"
-
-// Text prints text at the x, y coords on the screen
-func (e *Engine) Text(x, y float64, text string, opts ...TOp) {
-	text = strings.ToLower(text)
-	px, py := x, y
-	opt := TOp{}
-	sopt := SOp{TCol: Col3}
-	if len(opts) > 0 {
-		opt = opts[0]
-	}
-	if opt.Solid {
-		sopt.TCol = 0
-	}
-	if opt.Col != 0 {
-		sopt.PFrom = []Col{Col0}
-		sopt.PTo = []Col{opt.Col}
-	}
-	sopt.Fixed = opt.Fixed
-
-	e.setActiveSpriteBuff(internalSpriteBase)
-
-	for i := 0; i < len(text); i++ {
-		if text[i] == '\n' {
-			px = x
-			py += 6
-			continue
-		}
-		if text[i] == ' ' {
-			px += 6
-			continue
-		}
-		if text[i] == '^' {
-			i++
-			dex := strings.Index(textRef, string(text[i]))
-			e.drawChar(px, py, dex, sopt)
-			px += 6
-			continue
-		}
-		bdex := -1
-		if i+2 < len(text) {
-			bdex = strings.Index(btnRef, string(text[i:i+3]))
-		}
-		if bdex%3 == 0 {
-			bdex = bdex/3 + 86
-			e.drawChar(px, py, bdex, sopt)
-			px += 6
-			i += 2
-			continue
-		}
-		sdex := -1
-		if i+1 < len(text) {
-			sdex = strings.Index(specialRef, string(text[i:i+2]))
-		}
-		if sdex%2 == 0 {
-			sdex = sdex/2 + 65
-			e.drawChar(px, py, sdex, sopt)
-			px += 6
-			i++
-			continue
-		}
-		dex := -1
-		if i < len(text) {
-			dex = strings.Index(textRef, string(text[i]))
-		}
-		e.drawChar(px, py, dex, sopt)
-		px += 6
-	}
-
-	e.setActiveSpriteBuff(spriteBase)
-}
-
-func (e *Engine) drawChar(x, y float64, i int, opt SOp) {
-	if i < 0 {
-		return
-	}
-	sx := i % 24
-	sy := i / 24
-	e.SSpr(sx*6, sy*6, 6, 6, x, y, opt)
 }
 
 // PalA sets pallet A

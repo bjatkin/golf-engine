@@ -25,17 +25,17 @@ func (e *Engine) startupAnim() {
 	e.SetBG(tmpBG)
 
 	// Draw the logo
-	tCol := TOp{Col: Col3}
+	tCol := TOp{Col: Col3, SH: 2, SW: 2}
 	if e.Frames() > 40 {
-		tCol = TOp{Col: Col2}
+		tCol = TOp{Col: Col2, SH: 1.8, SW: 1.8}
 	}
 	if e.Frames() > 50 {
-		tCol = TOp{Col: Col1}
+		tCol = TOp{Col: Col1, SH: 1.9, SW: 1.9}
 	}
 	if e.Frames() > 60 {
-		tCol = TOp{Col: Col0}
+		tCol = TOp{Col: Col0, SH: 2, SW: 2}
 	}
-	e.Text(28, 55, "made with", tCol)
+	e.Text(10, 50, "made with", tCol)
 
 	// Change to the internal sprite sheet
 	e.RAM[activeSpriteBuff] = internalSpriteBase >> 8

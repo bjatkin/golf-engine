@@ -3,8 +3,10 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
-* Add last 4 color pallets
-* Fix color pallet swapping caused by the startup anim
+* Use all 8 colors on the loading animation to make the fading nicer
+* Fix color pallet swapping caused by the startup anim (allow the user to set the pallets)
+* Default to the black and gray pallets
+* Clean up startup code
 * Create and example golang server for using this framework for playing games online
 * Build out the readme so there is good documentation for the API
 * Add instructions for installing and playing the golf examples
@@ -12,6 +14,8 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### DONE
 ---
+* Add last 4 color pallets (Black White Red Blue pallet) [x]
+* Add scale width and scale height opts to the text drawing [x]
 * Add startup animation when you start the game [x]
 * Fix the color pallet [x]
 * Add function to load sprite flag data [x]
@@ -57,3 +61,5 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
   * sprite flag editor 
 * Sound? (I still have 20k memory for this)
 * Add interpreted scripting language to make it more aproacable and to prevent golang from being an install requirement
+* Let text use multips options with {} syntac to start and end option sections
+* add vertical and horizontal flip to the text functions

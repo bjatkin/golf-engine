@@ -69,3 +69,27 @@ dark-cornflower-blue: rgba(35, 66, 139, 1)
 bdazzled-blue: rgba(47, 85, 165, 1)
 true-blue: rgba(59, 104, 191, 1)
 united-nations-blue: rgba(82, 141, 242, 1)
+
+Pal12
+black: rgba(0, 0, 0, 1)
+venetian-red: rgba(197, 17, 17, 1)
+dark-cornflower-blue: rgba(20, 58, 133, 1)
+white: rgba(255, 255, 255, 1)
+
+Pal13
+liver-dogs: rgba(181, 98, 11, 1)
+tangerine: rgba(241, 131, 14, 1)
+deep-saffron: rgba(243, 152, 56, 1)
+mellow-apricot: rgba(246, 178, 105, 1)
+
+Pal14
+maximum-yellow-red: rgba(246, 189, 96, 1)
+linen: rgba(247, 237, 226, 1)
+baby-pink: rgba(245, 202, 195, 1)
+morning-blue: rgba(132, 165, 157, 1)
+
+Pal15
+purple-ish: rgba(21, 34, 83, 1)
+aqua-marine: rgba(70, 135, 143, 1)
+grass-green: rgba(148, 227, 68, 1)
+apricot-spring: rgba(226, 243, 228, 1)
