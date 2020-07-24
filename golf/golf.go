@@ -1,6 +1,7 @@
 package golf
 
 import (
+	"fmt"
 	"syscall/js"
 )
 
@@ -23,10 +24,9 @@ type Engine struct {
 // NewEngine creates a new golf engine
 func NewEngine(updateFunc func(), draw func()) *Engine {
 	ret := Engine{
-		RAM:           &[0xFFFF]byte{},
-		Draw:          draw,
-		Update:        updateFunc,
-		screenBufHook: js.Global().Get("screenBuff"),
+		RAM:    &[0xFFFF]byte{},
+		Draw:   draw,
+		Update: updateFunc,
 	}
 
 	doc := js.Global().Get("document")
@@ -45,10 +45,14 @@ func NewEngine(updateFunc func(), draw func()) *Engine {
 	ret.PalA(0)
 	ret.PalB(1)
 
-	// Create the element
-	// script := doc.Call("createElement", "script")
-	// script.Set("innerHTML", string(drawTemplate))
-	// doc.Get("Body").Call("appendChild", script)
+	// Inject the nessisary JS
+	script := doc.Call("createElement", "script")
+	script.Set("innerHTML", string(drawTemplate[:]))
+	doc.Get("body").Call("appendChild", script)
+	fmt.Println(string(drawTemplate[:]))
+
+	// Hook into the injected js
+	ret.screenBufHook = js.Global().Get("screenBuff")
 
 	return &ret
 }

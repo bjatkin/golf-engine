@@ -3,6 +3,7 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
+* Hash the sprite sheet and map file to see if they need to be re-imported
 * Change build code to use hex instead of bin to make smaller generated files
 * Show error on server automatic build
 * give X, Y coords on unknown color in image
@@ -15,6 +16,7 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### DONE
 ---
+* Inject draw.js to make golf require less dependancies [x]
 * Default to the black and gray pallets [x]
 * Fix color pallet swapping caused by the startup anim (allow the user to set the pallets) [x]
 * Template generation code should create arrays rather than slices [x]
