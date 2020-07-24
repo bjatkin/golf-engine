@@ -16,8 +16,8 @@ func initProject(args []string) error {
 		return err
 	}
 
-	buildTemplate = []byte(strings.Replace(string(buildTemplate), "main.wasm", args[0]+".wasm", -1))
-	err = addExecFile("build.sh", buildTemplate, true)
+	newBuildTemplate := []byte(strings.Replace(string(buildTemplate[:]), "main.wasm", args[0]+".wasm", -1))
+	err = addExecFile("build.sh", newBuildTemplate, true)
 	if err != nil {
 		return err
 	}
@@ -27,17 +27,17 @@ func initProject(args []string) error {
 		return err
 	}
 
-	err = addFile("assets/spritesheet.png", spritesheetTemplate, false)
+	err = addFile("assets/spritesheet.png", spritesheetTemplate[:], false)
 	if err != nil {
 		return err
 	}
 
-	err = addFile("assets/map.png", mapTemplate, false)
+	err = addFile("assets/map.png", mapTemplate[:], false)
 	if err != nil {
 		return err
 	}
 
-	err = addFile("main.go", mainTemplate, false)
+	err = addFile("main.go", mainTemplate[:], false)
 	if err != nil {
 		return err
 	}
@@ -47,13 +47,13 @@ func initProject(args []string) error {
 		return err
 	}
 
-	indexTemplate = []byte(strings.Replace(string(indexTemplate), "main.wasm", args[0]+".wasm", -1))
-	err = addFile("web/index.html", indexTemplate, false)
+	newIndexTemplate := []byte(strings.Replace(string(indexTemplate[:]), "main.wasm", args[0]+".wasm", -1))
+	err = addFile("web/index.html", newIndexTemplate, false)
 	if err != nil {
 		return err
 	}
 
-	err = addFile("web/draw.js", drawTemplate, false)
+	err = addFile("web/draw.js", drawTemplate[:], false)
 	if err != nil {
 		return err
 	}

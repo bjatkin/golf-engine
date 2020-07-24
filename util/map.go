@@ -134,9 +134,6 @@ func convertCSVMap(inputFile, outputFile string) error {
 			}
 			low = append(low, byte(id))
 			high = append(high, h)
-			// if id != 0 {
-			// fmt.Printf("low %d high %d\n", byte(id), h)
-			// }
 		}
 	}
 	return writeMapData(low, high, outputFile)

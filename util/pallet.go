@@ -1,10 +1,6 @@
 package main
 
-type color struct {
-	r, g, b uint32
-}
-
-type pallet [4]color
+type pallet [4]rgb
 
 // var pallets = []pallet{
 // 	pallet{{0, 0, 0},
