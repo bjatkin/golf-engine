@@ -62,3 +62,6 @@ const mapBase = 0xB74B //Start from the high memory so the map grows down
 
 // SpriteFlags (512 8x8): 0xB74C - B94C
 const spriteFlags = 0xB74E
+
+// StartAnimLen: 0xB74F
+const startAnim = 0xB74F

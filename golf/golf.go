@@ -38,6 +38,10 @@ func NewEngine(updateFunc func(), draw func()) *Engine {
 		ret.RAM[i+base] = internalSpriteSheet[i]
 	}
 
+	ret.RAM[startAnim] = 255
+	ret.PalA(5)
+	ret.PalB(1)
+
 	//TODO inject the custom javascritp into the page here
 
 	return &ret
@@ -50,7 +54,7 @@ func (e *Engine) Run() {
 	renderFrame = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		e.addFrame()
 
-		if e.Frames() < 250 {
+		if e.Frames() < int(e.RAM[startAnim]) {
 			e.startupAnim()
 		} else {
 			e.Update()
