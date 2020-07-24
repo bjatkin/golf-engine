@@ -3,9 +3,10 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
+* Change build code to use hex instead of bin to make smaller generated files
+* Show error on server automatic build
+* give X, Y coords on unknown color in image
 * Use all 8 colors on the loading animation to make the fading nicer
-* Fix color pallet swapping caused by the startup anim (allow the user to set the pallets)
-* Default to the black and gray pallets
 * Clean up startup code
 * Create and example golang server for using this framework for playing games online
 * Build out the readme so there is good documentation for the API
@@ -14,6 +15,9 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### DONE
 ---
+* Default to the black and gray pallets [x]
+* Fix color pallet swapping caused by the startup anim (allow the user to set the pallets) [x]
+* Template generation code should create arrays rather than slices [x]
 * Add last 4 color pallets (Black White Red Blue pallet) [x]
 * Add scale width and scale height opts to the text drawing [x]
 * Add startup animation when you start the game [x]

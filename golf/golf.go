@@ -18,6 +18,8 @@ type Engine struct {
 	Update        func()
 }
 
+//go:generate ../generate/genTemplates packedTemplates.go templates golf
+
 // NewEngine creates a new golf engine
 func NewEngine(updateFunc func(), draw func()) *Engine {
 	ret := Engine{
@@ -27,7 +29,8 @@ func NewEngine(updateFunc func(), draw func()) *Engine {
 		screenBufHook: js.Global().Get("screenBuff"),
 	}
 
-	ret.initKeyListener(js.Global().Get("document"))
+	doc := js.Global().Get("document")
+	ret.initKeyListener(doc)
 	ret.initMouseListener(js.Global().Get("golfcanvas"))
 
 	ret.RClip() // Reset the cliping box
@@ -39,10 +42,13 @@ func NewEngine(updateFunc func(), draw func()) *Engine {
 	}
 
 	ret.RAM[startAnim] = 255
-	ret.PalA(5)
+	ret.PalA(0)
 	ret.PalB(1)
 
-	//TODO inject the custom javascritp into the page here
+	// Create the element
+	// script := doc.Call("createElement", "script")
+	// script.Set("innerHTML", string(drawTemplate))
+	// doc.Get("Body").Call("appendChild", script)
 
 	return &ret
 }

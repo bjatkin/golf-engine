@@ -15,7 +15,7 @@ var serverSG = &sync.WaitGroup{}
 var server = &http.Server{Addr: ":8080"}
 var appDir = ""
 
-//go:generate generate/genTemplates packedTemplates.go templates
+//go:generate ../generate/genTemplates packedTemplates.go templates main
 func main() {
 	var err error
 	appDir, err = os.Getwd()
