@@ -3,12 +3,6 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
-* Hash the sprite sheet and map file to see if they need to be re-imported (probably unessisary)
-* Test the new sprite importing code
-* chang the way the map code works to that it uses the new color atlas and works with the new sprite import code
-* Change build code to use hex instead of bin to make smaller generated files
-* Show error on server automatic build
-* give X, Y coords on unknown color in image
 * Use all 8 colors on the loading animation to make the fading nicer
 * Clean up startup animation code
 * Create an example golang server for using this framework for playing games online
@@ -18,6 +12,12 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### DONE
 ---
+* Show error on server automatic build in golf toolkit [x]
+* Test new map code [x]
+* chang the way the map code works so that it uses the new color atlas and works with the new sprite import code [x]
+* give X, Y coords on unknown color in image [x]
+* Change build code to use hex instead of bin to make smaller generated files [x]
+* Test the new sprite importing code [x]
 * Inject draw.js to make golf require less dependancies [x]
 * Default to the black and gray pallets [x]
 * Fix color pallet swapping caused by the startup anim (allow the user to set the pallets) [x]

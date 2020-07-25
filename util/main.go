@@ -33,7 +33,10 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
 			fmt.Println("build")
-			buildProject(nil)
+			err := buildProject(nil)
+			if err != nil {
+				printErrorLine(err.Error())
+			}
 			printCommandLine()
 		}
 		fs.ServeHTTP(w, r)

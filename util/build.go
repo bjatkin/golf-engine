@@ -44,7 +44,6 @@ func buildProject(args []string) error {
 }
 
 func runBuild() error {
-	// err := exec.Command(appDir + "/build.sh").Run()
 	out, err := exec.Command(appDir + "/build.sh").CombinedOutput()
 	if err != nil {
 		fmt.Println("\n" + string(out))

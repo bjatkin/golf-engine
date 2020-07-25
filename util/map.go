@@ -21,23 +21,25 @@ func convertMap(mapFile, spriteFile, outputFile string) error {
 		return err
 	}
 
-	spriteKey := make(map[[128]byte]int)
+	sprAtlas, err := newColorAtlas(sprimg)
+	if err != nil {
+		return err
+	}
+
+	spriteKey := map[[64]byte]int{}
 	spriteIndex := 0
 	minX := sprimg.Bounds().Min.X
 	maxX := sprimg.Bounds().Max.X
 	minY := sprimg.Bounds().Min.Y
 	maxY := sprimg.Bounds().Max.Y
+	width := maxX - minX
 	for cy := minY; cy < maxY; cy += 8 {
 		for cx := minX; cx < maxX; cx += 8 {
-			key := [128]byte{}
+			key := [64]byte{}
 			i := 0
 			for x := 0; x < 8; x++ {
 				for y := 0; y < 8; y++ {
-					r, g, b, _ := sprimg.At(cx+x, cy+y).RGBA()
-					pxl := nearistPixel(int(r)/256, int(g)/256, int(b)/256)
-					key[i] = byte(pxl.pal)
-					i++
-					key[i] = byte(pxl.col)
+					key[i] = byte(sprAtlas.imgArray[cx+x+(cy+y)*width])
 					i++
 				}
 			}
@@ -51,32 +53,43 @@ func convertMap(mapFile, spriteFile, outputFile string) error {
 		return err
 	}
 
-	mpimg, err := png.Decode(mapdata)
+	mapimg, err := png.Decode(mapdata)
 	if err != nil {
 		return err
 	}
 
-	tiles := []int{}
+	mapAtlas, err := newColorAtlas(mapimg)
+	if err != nil {
+		return err
+	}
 
-	minX = mpimg.Bounds().Min.X
-	maxX = mpimg.Bounds().Max.X
-	minY = mpimg.Bounds().Min.Y
-	maxY = mpimg.Bounds().Max.Y
+	if mapAtlas.pal1 != sprAtlas.pal1 || mapAtlas.pal2 != sprAtlas.pal2 {
+		return fmt.Errorf("map and sprite sheet pallets do not match, map(%d, %d), spr(%d, %d)",
+			mapAtlas.pal1, mapAtlas.pal2, sprAtlas.pal1, sprAtlas.pal2)
+	}
+
+	tiles := []int{}
+	minX = mapimg.Bounds().Min.X
+	maxX = mapimg.Bounds().Max.X
+	minY = mapimg.Bounds().Min.Y
+	maxY = mapimg.Bounds().Max.Y
+	width = maxX - minX
 	for cy := minY; cy < maxY; cy += 8 {
 		for cx := minX; cx < maxX; cx += 8 {
-			key := [128]byte{}
+			key := [64]byte{}
 			i := 0
 			for x := 0; x < 8; x++ {
 				for y := 0; y < 8; y++ {
-					r, g, b, _ := mpimg.At(cx+x, cy+y).RGBA()
-					pxl := nearistPixel(int(r)/256, int(g)/256, int(b)/256)
-					key[i] = byte(pxl.pal)
-					i++
-					key[i] = byte(pxl.col)
+					key[i] = byte(mapAtlas.imgArray[cx+x+(cy+y)*width])
 					i++
 				}
 			}
-			tiles = append(tiles, spriteKey[key])
+			tile, ok := spriteKey[key]
+			if !ok {
+				tile = 0
+			}
+
+			tiles = append(tiles, tile)
 		}
 	}
 
@@ -155,7 +168,7 @@ func writeMapData(low, high []byte, outputFile string) error {
 
 	content := "package main\n\nvar mapData = [0x4800]byte{\n"
 	for _, b := range conv {
-		content += printByte(b) + ","
+		content += fmt.Sprintf("0x%X", b) + ","
 	}
 	content += "\n}"
 	return ioutil.WriteFile(outputFile, []byte(content), 0666)

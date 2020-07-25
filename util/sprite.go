@@ -1,67 +1,163 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"image"
 	"image/png"
 	"io/ioutil"
-	"math"
 	"os"
 	"strings"
 )
 
-type pixelArray struct {
-	pixels     []pixel
-	pal1, pal2 int
+type rgb struct {
+	r, g, b uint32
 }
 
-func newPixelArray() pixelArray {
-	return pixelArray{
-		pal1: -1,
-		pal2: -1,
-	}
+func (a *rgb) Equal(b rgb) bool {
+	return a.r == b.r && a.g == b.g && a.b == b.b
 }
 
-func (p *pixelArray) addPixel(pxl pixel) error {
-	if p.pal2 == -1 && p.pal1 != -1 && p.pal1 != pxl.pal {
-		p.pal2 = pxl.pal
-		if p.pal2 < p.pal1 {
-			p.pal1, p.pal2 = p.pal2, p.pal1
+func (a *rgb) Dist(b rgb) uint32 {
+	m := uint32(255)
+	x := (a.r&m - b.r&m)
+	y := (a.g&m - b.g&m)
+	z := (a.b&m - b.b&m)
+	return x*x + y*y + z*z
+}
+
+func (a *rgb) PalDist(pal int) (uint32, int) {
+	minDist := ^uint32(0)
+	index := 0
+	for i, c := range pallets[pal] {
+		d := a.Dist(c)
+		if d < minDist {
+			minDist = d
+			index = i
 		}
 	}
-	if p.pal1 == -1 {
-		p.pal1 = pxl.pal
-	}
-	if pxl.pal != p.pal1 && pxl.pal != p.pal2 {
-		return fmt.Errorf("more than 2 pallets detected, Pal1: %d, Pal2: %d, NewPal: %d, NewCol: %v",
-			p.pal1, p.pal2, pxl.pal, pxl.col)
-	}
-	p.pixels = append(p.pixels, pxl)
-	return nil
+
+	return minDist, index
 }
 
-func dist(r1, g1, b1, r2, g2, b2 int) float64 {
-	a := float64(r2 - r1)
-	b := float64(g2 - g1)
-	c := float64(b2 - b1)
-	return math.Sqrt(a*a + b*b + c*c)
+func (a rgb) String() string {
+	return fmt.Sprintf("(%d, %d, %d)", uint8(a.r), uint8(a.g), uint8(a.b))
 }
 
-var test = 0
+type colorAtlas struct {
+	colors     [8]rgb
+	cindex     int
+	palMap     [8]int
+	colMap     [8]int
+	pal1, pal2 int
+	imgArray   []int
+}
 
-func nearistPixel(r, g, b int) pixel {
-	minDist := 65535.0
-	bestPixel := pixel{}
-	for p, pal := range pallets {
-		for c, col := range pal {
-			dist := dist(r, g, b, int(col.r), int(col.g), int(col.b))
-			if dist < minDist {
-				bestPixel.pal = p
-				bestPixel.col = c
-				minDist = dist
+func newColorAtlas(img image.Image) (colorAtlas, error) {
+	minX := img.Bounds().Min.X
+	maxX := img.Bounds().Max.X
+	minY := img.Bounds().Min.Y
+	maxY := img.Bounds().Max.Y
+
+	ret := colorAtlas{}
+	// add colors to the atlas
+	for y := minY; y < maxY; y++ {
+		for x := minX; x < maxX; x++ {
+			r, g, b, _ := img.At(x, y).RGBA()
+			err := ret.addColor(rgb{r, g, b})
+			if err != nil {
+				return ret, err
 			}
 		}
 	}
-	return bestPixel
+	ret.sortColor()
+
+	// build the image array
+	for y := minY; y < maxY; y++ {
+		for x := minX; x < maxX; x++ {
+			r, g, b, _ := img.At(x, y).RGBA()
+			i, ok := ret.cIndex(rgb{r, g, b})
+			if !ok {
+				return ret, errors.New("unknown color error")
+			}
+			ret.imgArray = append(ret.imgArray, i)
+		}
+	}
+
+	// Find the best pallets for this sprite sheet
+	minDist := ^uint32(0)
+	var palMap, colMap [8]int
+	var found bool
+	for i := 0; i < 16; i++ {
+		for j := i; j < 16; j++ {
+			errDist := uint32(0)
+			for atlasI, c := range ret.colors {
+				a, ai := c.PalDist(i)
+				b, bi := c.PalDist(j)
+				palMap[atlasI] = i
+				colMap[atlasI] = ai
+				if b < a {
+					a = b
+					palMap[atlasI] = j
+					colMap[atlasI] = bi
+				}
+				errDist += a
+			}
+			if errDist <= minDist {
+				ret.pal1, ret.pal2 = i, j
+				ret.palMap = palMap
+				ret.colMap = colMap
+				minDist = errDist
+			}
+			if errDist == 0 && i == j {
+				ret.pal2 = 0
+				found = true
+			}
+			if found {
+				break
+			}
+		}
+		if found {
+			break
+		}
+	}
+	return ret, nil
+}
+
+func (a *colorAtlas) addColor(color rgb) error {
+	for i := 0; i < a.cindex; i++ {
+		if color.Equal(a.colors[i]) {
+			return nil
+		}
+	}
+
+	if a.cindex > 7 {
+		return fmt.Errorf("more than 8 colors detected %s", color)
+	}
+	a.colors[a.cindex] = color
+	a.cindex++
+
+	return nil
+}
+
+func (a *colorAtlas) cIndex(color rgb) (int, bool) {
+	for i := 0; i < 8; i++ {
+		if a.colors[i].Equal(color) {
+			return i, true
+		}
+	}
+	return 0, false
+}
+
+func (a *colorAtlas) sortColor() {
+	for i := 0; i < 8; i++ {
+		for j := i + 1; j < 8; j++ {
+			o, t := a.colors[i], a.colors[j]
+			if o.r|(o.g<<8)|(o.b<<16) < t.r|(t.g<<8)|(t.b<<16) {
+				a.colors[i], a.colors[j] = a.colors[j], a.colors[i]
+			}
+		}
+	}
 }
 
 func convertSpriteSheet(inputFile, outputFile string) error {
@@ -75,36 +171,33 @@ func convertSpriteSheet(inputFile, outputFile string) error {
 		return err
 	}
 
-	minX := img.Bounds().Min.X
-	maxX := img.Bounds().Max.X
-	minY := img.Bounds().Min.Y
-	maxY := img.Bounds().Max.Y
-	image := newPixelArray()
-	for y := minY; y < maxY; y++ {
-		for x := minX; x < maxX; x++ {
-			r, g, b, _ := img.At(x, y).RGBA()
-			pxl := nearistPixel(int(r)/256, int(g)/256, int(b)/256)
-			err := image.addPixel(pxl)
-			if err != nil {
-				return err
-			}
-		}
+	atlas, err := newColorAtlas(img)
+	if err != nil {
+		return err
 	}
 
-	colorBuff := []byte{}
-	for i, pxl := range image.pixels {
+	colArray, palArray := []byte{}, []byte{}
+	for _, i := range atlas.imgArray {
+		colArray = append(colArray, byte(atlas.colMap[i]))
+		palArray = append(palArray, byte(atlas.palMap[i]))
+	}
+
+	// pack the color information. 4 pixels to a byte
+	colBuff := []byte{}
+	for i, col := range colArray {
 		shift := (i % 4) * 2
 		index := i / 4
 		if shift == 0 {
-			colorBuff = append(colorBuff, 0)
+			colBuff = append(colBuff, 0)
 		}
 
-		col := pxl.col
-		colorBuff[index] |= (byte(col) << shift)
+		col := col
+		colBuff[index] |= (col << shift)
 	}
 
+	// pack the pallet informaiotn. 8 pixels to a byte
 	palBuff := []byte{}
-	for i, pxl := range image.pixels {
+	for i, pal := range palArray {
 		shift := (i % 8)
 		index := i / 8
 		if shift == 0 {
@@ -112,30 +205,27 @@ func convertSpriteSheet(inputFile, outputFile string) error {
 		}
 
 		p := byte(0)
-		if pxl.pal == image.pal2 {
+		if pal == byte(atlas.pal2) {
 			p = byte(1)
 		}
 		palBuff[index] |= p << shift
 	}
 
+	// interlace and write the pallet and color data to a string
 	bytes := []string{}
-
 	j := 0
-	for i := 0; i < len(colorBuff); i++ {
-		bytes = append(bytes, printByte(colorBuff[i]))
+	for i := 0; i < len(colBuff); i++ {
+		bytes = append(bytes, fmt.Sprintf("0x%X", colBuff[i]))
 		if (i+1)%2 == 0 {
-			bytes = append(bytes, printByte(palBuff[j]))
+			bytes = append(bytes, fmt.Sprintf("0x%X", palBuff[j]))
 			j++
 		}
 	}
 
-	content := fmt.Sprintf("package main\n\nvar spriteSheet = [0x%X]byte {\n", len(bytes))
+	// write the final string to a package file
+	content := fmt.Sprintf("package main\n\nvar spriteSheet = [0x%x]byte {\n", len(bytes))
 	content += strings.Join(bytes, ",")
 	content += ",\n}"
 
-	err = ioutil.WriteFile(outputFile, []byte(content), 0644)
-	if err != nil {
-		return err
-	}
-	return nil
+	return ioutil.WriteFile(outputFile, []byte(content), 0644)
 }
