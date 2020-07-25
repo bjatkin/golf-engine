@@ -53,7 +53,7 @@ func (e *Engine) Text(x, y float64, text string, opts ...TOp) {
 	text = strings.ToLower(text)
 	px, py := x, y
 	opt := TOp{}
-	sopt := SOp{TCol: Col3, SH: 1, SW: 1}
+	sopt := SOp{TCol: Col1, SH: 1, SW: 1}
 	if len(opts) > 0 {
 		opt = opts[0]
 	}
