@@ -3,8 +3,6 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
-* Use all 8 colors on the loading animation to make the fading nicer
-* Clean up startup animation code
 * Create an example golang server for using this framework for playing games online
 * Build out the readme so there is good documentation for the API
 * Add instructions for installing and playing the golf examples
@@ -12,6 +10,9 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### DONE
 ---
+* Clean up startup animation code [x]
+* Use all 8 colors on the loading animation to make the fading nicer [x]
+* Fix text alpha [x]
 * Show error on server automatic build in golf toolkit [x]
 * Test new map code [x]
 * chang the way the map code works so that it uses the new color atlas and works with the new sprite import code [x]

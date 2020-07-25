@@ -4,49 +4,78 @@ import "math"
 
 // startupAnim runs the startup animation for golf engine
 func (e *Engine) startupAnim() {
-	bgCol := Col3
-	pto := []Col{Col0, Col1, Col2, Col3}
-	pfrom := []Col{Col0, Col1, Col2, Col3}
-	if e.Frames() > 180 {
-		bgCol = Col2
-		pto = []Col{Col0, Col0, Col1, Col2}
+	frame := e.Frames()
+	startLogo, startText := 0, 80
+	endLogo, endIntro := 180, 180
+	fadeSpeed := 5
+	fadeLen := fadeSpeed*8 - 1
+	fadeFrom := []Col{Col0, Col1, Col2, Col3, Col4, Col5, Col6, Col7}
+	fadeTo := [][]Col{
+		[]Col{Col7, Col7, Col7, Col7, Col7, Col7, Col7, Col7},
+		[]Col{Col6, Col7, Col7, Col7, Col7, Col7, Col7, Col7},
+		[]Col{Col5, Col6, Col7, Col7, Col7, Col7, Col7, Col7},
+		[]Col{Col4, Col5, Col6, Col7, Col7, Col7, Col7, Col7},
+		[]Col{Col3, Col4, Col5, Col6, Col7, Col7, Col7, Col7},
+		[]Col{Col2, Col3, Col4, Col5, Col6, Col7, Col7, Col7},
+		[]Col{Col1, Col2, Col3, Col4, Col5, Col6, Col7, Col7},
+		[]Col{Col0, Col1, Col2, Col3, Col4, Col5, Col6, Col7},
+		[]Col{Col0, Col0, Col1, Col2, Col3, Col4, Col5, Col6},
+		[]Col{Col0, Col0, Col0, Col1, Col2, Col3, Col4, Col5},
+		[]Col{Col0, Col0, Col0, Col0, Col1, Col2, Col3, Col4},
+		[]Col{Col0, Col0, Col0, Col0, Col0, Col1, Col2, Col3},
+		[]Col{Col0, Col0, Col0, Col0, Col0, Col0, Col1, Col2},
+		[]Col{Col0, Col0, Col0, Col0, Col0, Col0, Col0, Col1},
+		[]Col{Col0, Col0, Col0, Col0, Col0, Col0, Col0, Col0},
 	}
-	if e.Frames() > 190 {
-		bgCol = Col1
-		pto = []Col{Col0, Col0, Col0, Col1}
+
+	// Clear the BG
+	bgCol := Col7
+	if frame > endIntro {
+		bgCol = fadeTo[(frame-endIntro)/fadeSpeed][0]
 	}
-	if e.Frames() > 200 {
+	if frame > endIntro+fadeLen {
 		bgCol = Col0
-		pto = []Col{Col0, Col0, Col0, Col0}
 	}
 	tmpBG := e.BG()
 	e.SetBG(bgCol)
 	e.Cls()
 	e.SetBG(tmpBG)
 
-	// Draw the logo
-	tCol := TOp{Col: Col3, SH: 2, SW: 2}
-	if e.Frames() > 40 {
-		tCol = TOp{Col: Col2, SH: 1.8, SW: 1.8}
+	// Draw "made with"
+	txtf := 0
+	if frame > startText {
+		txtf = (frame - startText) / fadeSpeed
 	}
-	if e.Frames() > 50 {
-		tCol = TOp{Col: Col1, SH: 1.9, SW: 1.9}
+	if frame > startText+fadeLen {
+		txtf = 7
 	}
-	if e.Frames() > 60 {
-		tCol = TOp{Col: Col0, SH: 2, SW: 2}
-	}
+	tCol := TOp{Col: fadeTo[txtf][0], SH: 2, SW: 2}
 	e.Text(10, 50, "made with", tCol)
+
+	// Draw golf logo
+	sprf := 0
+	s := 0.0
+	if frame > startLogo {
+		s = math.Sin(float64(frame-startLogo)/30) + 1
+		sprf = (frame - startLogo) / fadeSpeed
+	}
+	if frame > startLogo+fadeLen {
+		s = 2
+		sprf = 7
+	}
+	if frame > endLogo {
+		sprf = (frame-endLogo)/fadeSpeed + 7
+	}
+	if frame > endLogo+fadeLen {
+		sprf = 14
+	}
+	width := 64.0 * s
 
 	// Change to the internal sprite sheet
 	e.RAM[activeSpriteBuff] = internalSpriteBase >> 8
 	e.RAM[activeSpriteBuff+1] = internalSpriteBase & 0b0000000011111111
 
-	s := math.Sin(float64(e.Frames())/30) + 1
-	if e.Frames() > 30 {
-		s = 2
-	}
-	width := 64.0 * s
-	e.SSpr(152, 0, 64, 24, 96-(width/2), 64, SOp{TCol: Col7, SW: s, SH: s, PTo: pto, PFrom: pfrom})
+	e.SSpr(152, 0, 64, 24, float64(96-(width/2)), 64.0, SOp{TCol: Col1, SW: s, SH: s, PFrom: fadeFrom, PTo: fadeTo[sprf]})
 
 	// Change back to the main sprite sheet
 	e.RAM[activeSpriteBuff] = spriteBase >> 8

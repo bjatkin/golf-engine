@@ -1,7 +1,6 @@
 package golf
 
 import (
-	"fmt"
 	"syscall/js"
 )
 
@@ -49,7 +48,6 @@ func NewEngine(updateFunc func(), draw func()) *Engine {
 	script := doc.Call("createElement", "script")
 	script.Set("innerHTML", string(drawTemplate[:]))
 	doc.Get("body").Call("appendChild", script)
-	fmt.Println(string(drawTemplate[:]))
 
 	// Hook into the injected js
 	ret.screenBufHook = js.Global().Get("screenBuff")
