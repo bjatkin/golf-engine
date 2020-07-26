@@ -3,6 +3,8 @@ the GoLang Fantasy Engine. Right now this is just a convient place for the todo 
 
 ### TODO
 ---
+* Fix mouse transparency
+* change which pallet the mouse is drawn with (a/b)
 * Create an example golang server for using this framework for playing games online
 * Build out the readme so there is good documentation for the API
 * Add instructions for installing and playing the golf examples
