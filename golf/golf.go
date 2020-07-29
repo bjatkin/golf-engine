@@ -21,11 +21,11 @@ type Engine struct {
 //go:generate ../generate/genTemplates packedTemplates.go templates golf
 
 // NewEngine creates a new golf engine
-func NewEngine(updateFunc func(), draw func()) *Engine {
+func NewEngine(update func(), draw func()) *Engine {
 	ret := Engine{
 		RAM:    &[0xFFFF]byte{},
 		Draw:   draw,
-		Update: updateFunc,
+		Update: update,
 	}
 
 	doc := js.Global().Get("document")
@@ -230,6 +230,17 @@ func (e *Engine) Line(x1, y1, x2, y2 float64, col Col) {
 	}
 }
 
+// Circ draws a circle using Bresenham's algorithm
+func (e *Engine) Circ(xc, yc, r float64, col Col) {
+	e.circ(xc, yc, r, col, false)
+}
+
+// CircFill draws a filled circle using Bresenham's algorithm
+func (e *Engine) CircFill(xc, yc, r float64, col Col) {
+	e.circ(xc, yc, r, col, true)
+	e.circ(xc, yc, r, col, false)
+}
+
 // drawCirc8 draws 8 points on a circle
 func (e *Engine) drawCirc8(xc, yc, x, y float64, c Col, filled bool) {
 	if filled {
@@ -247,17 +258,6 @@ func (e *Engine) drawCirc8(xc, yc, x, y float64, c Col, filled bool) {
 		e.Pset(xc+y, yc-x, c)
 		e.Pset(xc-y, yc-x, c)
 	}
-}
-
-// Circ draws a circle using Bresenham's algorithm
-func (e *Engine) Circ(xc, yc, r float64, c Col) {
-	e.circ(xc, yc, r, c, false)
-}
-
-// CircFill draws a filled circle using Bresenham's algorithm
-func (e *Engine) CircFill(xc, yc, r float64, c Col) {
-	e.circ(xc, yc, r, c, true)
-	e.circ(xc, yc, r, c, false)
 }
 
 func (e *Engine) circ(xc, yc, r float64, c Col, filled bool) {
