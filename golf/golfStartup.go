@@ -36,10 +36,10 @@ func (e *Engine) startupAnim() {
 	if frame > endIntro+fadeLen {
 		bgCol = Col0
 	}
-	tmpBG := e.BG()
-	e.SetBG(bgCol)
-	e.Cls()
-	e.SetBG(tmpBG)
+	// tmpBG := e.BG()
+	// e.SetBG(bgCol)
+	e.Cls(bgCol)
+	// e.SetBG(tmpBG)
 
 	// Draw "made with"
 	txtf := 0

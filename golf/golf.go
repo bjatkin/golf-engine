@@ -136,25 +136,14 @@ func (e *Engine) Mouse() (int, int) {
 	return int(e.RAM[mouseX]), int(e.RAM[mouseY])
 }
 
-// BG returns the current clear color of the screen
-func (e *Engine) BG() Col {
-	return Col(e.RAM[bgColor] & 0b11100000 >> 5)
-}
-
-// SetBG sets the bg color of the screen
-func (e *Engine) SetBG(col Col) {
-	e.RAM[bgColor] &= 0b00011111
-	e.RAM[bgColor] |= byte(col << 5)
-}
-
-// Cls clears the screen and resets TextL and TextR
-func (e *Engine) Cls() {
+// Cls fills the screen with col and resets TextL and TextR
+func (e *Engine) Cls(col Col) {
 	textLline, textRline = 0, 0
 
-	c := (e.RAM[bgColor] >> 5) & 0b00000011
-	colBG := (c << 6) | (c << 4) | (c << 2) | c
+	c := col & 0b00000011
+	colBG := byte((c << 6) | (c << 4) | (c << 2) | c)
 	palBG := byte(0)
-	if e.RAM[bgColor]>>7 == 1 {
+	if col>>2 == 0b00100001 {
 		palBG = 0b11111111
 	}
 

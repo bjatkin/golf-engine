@@ -8,8 +8,8 @@ const screenBuffBase = 0x0000
 //  Pal Set: 0x3600
 const screenPalSet = 0x3600
 
-// BG Color: 0x3601 - high 3 bits
-const bgColor = 0x3601
+// StartAnimLen: 0x3601
+const startAnim = 0x3601
 
 // CameraX: 0x3602-0x3603
 const cameraX = 0x3602
@@ -62,6 +62,3 @@ const mapBase = 0xB74B //Start from the high memory so the map grows down
 
 // SpriteFlags (512 8x8): 0xB74C - B94C
 const spriteFlags = 0xB74E
-
-// StartAnimLen: 0xB74F
-const startAnim = 0xB74F
