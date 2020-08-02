@@ -62,6 +62,9 @@ This will create all the nessisary files for you to start building your first ga
   * !! - re-run the last executed command.
 
 # Color Pallet
+![Color Pallet]
+(https://github.com/bjatkin/golf-engine/blob/master/images/golf_color_pallet.png)
+
 ### HEX
 Pallet | Color 1 | Color 2 | Color 3 | Color 4
 -------|---------|---------|---------|---------
@@ -84,6 +87,7 @@ Pallet | Color 1 | Color 2 | Color 3 | Color 4
 
 ### RGB
 Pallet | Color 1 | Color 2 | Color 3 | Color 4
+-------|---------|---------|---------|---------
 0 | (0, 0, 0) | (96, 96, 96) | (144, 144, 144) | (192, 192, 192)
 1 | (64, 64, 64) | (128, 128, 128) | (160, 160, 160) | (255, 255, 255)
 2 | (21, 3, 7) | (74, 18, 21) | (174, 48, 49) | (236, 126, 124)
