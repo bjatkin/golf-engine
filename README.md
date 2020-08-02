@@ -27,6 +27,10 @@ Note that this is for MacOSX users and Windows/ Linux users will have to change 
 Once you've started the golf_toolkit you can run `init <project name>` command where project name is the name of your game.
 This will create all the nessisary files for you to start building your first game. <br />
 
+# Developing your game
+
+# Releasing your game
+
 # GoLF toolkit commands
   * about: Displays some simple information about the golf toolkit and why it exsists.
   * exit: Quits the golf toolkit. Will stop the development server if it's running.
@@ -61,7 +65,10 @@ This will create all the nessisary files for you to start building your first ga
   * help - displays all the golf toolkit commands.
   * !! - re-run the last executed command.
 
-# Color Pallet
+
+# The GoLF color pallet
+golf uses a pallet of 64 colors split into 16 four color pallets. You can mix and match these pallets however you want but only 2 can be used at a time
+
 ![Color Pallet](https://github.com/bjatkin/golf-engine/blob/master/images/golf_color_pallet.png)
 
 ### HEX
@@ -127,43 +134,6 @@ Then, either using the default go server or a server of your choice, simply serv
 a user when they visit the appropriate page. Setting up a server is beyond the scope of this documentation but there is a large amount of
 excellent material on how to do this already. Visit here or here for some material on the matter.
 
-# GoLF RAM
-The golf engine object uses a RAM array to store crucial data about the current state of the engine. 
-For example the screen buffer and sprite data. This makes the engine itself very hackable and exposes additional functionality that the API does not cover.
-the memoryMap.go file lists all the critical locations in memory and this fill is reiterated below in the API section of the documentation.
-You are encouraged to dig around here and mess with the values to get a better understanding of how the engine works.
-
-# Data Packing
-Part of the goal for this project was to make the console feel somewhat ‘retro’ no just in it’s visual style but also internally.
-I decided to do this by creating simulated memory which is the engine.RAM array.
-Using this memory efficiently was a goal since early on in development.
-Because of this some of the internal representations of data can get a little difficult to understand in order to aid 
-in this I’ve included the following sections of GoLF pixel data and map tile data. 
-While this may seem complicated it is totally possible to use the engine without understanding these
-concepts so unless you're interested in how the internals of GoLF works feel free to skip these sections.
-
-# GoLF Pixel Data
-GoLF supports up to 8 colors on screen at a time. Unfortunately 8 colors only fills up 3 bits which makes packing the grafix data efficiently rather difficult.
-In order resolve this the golf engine splits a pixels color from its pallet. This means that grafix data is represented as follows in GoLF simulated memory.
-2 bytes with 4 pixel intensities each followed by one byte with 8 color pallets, one for each of the previous 8 pixel intensities.
-You can learn more about his by looking at the pget and pset functions in the golf engine.
-
-# GoLF Map Tile Data
-The golf map supports indexing 512 8x8 sprites from the sprite sheet. This means a map tile value is a maximum of 9 bits. 
-Like with pixel data this odd sizing makes it a little tricky to use memory efficiently. 
-In order to deal with this I pack pixel data using the following method.
-The sprite sheet is broken up into two halves each with 256 sprites.
-The top half is the low half (low memory) and the bottom half is the high half (high memory). 
-I then idex each tile with an 8 bit integer 0-255 and store which half of the sprite sheet it belongs to separately.
-This data is then packed into RAM as follows. 8 bytes with a 0-255 index for each tile, followed by 1 byte 
-with 8 bits to indicate whether the previous 8 tiles are in high or low memory.
-
-# GoLF Graphics Memory Layout (Map and SpriteSheet)
-Additionally it’s worth noting that the GoLF sprite data and GoLF map data are placed next to each other in memory and grow in opposite directions.
-Sprites grow from low memory to high memory and the map grows from high memory to low memory.
-This allows for the sprite sheet or the map to expand beyond the default sizes if needed.
-In the case the the spritesheet ‘overgrows’ the map keep in mind that the map will only index the first
-512 tiles and that the sprite flags will only apply to the first 512 sprites as well.
 
 # GoLF API
 
@@ -338,25 +308,73 @@ line is added.
 engine.TextR(text string, opts ...TOp): draws text in the upper right hand corner of the screen. Each time TextR is called
 a new line is added.
 
+### Cart Data
+
+engine.Dset(name string, data []byte): stores persistent data to a users browser as a cookie. only 1024 bytes or less can be stored and the name must be alpa numeric.
+the name is used to save the data so it can be retrived later. Keep in mind this name should be unique or it may get overwritten by other games.
+
+engine.Dget(name string): retrievs data stored with Dset. In addition to returning the data it returns a bool which is true if the saved data was successfully found.
+
 # The GoLF memory map
-the golf engine is designed to be hackable as was as to maintin a retro feel which developing. In order to achieve this the
-golf engine uses a block of memory that can be accessed using the RAM member variable of a golf engine instance. The engine.RAM
-contains all the data for the sprite memory, the map memory, the screen buffer and even the keyboard state. If there is anything
-that the API does not expose you can probable read or write that data from the engine memory. In order to help you with this 
-you may with to look at the memoryMap.go file. This contains a list of all the memory addresses used by golf to run the engine.
+Another goal of golf is to be a 'hackable' engine. To achieve this golf uses virtual ram (stored in engine.RAM). This virtual ram
+stores sprite data, map data, the screen buffer and much more. Bellow is a list of all the important memory addresses in the 
+virtual ram. (you can also view memroy addresses by looking at the memoryMap.go file)
 
-# The GoLF color pallet
-part of golf's goal as a engine is to all the creation of games with a unique and recognizable style. Visual style is an important
-aspect of this and so the engine uses a unique method for drawing colors on screen. Each pixel can only be one of 4 colors but it
-can also belong to either of 2 pallets. This means that you can effectively draw up to 8 colors on screen at a time. There is no
-limit to how often you can change these pallets either allowing you to create uinque and interesting games with creative graphics.
-This system may seem restrictive but that is by design. The golf engine firmly believes that restrictions foster creativity and
-also help developers finish projects which are major goals of this engine. The 16 available 4 color pallets are shown bellow 
-(in order from top Pal0 to bottom Pal15). Play around and find unique and interesting pallet combinations!
+  * Screen Buffer: 0x0000 - 0x3600, this data is coppied to the screen once per frame
+  * Screen Pallet: 0x3600, the two screen pallets, top 4 bits are pallet 1 and bottom 4 bits are pallet 2
+  * Start Screen Length: 0x3601, the number of frames to play the startup animation. If you set this to 0 you can skip the startup animtion.
+    If you choose to do this please credit the project some other way in your game.
+  * CameraX: 0x3602-0x3603, the 16 bit x coordinate of the camera.
+  * CameraY: 0x3604-0x3605, the 16 bit y coordinate of the camera.
+  * Frames: 0x3606-0x3608, the 24 bit number that counts the frames since the game engine was started.
+  * ClipX: 0x3609, the x coordinate of the clipping rect.
+  * ClipY: 0x360A, the Y coordinate of the clipping rect.
+  * ClipW: 0x360B, the width of the clipping rect.
+  * ClipH: 0x360C, the height of the clipping rect.
+  * MouseX: 0x360D, the x coordinate of the mouse.
+  * MouseY: 0x360E, the y coordinate of the mouse.
+  * Left Click: 0x360F, the click state of the left mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed)
+  * Middle Click: 0x360F, the click state of the middle mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed
+  * Right Click: 0x360F, the click state of the right mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed
+  * Mouse Style: 0x360F, the draw style of the mouse (00 - mouse currsor is not drawn, 01 - arrow, 10 - hand cursor, 11 - cross cursor)
+  * Keyboad Key Stat: 0x3601 - 0x3646, the pressed state of all the keys on the keyboard (00 - unpressed, 01 - press started, 10 - press ended, 11 - pressed). Keys are indexed in this array based on their js keyCode - 9 (backspace keycode)
+  * Internal Sprite Sheet: 0x3647 - 0x3F47, sprite data for the golf font, emojies, logo and mouse sprites.
+  * Sprite Sheet: 0x3F48 - 0x6F48, the data for the user sprite sheet, this data is stored in the compressed format described below.
+  * Active Sprite Buff: 0x6F49 - 0x6F4A, 16 bit address that points to the memory location that will be used by the sprite functions. You can use this to swap to the internal sprite sheet or reindex sprites on the sprite sheet.
+  * Map Data: 0x6F4B - 0xB74B, the map data, this data is stored in the compressed format described below.
+  * Sprite Flag Data:  0xB74C - 0xB94C, the sprite flag data, each sprite gets one byte of data which is 8 flags.
 
-# Developing your game
+# Data Packing
+Part of the goal for this project was to make the console feel somewhat ‘retro’ no just in it’s visual style but also internally.
+I decided to do this by creating simulated memory which is the engine.RAM array.
+Using this memory efficiently was a goal since early on in development.
+Because of this some of the internal representations of data can get a little difficult to understand in order to aid 
+in this I’ve included the following sections of GoLF pixel data and map tile data. 
+While this may seem complicated it is totally possible to use the engine without understanding these
+concepts so unless you're interested in how the internals of GoLF works feel free to skip these sections.
 
-# Releasing your game
+# GoLF Pixel Data
+GoLF supports up to 8 colors on screen at a time. Unfortunately 8 colors only fills up 3 bits which makes packing the grafix data efficiently rather difficult.
+In order resolve this the golf engine splits a pixels color from its pallet. This means that grafix data is represented as follows in GoLF simulated memory.
+2 bytes with 4 pixel intensities each followed by one byte with 8 color pallets, one for each of the previous 8 pixel intensities.
+You can learn more about his by looking at the pget and pset functions in the golf engine.
+
+# GoLF Map Tile Data
+The golf map supports indexing 512 8x8 sprites from the sprite sheet. This means a map tile value is a maximum of 9 bits. 
+Like with pixel data this odd sizing makes it a little tricky to use memory efficiently. 
+In order to deal with this I pack pixel data using the following method.
+The sprite sheet is broken up into two halves each with 256 sprites.
+The top half is the low half (low memory) and the bottom half is the high half (high memory). 
+I then idex each tile with an 8 bit integer 0-255 and store which half of the sprite sheet it belongs to separately.
+This data is then packed into RAM as follows. 8 bytes with a 0-255 index for each tile, followed by 1 byte 
+with 8 bits to indicate whether the previous 8 tiles are in high or low memory.
+
+# GoLF Graphics Memory Layout (Map and SpriteSheet)
+Additionally it’s worth noting that the GoLF sprite data and GoLF map data are placed next to each other in memory and grow in opposite directions.
+Sprites grow from low memory to high memory and the map grows from high memory to low memory.
+This allows for the sprite sheet or the map to expand beyond the default sizes if needed.
+In the case the the spritesheet ‘overgrows’ the map keep in mind that the map will only index the first
+512 tiles and that the sprite flags will only apply to the first 512 sprites as well.
 
 ### TODO
 ---
