@@ -1,32 +1,38 @@
 # GoLF Engine
-the GoLang Fantasy Engine (GoLF Engine) is a fantasy engine. It draws inspiration from projects fantasy console projects 
+the GoLang Fantasy Engine (GoLF Engine) is a retro game engine. It draws inspiration from fantasy console projects 
 like [pico-8](https://www.lexaloffle.com/pico-8.php), [tic-80](https://tic.computer/), and [pyxle](https://pypi.org/project/pyxel/). 
 Like those projects it is designed to be a retro feeling game creation/ playing tool. Unlike those
-projects GoLF is more minimal in scope and only provides an api and a small set of tools to create youre game. Tools like
-and image editor, and code editor are not built in. fairly restrictive game creation tool focused on creating
-a more managble game creation enviroment the a fully featured game engine would offer. This project differs from those
-projects in a few importan ways however.
-
-# Specs
-  * 192 x 192 screen size
-  * 64 total colors split into 16 pallets with 4 colors each
-  * 8 on screen colors consisting of any 2 of the 16 predefined pallets
-  * one 256 x 128 sprite sheet for a total of 512 8x8 sprites
-  * one 128 x 128 tile map
-  * 60 FPS
-  * Mouse support with 3 different cursor styles
-  * Keyboard support
+projects GoLF is more minimal in scope and only provides an api and a small set of tools to help you create your games. Tools like
+an image editor, and code editor are not built in. Despite this creating games in GoLF is still easy and should still maintain
+the retro game feel.
 
 # Getting Started
-The golf engine is just a go package. It can be installed by running `go get github.com/bjatkin/golf-engine/golf`.  <br />
-There is also a toolkit which you will need to complie you game as well as for importing the sprite sheet and map file.
-you can install this toolkit by running `go get github.com/bjatkin/golf-engine/util`. <br />
-Once both these are installed you can use the golf toolkit to start a new project. Simply create a directory for you new game.
-Then, open that directory in termnal and run the golf_toolkit program. <br />
-The golf_toolkit program is located in the golf-engine/util directory so you can run `./Users/[your user name]/go/src/github.com/bjatkin/golf-engine/util/golf_toolkit` to start it. <br />
-Note that this is for MacOSX users and Windows/ Linux users will have to change the path so it correctly points to the golf-engine/util directory. <br />
-Once you've started the golf_toolkit you can run `init <project name>` command where project name is the name of your game.
-This will create all the nessisary files for you to start building your first game. <br />
+Installing the golf engine is simple. You can install the engine and required tools by running the following commands.
+from your terminal run 
+
+`go get github.com/bjatkin/golf-engine/golf`
+
+ignore any errors you get about syscall/js.
+
+then run
+
+`go get github.com/bjatkin/golf-engine/util`
+
+then create a directory for your game. for example.
+
+`mkdir hello world`
+
+navigte into this direcotry and run the golf_toolkit binary, located in the golf engine utils folder
+
+`./Users/[your user name]/go/src/github.com/bjatkin/golf-engine/util/golf_toolkit`
+
+This will start the golf toolkit which you'll need to help you develop golf engine games. Now you can init your new project.
+
+`init <project name>`
+
+This will create all the nessisary files and folders for you to develop your game. You can edit the assets/spritesheet.png file
+to add sprites to your game. you can also edit assets/map.png to create a map for your game. You can start writing your golf code
+in the main.go file.
 
 # Developing your game
 
@@ -66,6 +72,15 @@ This will create all the nessisary files for you to start building your first ga
   * help - displays all the golf toolkit commands.
   * !! - re-run the last executed command.
 
+# Specs
+  * 192 x 192 screen size
+  * 64 total colors split into 16 pallets with 4 colors each
+  * 8 on screen colors consisting of any 2 of the 16 predefined pallets
+  * one 256 x 128 sprite sheet for a total of 512 8x8 sprites
+  * one 128 x 128 tile map
+  * 60 FPS
+  * Mouse support with 3 different cursor styles
+  * Keyboard support
 
 # The GoLF color pallet
 golf uses a pallet of 64 colors split into 16 four color pallets. You can mix and match these pallets however you want but only 2 can be used at a time
