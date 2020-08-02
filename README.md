@@ -155,7 +155,7 @@ excellent material on how to do this already. Visit here or here for some materi
 
 ### GoLF structs
 
-golf.SOp: This structure is a list of options that can be passed to a sprite to change how it is drawn.
+**golf.SOp:** This structure is a list of options that can be passed to a sprite to change how it is drawn.
   * FH: flip the sprite horizontally.
   * FV: flip the sprite vertically.
   * TCol: set the sprites tranparency color.
@@ -166,7 +166,7 @@ golf.SOp: This structure is a list of options that can be passed to a sprite to 
   * SH: the amount to scale the height of the sprite. default value is 1 or no scaling.
   * Fixed: if this is set to true then the sprite ignores the camera x & y when draing. Useful for UI.
 
-golf.TOp: this structure is a list of options that can be passed to text functions to change how text is drawn.
+**golf.TOp:** this structure is a list of options that can be passed to text functions to change how text is drawn.
   * Col: The color to draw the text.
 	* Fixed: If this is set to true the text ignores the camera.
 	* SW: the amount to scale the width of the text.
@@ -174,115 +174,112 @@ golf.TOp: this structure is a list of options that can be passed to text functio
 
 ### Golf Types
 
-golf.Col: a golf color. there are 8 colors ranging from Col0 to Col7. The first 4 colors map to pallet A and the last
+**golf.Col:** a golf color. there are 8 colors ranging from Col0 to Col7. The first 4 colors map to pallet A and the last
 four map to pallet B.
 
-golf.Pal: a golf pallet. There are 16 available pallets (Pal0 to Pal15). These can be used to give you game a unique feel/ look.
+**golf.Pal:** a golf pallet. There are 16 available pallets (Pal0 to Pal15). These can be used to give you game a unique feel/ look.
 
 ### The GoLF Engine
 
-NewEngine(updateFunc func(), draw func()): creates a golf engine instance and returns a pointer to the engine. The golf engine is
-the main object used to perform most of the golf functions
+**NewEngine(updateFunc func(), draw func()):** creates a golf engine instance and returns a pointer to the engine. 
+The golf engine is the main object used to perform most of the golf functions
 
-engine.Run(): starts the game engine running. Once this is run the update function will be called 60 times a second and the draw function will be called 60 times a second.
+**engine.Run():** starts the game engine running. Once this is run the update function will be called 60 times a second and the draw function will be called 60 times a second.
 
-engine.Frames(): returns the number of frames that have passed since the game engine was started. This count includes
+**engine.Frames():** returns the number of frames that have passed since the game engine was started. This count includes
 the startup animation frames. The startup animation is 254 frames meaning the first frame that the update/ draw function 
 will be called is frame 255.
 
-engine.DrawMouse(style int): sets the draw style for the mouse indictor.
+**engine.DrawMouse(style int):** sets the draw style for the mouse indictor.
   * 0 = no mouse cursor is drawn
   * 1 = a mouse arrow is drawn
   * 2 = a hand cursor is drawn
   * 3 = a cross cursoe is drawn
 
-engine.Cls(col golf.Col): fills the screen with the col color.
+**engine.Cls(col golf.Col):** fills the screen with the col color.
 
-engine.Camera(x, y int): Changes the X, Y coordinates of the camera. This value is then subtracted from the
+**engine.Camera(x, y int):** Changes the X, Y coordinates of the camera. This value is then subtracted from the
 X, Y coordinates of all future drawing calls. This is useful for moving the panning the screen around.
 
-engine.Clip(x, y, w, h int): clips all future draw functions with upper left corner at point (x, y) and with w and heigh h.
+**engine.Clip(x, y, w, h int):** clips all future draw functions with upper left corner at point (x, y) and with w and heigh h.
 
-engine.RClip(): resets the screen clipping so that no screen pixels are clipped.
+**engine.RClip():** resets the screen clipping so that no screen pixels are clipped.
 
-engine.PalA(pallet golf.Pal): sets the first pallet.
+**engine.PalA(pallet golf.Pal):** sets the first pallet.
 
-engine.PalB(pallet golf.Pal): sets the second pallet.
+**engine.PalB(pallet golf.Pal):** sets the second pallet.
 
-engine.PalGet(): returns the first and second pallets that are currently set.
+**engine.PalGet():** returns the first and second pallets that are currently set.
 
 ### Shapes
 
-engine.Pset(x, y float64, col golf.Col): Sets the pixel on the screen at point (x, y) to the color col.
+**engine.Pset(x, y float64, col golf.Col):** Sets the pixel on the screen at point (x, y) to the color col.
 
-engine.Pget(x, y float64): Gets the color currently set at screen pixel (x, y).
+**engine.Pget(x, y float64):** Gets the color currently set at screen pixel (x, y).
 
-engine.Rect(x, y, w, h float64, col golf.Col): Draw an empty rectangle outline with the specified draw color.
+**engine.Rect(x, y, w, h float64, col golf.Col):** Draw an empty rectangle outline with the specified draw color.
 
-engine.RectFill(x, y, w, h float64, col golf.Col): Draw a filled rectangle with the specified draw color.
+**engine.RectFill(x, y, w, h float64, col golf.Col):** Draw a filled rectangle with the specified draw color.
 
-engine.Line(x1, y1, x2, y2 float64, col golf.Col): Draw a line from point (x1, y1) to (x2, y2). The line is drawn with
+**engine.Line(x1, y1, x2, y2 float64, col golf.Col):** Draw a line from point (x1, y1) to (x2, y2). The line is drawn with
 the specified color.
 
-engine.Circ(xc, yx, r float64, col golf.Col): Draw a circle outline with center at point (xc, yc) with radius r.
+**engine.Circ(xc, yx, r float64, col golf.Col):** Draw a circle outline with center at point (xc, yc) with radius r.
 The outline is drawn with the specified color.
 
-engine.CircFill(xc, yc, r float64, col golf.Col): Draw a filled circle with center at point (xc, yc) with radius r.
+**engine.CircFill(xc, yc, r float64, col golf.Col):** Draw a filled circle with center at point (xc, yc) with radius r.
 The circle is drawn with the specified color
 
 ### Controlls
 
-engine.Btn(key golf.Key): returns true if the given key is being held on this frame.
+**engine.Btn(key golf.Key):** returns true if the given key is being held on this frame.
 
-engine.Btnp(key golf.Key): returns true if the given key was first pressed on this frame.
+**engine.Btnp(key golf.Key):** returns true if the given key was first pressed on this frame.
 
-engine.Btnr(key golf.Key): returns true if the given key was released on this frame.
+**engine.Btnr(key golf.Key):** returns true if the given key was released on this frame.
 
-engine.Mbtn(key golf.MouseBtn): returns true if the given mouse key is being held on this frame.
+**engine.Mbtn(key golf.MouseBtn):** returns true if the given mouse key is being held on this frame.
 
-engine.Mbtnp(key golf.MouseBtn): returns true if the given mouse key was first pressed on this frame.
+**engine.Mbtnp(key golf.MouseBtn):** returns true if the given mouse key was first pressed on this frame.
 
-engine.Mbtnr(key golf.MouseBtn): returns true if the given mouse was released ont his frame.
+**engine.Mbtnr(key golf.MouseBtn):** returns true if the given mouse was released ont his frame.
 
 ### Map
 
-engine.LoadMap(mapData [0x4800]byte): load the map data into memory.
+**engine.LoadMap(mapData [0x4800]byte):** load the map data into memory.
 
-engine.Map(mx, my, mw, mh int, dx, dy float64, opts ...SOp): Draws the map data onto the screen witht he left coordinate 
+**engine.Map(mx, my, mw, mh int, dx, dy float64, opts ...SOp):** Draws the map data onto the screen witht he left coordinate 
 at screen point dx, dy. mx and my are the map coordinates in tiles and dw and mh are the map size in tiles. opts are optional and change how each individual map tile is drawn.
 
-engine.Mset(x, y, t int): sets the map tile to sprite number t at the map coordinate (x, y)
+**engine.Mset(x, y, t int):** sets the map tile to sprite number t at the map coordinate (x, y)
 
-engine.Mget(x, y int): returns the sprite index of the tile a the map coordinate (x, y)
+**engine.Mget(x, y int):** returns the sprite index of the tile a the map coordinate (x, y)
 
 ### Sprites
 
-engine.LoadSprs(sheet [0x3000]byte): load the sprite sheet data into memory.
+**engine.LoadSprs(sheet [0x3000]byte):** load the sprite sheet data into memory.
 
-engine.LoadFlags(flags [0x200]byte): load the sprite flags into memory. Each sprite in the sprite sheet has 1 byte 
+**engine.LoadFlags(flags [0x200]byte):** load the sprite flags into memory. Each sprite in the sprite sheet has 1 byte 
 (or 8 flags) associated with is that can be set and then later checked. The meaning of each of these flags is 
 totally up to the needs of the progarmmer.
 
-engine.Spr(n int, x, y float64, opts ...SOp): draw sprite number n at screen position x, y. opts are optional and change
+**engine.Spr(n int, x, y float64, opts ...SOp):** draw sprite number n at screen position x, y. opts are optional and change
 how the sprite is drawn on screen. the sprite sheet is broken up into 8x8 areas that are then number from the top left 
 to the bottom right. Usually the first 8x8 sprite is not used as this sprite is drawn as a transparent tile when used on the map screen.
 
-engine.SSpr(sx, sy, sw, sh int, dx, dy float64, opts ...SOp): a more general version of the spr function. It draws a sprite from an
-abitrary spot on the sprite sheet with abitrary size to the screen. sx and sy are the pixel coordiantes of upper left corner of the
-sprite on the sprite sheet. sw and sh are the sprites withd and height respectivly. dx and dy are the screen coordinates that
-the sprite is drawn to. opts is optional and changes how the sprite is drawn on screen.
+**engine.SSpr(sx, sy, sw, sh int, dx, dy float64, opts ...SOp):** a more general version of the spr function. It draws a sprite from an abitrary spot on the sprite sheet with abitrary size to the screen. sx and sy are the pixel coordiantes of upper left corner of the sprite on the sprite sheet. sw and sh are the sprites withd and height respectivly. dx and dy are the screen coordinates that the sprite is drawn to. opts is optional and changes how the sprite is drawn on screen.
 
-engine.Fget(n, f int): returns flag number f associated with sprite number n.
+**engine.Fget(n, f int):** returns flag number f associated with sprite number n.
 
-engine.Fset(n, f int, s bool): sets the flag number f for sprite n to the same value as s.
+**engine.Fset(n, f int, s bool):** sets the flag number f for sprite n to the same value as s.
 
-engine.FgetByte(n int): returns the full byte assocated with sprite number n.
+**engine.FgetByte(n int):** returns the full byte assocated with sprite number n.
 
-engine.FsetByte(n int, b byte): sets the full byte assocated with sprite number n to the value of b.
+**engine.FsetByte(n int, b byte):** sets the full byte assocated with sprite number n to the value of b.
 
 ### Text
 
-engine.Text(x, y float64, text string, opts ...TOp): draws the text on screen at point (x, y), all text is converted to the golf
+**engine.Text(x, y float64, text string, opts ...TOp):** draws the text on screen at point (x, y), all text is converted to the golf
 engines internal font which is all upper case. There are also several sequences that are converted in to golf emojis. escaped sequences are listed bellow. opts are optional and modify how the text is drawn.
   * (<) left button
   * (>) right button
@@ -318,18 +315,18 @@ engines internal font which is all upper case. There are also several sequences 
   note: if you need to draw one of these patterns without it being drawn as an emoji you can use the '^' symbole to escape.
   the pattern. (e.g. ^** will be drawn as two asterix characters rather than a star)
 
-engine.TextL(text string, opts ...TOp): draws text in the upper left hand corner of the screen. Each time TextL called a new
+**engine.TextL(text string, opts ...TOp):** draws text in the upper left hand corner of the screen. Each time TextL called a new
 line is added.
 
-engine.TextR(text string, opts ...TOp): draws text in the upper right hand corner of the screen. Each time TextR is called
+**engine.TextR(text string, opts ...TOp):** draws text in the upper right hand corner of the screen. Each time TextR is called
 a new line is added.
 
 ### Cart Data
 
-engine.Dset(name string, data []byte): stores persistent data to a users browser as a cookie. only 1024 bytes or less can be stored and the name must be alpa numeric.
+**engine.Dset(name string, data []byte):** stores persistent data to a users browser as a cookie. only 1024 bytes or less can be stored and the name must be alpa numeric.
 the name is used to save the data so it can be retrived later. Keep in mind this name should be unique or it may get overwritten by other games.
 
-engine.Dget(name string): retrievs data stored with Dset. In addition to returning the data it returns a bool which is true if the saved data was successfully found.
+**engine.Dget(name string):** retrievs data stored with Dset. In addition to returning the data it returns a bool which is true if the saved data was successfully found.
 
 # The GoLF memory map
 Another goal of golf is to be a 'hackable' engine. To achieve this golf uses virtual ram (stored in engine.RAM). This virtual ram
@@ -375,6 +372,8 @@ In order resolve this the golf engine splits a pixels color from its pallet. Thi
 2 bytes with 4 pixel intensities each followed by one byte with 8 color pallets, one for each of the previous 8 pixel intensities.
 You can learn more about his by looking at the pget and pset functions in the golf engine.
 
+![Sprite Data](https://github.com/bjatkin/golf-engine/blob/master/images/sprite_data.png)
+
 # GoLF Map Tile Data
 The golf map supports indexing 512 8x8 sprites from the sprite sheet. This means a map tile value is a maximum of 9 bits. 
 Like with pixel data this odd sizing makes it a little tricky to use memory efficiently. 
@@ -385,12 +384,16 @@ I then idex each tile with an 8 bit integer 0-255 and store which half of the sp
 This data is then packed into RAM as follows. 8 bytes with a 0-255 index for each tile, followed by 1 byte 
 with 8 bits to indicate whether the previous 8 tiles are in high or low memory.
 
+![Map Tile Data](https://github.com/bjatkin/golf-engine/blob/master/images/map_data.png)
+
 # GoLF Graphics Memory Layout (Map and SpriteSheet)
 Additionally it’s worth noting that the GoLF sprite data and GoLF map data are placed next to each other in memory and grow in opposite directions.
 Sprites grow from low memory to high memory and the map grows from high memory to low memory.
 This allows for the sprite sheet or the map to expand beyond the default sizes if needed.
 In the case the the spritesheet ‘overgrows’ the map keep in mind that the map will only index the first
 512 tiles and that the sprite flags will only apply to the first 512 sprites as well.
+
+![Map Vs Sprite Data](https://github.com/bjatkin/golf-engine/blob/master/images/sprite_vs_map.png)
 
 ### TODO
 ---
