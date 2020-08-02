@@ -43,7 +43,10 @@ func convertMap(mapFile, spriteFile, outputFile string) error {
 					i++
 				}
 			}
-			spriteKey[key] = spriteIndex
+			_, added := spriteKey[key]
+			if !added {
+				spriteKey[key] = spriteIndex
+			}
 			spriteIndex++
 		}
 	}

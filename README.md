@@ -1,23 +1,65 @@
 # GoLF Engine
 the GoLang Fantasy Engine (GoLF Engine) is a fantasy engine. It draws inspiration from projects fantasy console projects 
-like pico-8 and tic-80. Like those projects it is designed to be a fairly restrictive game creation tool focused on creating
+like pico-8 and tic-80. Like those projects it is designed to be a retro feeling game creation/ playing tool. Unlike those
+projects GoLF is more minimal in scope and only provides an api and a small set of tools to create youre game. Tools like
+and image editor, and code editor are not built in. fairly restrictive game creation tool focused on creating
 a more managble game creation enviroment the a fully featured game engine would offer. This project differs from those
-projects in a few importan ways however. First, while the the golf engine strives to present 'retro' style restrictions, these
-restrictions don't apply to the code. The code that is produced by golf is compiled WASM meaning your performance budget is
-much larger with the GoLF engine than it would be with other fantasy consoles. It also has no limits on the size of your
-code base. GoLF also uses golang, which is a compiled language rather than a scripting language like lua. Finally unlike other
-fantasy consoles which have tools like a sprite editor and a music editor build in, GoLF does not yet provide these tools.
-This is more because of my limited time as the developer rather than any technical reason, however for these reasons I have
-chosen to refere to my GoLF as an fantasy engine, rather than a fantasy console (technically though a fantasy framework might be
-more apropriate). Despite these differences I hope you will still enjoy playing and making games with golf.
+projects in a few importan ways however.
+
+# Specs
+  * 192 x 192 screen size
+  * 64 total colors split into 16 pallets with 4 colors each
+  * 8 on screen colors consisting of any 2 of the 16 predefined pallets
+  * one 256 x 128 sprite sheet for a total of 512 8x8 sprites
+  * one 128 x 128 tile map
+  * 60 FPS
+  * Mouse support with 3 different cursor styles
+  * Keyboard support
 
 # Getting Started
-The golf engine is just a go package which can be installed by using ‘go get -u atkins/golf’. This package contains 2 main folders. 
-The first is the golf folder which contains the golf package. You can simply import this package to use it ‘import /github.com/bjatkin/golf’.
-The second directory is the util directory which contains the golf_toolkit. The golf_toolkit is a set of tools used to make working with golf easier.
-In order to create a golf engine game simply navigate to the desired location for the game in your terminal and then run the golf toolkit binary from the directory. 
-/user/brandonatkinson/go/src/github.com/bjatkin/golf/util. Once you’ve started the golf toolkit you can run the init <project name> command. 
-This will create a config file and create all the necessary project files so your game can be run.
+The golf engine is just a go package. It can be installed by running `go get github.com/bjatkin/golf-engine/golf`.
+There is also a toolkit which you will need to complie you game as well as for importing the sprite sheet and map file.
+you can install this toolkit by running `go get github.com/bjatkin/golf-engine/util`. 
+Once both these are installed you can use the golf toolkit to start a new project. Simply create a directory for you new game.
+Then, open that directory in termnal and run the golf_toolkit program.
+The golf_toolkit program is located in the golf-engine/util directory so you can run `./Users/[your user name]/go/src/github.com/bjatkin/golf-engine/util/golf_toolkit` to start it.
+Note that this is for MacOSX users and Windows/ Linux users will have to change the path so it correctly points to the golf-engine/util directory.
+Once you've started the golf_toolkit you can run `init <project name>` command where project name is the name of your game.
+This will create all the nessisary files for you to start building your first game
+
+# GoLF toolkit commands
+  * about: Displays some simple information about the golf toolkit and why it exsists.
+  * exit: Quits the golf toolkit. Will stop the development server if it's running.
+  * map: Takes a map file location, a sprite file location, and an output file location. the map file should be a png file filled with 8x8 sprites from the specified sprite sheet. The result is saved to the output file.
+  * csvmap: Takes a csv map file location and an output file. This file should have a list of sprite indexes which corresponds to the index of 8x8 sprites on the sprite sheet. The resut is save to the output file.
+  * sprite: Takes a sprite file location and an output file location. Converts the sprite sheet into golf data and saves it to the output file location. Sprite sheets must only use 2 pallets from the 16 GoLF pallets
+  * flag: Takes a flage file location and an output file location. Contains a list of flags that corespond to the sprite sheet. Each flag should be 8 characters long and consist of 1's(flag is set) and 0's(flag is not set).
+  This file need not contain all flags for all 512 sprites.
+  * startserver: starts a development server. This will automatically only your default browsers to localhost:8080 where you can play your game. Each time you reload your game your project will be rebuilt.
+  * stopserver: stops the deveopment server if it's running. Otherwise does nothing.
+  * build: builds the current project, creating a new WASM game file.
+  * init: init's a new game in the current directory. Creates the following files.
+    * assets
+      * map.png - an empty my file.
+      * spritesheet.png - an empyt sprite sheet.
+    * web
+      * index.html - simple html file with a canvas to run your game.
+      * wasm_exec.js - the golang wasm glue file.
+    * main.go - some boiler plate code to get you started.
+    * golf_config - used by the golf_toolkit to compile your project.
+    * build.sh - build file.
+  * config: takes a golf_config property name and prints the current value. valid config property names are listed below.
+    * name - your project name.
+    * spriteFile - the sprite file to be converted when build is run.
+    * mapFile - the map file to be converted when build is run.
+    * flagFile - the flag file to be converted when build is run.
+    * outputSpriteFile - the go file to write the converted sprite data to.
+    * outputMapFile - the go file to write the converted map data to.
+    * outputFlagFile - the go file to write the converted flag data to.
+  * setconfig - takes a golf_config property name and a new value. the new value is assigned to that value in the golf_config file.
+  * clear - clears the terminal screen.
+  * help - displays all the golf toolkit commands.
+  * !! - re-run the last executed command.
 
 # Example Games
 There are a few example projects located at golfExamples which you can download, play, and review to better understand how the golf engine works.

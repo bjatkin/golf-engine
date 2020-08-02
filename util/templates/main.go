@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fantasyConsole/golf_server/golf_test/golf"
+	"github.com/bjatkin/golf-engine/golf"
 )
 
 var g *golf.Engine
@@ -9,14 +9,17 @@ var g *golf.Engine
 func main() {
 	g = golf.NewEngine(update, draw)
 
-	g.BG(golf.Col3)
+	// g.LoadSprs(spriteSheet)
+	// g.LoadMap(mapData)
+	// g.LoadFlags(flagData)
+
 	g.Run()
 }
 
 func update() {}
 
 func draw() {
-	g.Cls()
+	g.Cls(golf.Col3)
 
 	g.Text(60, 50, "hello world!")
 }
