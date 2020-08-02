@@ -17,15 +17,15 @@ projects in a few importan ways however.
   * Keyboard support
 
 # Getting Started
-The golf engine is just a go package. It can be installed by running `go get github.com/bjatkin/golf-engine/golf`.
+The golf engine is just a go package. It can be installed by running `go get github.com/bjatkin/golf-engine/golf`.  <br />
 There is also a toolkit which you will need to complie you game as well as for importing the sprite sheet and map file.
-you can install this toolkit by running `go get github.com/bjatkin/golf-engine/util`. 
+you can install this toolkit by running `go get github.com/bjatkin/golf-engine/util`. <br />
 Once both these are installed you can use the golf toolkit to start a new project. Simply create a directory for you new game.
-Then, open that directory in termnal and run the golf_toolkit program.
-The golf_toolkit program is located in the golf-engine/util directory so you can run `./Users/[your user name]/go/src/github.com/bjatkin/golf-engine/util/golf_toolkit` to start it.
-Note that this is for MacOSX users and Windows/ Linux users will have to change the path so it correctly points to the golf-engine/util directory.
+Then, open that directory in termnal and run the golf_toolkit program. <br />
+The golf_toolkit program is located in the golf-engine/util directory so you can run `./Users/[your user name]/go/src/github.com/bjatkin/golf-engine/util/golf_toolkit` to start it. <br />
+Note that this is for MacOSX users and Windows/ Linux users will have to change the path so it correctly points to the golf-engine/util directory. <br />
 Once you've started the golf_toolkit you can run `init <project name>` command where project name is the name of your game.
-This will create all the nessisary files for you to start building your first game
+This will create all the nessisary files for you to start building your first game. <br />
 
 # GoLF toolkit commands
   * about: Displays some simple information about the golf toolkit and why it exsists.
@@ -122,11 +122,35 @@ This allows for the sprite sheet or the map to expand beyond the default sizes i
 In the case the the spritesheet ‘overgrows’ the map keep in mind that the map will only index the first
 512 tiles and that the sprite flags will only apply to the first 512 sprites as well.
 
-# GoLF and WASM
-WASM is an exciting new technology and brings a lot of new power and many new programing languages to the web. GoLF was designed
-from the groud up to work with WASM. 
-
 # GoLF API
+
+### GoLF structs
+
+golf.SOp: This structure is a list of options that can be passed to a sprite to change how it is drawn.
+  * FH: flip the sprite horizontally.
+  * FV: flip the sprite vertically.
+  * TCol: set the sprites tranparency color.
+  * PFrom & PTo: change the sprites pallet. colors number n in PFrom is converted to color number n in PTo.
+  * W: width of the sprite in tiles to read from the spritesheet. (e.g. W: 2 is 16 pixels in width).
+  * H: height of the sprite in tiles to read from the spritesheet. (e.g. H: 2 is 16 pixels tall).
+  * SW: the amount to scale the width of the sprite. default value is 1 or no scaling.
+  * SH: the amount to scale the height of the sprite. default value is 1 or no scaling.
+  * Fixed: if this is set to true then the sprite ignores the camera x & y when draing. Useful for UI.
+
+golf.TOp: this structure is a list of options that can be passed to text functions to change how text is drawn.
+  * Col: The color to draw the text.
+	* Fixed: If this is set to true the text ignores the camera.
+	* SW: the amount to scale the width of the text.
+  * SH: the amount to scale the height of the text.
+
+### Golf Types
+
+golf.Col: a golf color. there are 8 colors ranging from Col0 to Col7. The first 4 colors map to pallet A and the last
+four map to pallet B.
+
+golf.Pal: a golf pallet. There are 16 available pallets (Pal0 to Pal15). These can be used to give you game a unique feel/ look.
+
+### The GoLF Engine
 
 NewEngine(updateFunc func(), draw func()): creates a golf engine instance and returns a pointer to the engine. The golf engine is
 the main object used to perform most of the golf functions
@@ -148,6 +172,22 @@ engine.Cls(col golf.Col): fills the screen with the col color.
 engine.Camera(x, y int): Changes the X, Y coordinates of the camera. This value is then subtracted from the
 X, Y coordinates of all future drawing calls. This is useful for moving the panning the screen around.
 
+engine.Clip(x, y, w, h int): clips all future draw functions with upper left corner at point (x, y) and with w and heigh h.
+
+engine.RClip(): resets the screen clipping so that no screen pixels are clipped.
+
+engine.PalA(pallet golf.Pal): sets the first pallet.
+
+engine.PalB(pallet golf.Pal): sets the second pallet.
+
+engine.PalGet(): returns the first and second pallets that are currently set.
+
+### Shapes
+
+engine.Pset(x, y float64, col golf.Col): Sets the pixel on the screen at point (x, y) to the color col.
+
+engine.Pget(x, y float64): Gets the color currently set at screen pixel (x, y).
+
 engine.Rect(x, y, w, h float64, col golf.Col): Draw an empty rectangle outline with the specified draw color.
 
 engine.RectFill(x, y, w, h float64, col golf.Col): Draw a filled rectangle with the specified draw color.
@@ -161,19 +201,7 @@ The outline is drawn with the specified color.
 engine.CircFill(xc, yc, r float64, col golf.Col): Draw a filled circle with center at point (xc, yc) with radius r.
 The circle is drawn with the specified color
 
-engine.Clip(x, y, w, h int): clips all future draw functions with upper left corner at point (x, y) and with w and heigh h.
-
-engine.RClip(): resets the screen clipping so that no screen pixels are clipped.
-
-engine.Pset(x, y float64, col golf.Col): Sets the pixel on the screen at point (x, y) to the color col.
-
-engine.Pget(x, y float64): Gets the color currently set at screen pixel (x, y).
-
-engine.PalA(pallet golf.Pal): sets the first pallet.
-
-engine.PalB(pallet golf.Pal): sets the second pallet.
-
-engine.PalGet(): returns the first and second pallets that are currently set.
+### Controlls
 
 engine.Btn(key golf.Key): returns true if the given key is being held on this frame.
 
@@ -187,6 +215,8 @@ engine.Mbtnp(key golf.MouseBtn): returns true if the given mouse key was first p
 
 engine.Mbtnr(key golf.MouseBtn): returns true if the given mouse was released ont his frame.
 
+### Map
+
 engine.LoadMap(mapData [0x4800]byte): load the map data into memory.
 
 engine.Map(mx, my, mw, mh int, dx, dy float64, opts ...SOp): Draws the map data onto the screen witht he left coordinate 
@@ -195,6 +225,8 @@ at screen point dx, dy. mx and my are the map coordinates in tiles and dw and mh
 engine.Mset(x, y, t int): sets the map tile to sprite number t at the map coordinate (x, y)
 
 engine.Mget(x, y int): returns the sprite index of the tile a the map coordinate (x, y)
+
+### Sprites
 
 engine.LoadSprs(sheet [0x3000]byte): load the sprite sheet data into memory.
 
@@ -219,16 +251,7 @@ engine.FgetByte(n int): returns the full byte assocated with sprite number n.
 
 engine.FsetByte(n int, b byte): sets the full byte assocated with sprite number n to the value of b.
 
-golf.SOp: this structure represents a list of options that can be passed to a sprite to change how it is drawn.
-  * FH: flip the sprite horizontally.
-  * FV: flip the sprite vertically.
-  * TCol: set the sprites tranparency color.
-  * PFrom & PTo: change the sprites pallet. colors number n in PFrom is converted to color number n in PTo.
-  * W: width of the sprite in tiles to read from the spritesheet. (e.g. W: 2 is 16 pixels in width).
-  * H: height of the sprite in tiles to read from the spritesheet. (e.g. H: 2 is 16 pixels tall).
-  * SW: the amount to scale the width of the sprite. default value is 1 or no scaling.
-  * SH: the amount to scale the height of the sprite. default value is 1 or no scaling.
-  * Fixed: if this is set to true then the sprite ignores the camera x & y when draing. Useful for UI.
+### Text
 
 engine.Text(x, y float64, text string, opts ...TOp): draws the text on screen at point (x, y), all text is converted to the golf
 engines internal font which is all upper case. There are also several sequences that are converted in to golf emojis. escaped sequences are listed bellow. opts are optional and modify how the text is drawn.
@@ -272,11 +295,6 @@ line is added.
 engine.TextR(text string, opts ...TOp): draws text in the upper right hand corner of the screen. Each time TextR is called
 a new line is added.
 
-golf.Col: a golf color. there are 8 colors ranging from Col0 to Col7. The first 4 colors map to pallet A and the last
-four map to pallet B.
-
-golf.Pal: a golf pallet. There are 16 available pallets (Pal0 to Pal15). These can be used to give you game a unique feel/ look.
-
 # The GoLF memory map
 the golf engine is designed to be hackable as was as to maintin a retro feel which developing. In order to achieve this the
 golf engine uses a block of memory that can be accessed using the RAM member variable of a golf engine instance. The engine.RAM
@@ -299,64 +317,8 @@ also help developers finish projects which are major goals of this engine. The 1
 
 ### TODO
 ---
-* Build out the readme so there is good documentation for the API
-* Change Cls to take a Col so we dont need to store a bg color (Update the README)
-* Create an example golang server for using this framework for playing games online
 * Add instructions for installing and playing the golf examples
 * Test the golf toolkit on a windows machine
-
-### DONE
----
-* Fix mouse transparency [x]
-* Clean up startup animation code [x]
-* Use all 8 colors on the loading animation to make the fading nicer [x]
-* Fix text alpha [x]
-* Show error on server automatic build in golf toolkit [x]
-* Test new map code [x]
-* chang the way the map code works so that it uses the new color atlas and works with the new sprite import code [x]
-* give X, Y coords on unknown color in image [x]
-* Change build code to use hex instead of bin to make smaller generated files [x]
-* Test the new sprite importing code [x]
-* Inject draw.js to make golf require less dependancies [x]
-* Default to the black and gray pallets [x]
-* Fix color pallet swapping caused by the startup anim (allow the user to set the pallets) [x]
-* Template generation code should create arrays rather than slices [x]
-* Add last 4 color pallets (Black White Red Blue pallet) [x]
-* Add scale width and scale height opts to the text drawing [x]
-* Add startup animation when you start the game [x]
-* Fix the color pallet [x]
-* Add function to load sprite flag data [x]
-* Change the sprite functions from using ints to using floats [x]
-* Change the SprOpts and TextOpts to be Sop and Top to make the API more terse [x]
-* Add a save cart data function (save to a browser cookie) [x]
-* Read cart data function (read from the browsers cookies) [x]
-* Add readme to go examples [x]
-* Create github for golfExamples games [x]
-* Check out Faith and Faith 2 itch.io [x]
-* Better error message when building fails in the golf_toolkit [x]
-* Throw a waning when rebuilding on refresh fails [x]
-* Add in command to modify the config file [x]
-* Fix the gaps that start to form in the map file as you scale up (only a problem with scale w/h) [x]
-* Make the map tool respect SprOpts, or make a separete MapOpts for pallet swaping [x]
-* Make the build tool work with csv map files [x]
-* Make golf_config not a hidden file [x]
-* Use \n chars to seperate golf config files rather than commas. this will make it easier to read and use [x]
-* restructure code. Delete bad old code. Make the repo nice and clean [x]
-* Add function to load map data (reverse order) [x]
-* Make tools for importings maps. [x]
-  * Import CSV as map [x]
-  * Import image as map [x]
-* restructure init so that starting code is nicer (e.g. js folder, assets folder etc.) [x]
-* oo for the filled in circle is a bad letter sequence. Picke a sequence that is less common in regular words [x]
-* Create csv format for the flags (Probably just 1's and 0's) [x]
-* Import sprite flag csv (Should be pretty easy) [x]
-* Create the Golf ToolKit [x]
-* Add about and help commands [x]
-* Add clear and !! command to the go toolkit [x]
-* Fix Filled Circles so the look the same as hollo ones [x]
-* Code automatically recompiles on browsers refresh [x]
-* Start and Stop server with golf_toolkit (nonblocking) [x]
-* Add build and init to golf_toolkit [x]
 
 ### TODO long term
 ---

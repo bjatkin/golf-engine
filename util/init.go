@@ -53,10 +53,10 @@ func initProject(args []string) error {
 		return err
 	}
 
-	err = addFile("web/draw.js", drawTemplate[:], false)
-	if err != nil {
-		return err
-	}
+	// err = addFile("web/draw.js", drawTemplate[:], false)
+	// if err != nil {
+	// 	return err
+	// }
 
 	err = addFile("web/wasm_exec.js", wasm, true)
 	if err != nil {

@@ -154,6 +154,14 @@ var commands = []command{
 	},
 
 	command{
+		"play",
+		"play <wasm file>",
+		"plays the wasm game file",
+		1,
+		playGame,
+	},
+
+	command{
 		"build",
 		"build",
 		"builds the current golf project and creates a wasm file",
