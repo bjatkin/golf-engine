@@ -1,6 +1,7 @@
 # GoLF Engine
 the GoLang Fantasy Engine (GoLF Engine) is a fantasy engine. It draws inspiration from projects fantasy console projects 
-like pico-8 and tic-80. Like those projects it is designed to be a retro feeling game creation/ playing tool. Unlike those
+like [pico-8](https://www.lexaloffle.com/pico-8.php), [tic-80](https://tic.computer/), and [pyxle](https://pypi.org/project/pyxel/). 
+Like those projects it is designed to be a retro feeling game creation/ playing tool. Unlike those
 projects GoLF is more minimal in scope and only provides an api and a small set of tools to create youre game. Tools like
 and image editor, and code editor are not built in. fairly restrictive game creation tool focused on creating
 a more managble game creation enviroment the a fully featured game engine would offer. This project differs from those
