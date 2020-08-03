@@ -1,6 +1,6 @@
 # GoLF Engine
-the GoLang Fantasy Engine (GoLF Engine) is a retro game engine. It draws inspiration from fantasy console projects 
-like [pico-8](https://www.lexaloffle.com/pico-8.php), [tic-80](https://tic.computer/), and [pyxle](https://pypi.org/project/pyxel/). 
+the GoLang Fantasy Engine (GoLF Engine) is a retro game engine. It draws inspiration from fantasy console projects like 
+[pico-8](https://www.lexaloffle.com/pico-8.php), [tic-80](https://tic.computer/), and [pyxle](https://pypi.org/project/pyxel/). 
 Like those projects it is designed to be a retro feeling game creation/ playing tool. Unlike those
 projects GoLF is more minimal in scope and only provides an api and a small set of tools to help you create your games. Tools like
 an image editor, and code editor are not built in. Despite this creating games in GoLF is still easy and should still maintain
@@ -39,17 +39,17 @@ in the main.go file.
 # Releasing your game
 
 # GoLF toolkit commands
-  * about: Displays some simple information about the golf toolkit and why it exsists.
-  * exit: Quits the golf toolkit. Will stop the development server if it's running.
-  * map: Takes a map file location, a sprite file location, and an output file location. the map file should be a png file filled with 8x8 sprites from the specified sprite sheet. The result is saved to the output file.
-  * csvmap: Takes a csv map file location and an output file. This file should have a list of sprite indexes which corresponds to the index of 8x8 sprites on the sprite sheet. The resut is save to the output file.
-  * sprite: Takes a sprite file location and an output file location. Converts the sprite sheet into golf data and saves it to the output file location. Sprite sheets must only use 2 pallets from the 16 GoLF pallets
-  * flag: Takes a flage file location and an output file location. Contains a list of flags that corespond to the sprite sheet. Each flag should be 8 characters long and consist of 1's(flag is set) and 0's(flag is not set).
+  * **about:** Displays some simple information about the golf toolkit and why it exsists.
+  * **exit:** Quits the golf toolkit. Will stop the development server if it's running.
+  * **map:** Takes a map file location, a sprite file location, and an output file location. the map file should be a png file filled with 8x8 sprites from the specified sprite sheet. The result is saved to the output file.
+  * **csvmap:** Takes a csv map file location and an output file. This file should have a list of sprite indexes which corresponds to the index of 8x8 sprites on the sprite sheet. The resut is save to the output file.
+  * **sprite:** Takes a sprite file location and an output file location. Converts the sprite sheet into golf data and saves it to the output file location. Sprite sheets must only use 2 pallets from the 16 GoLF pallets
+  * **flag:** Takes a flage file location and an output file location. Contains a list of flags that corespond to the sprite sheet. Each flag should be 8 characters long and consist of 1's(flag is set) and 0's(flag is not set).
   This file need not contain all flags for all 512 sprites.
-  * startserver: starts a development server. This will automatically only your default browsers to localhost:8080 where you can play your game. Each time you reload your game your project will be rebuilt.
-  * stopserver: stops the deveopment server if it's running. Otherwise does nothing.
-  * build: builds the current project, creating a new WASM game file.
-  * init: init's a new game in the current directory. Creates the following files.
+  * **startserver:** starts a development server. This will automatically only your default browsers to localhost:8080 where you can play your game. Each time you reload your game your project will be rebuilt.
+  * **stopserver:** stops the deveopment server if it's running. Otherwise does nothing.
+  * **build:** builds the current project, creating a new WASM game file.
+  * **init:** init's a new game in the current directory. Creates the following files.
     * assets
       * map.png - an empty my file.
       * spritesheet.png - an empyt sprite sheet.
@@ -59,7 +59,7 @@ in the main.go file.
     * main.go - some boiler plate code to get you started.
     * golf_config - used by the golf_toolkit to compile your project.
     * build.sh - build file.
-  * config: takes a golf_config property name and prints the current value. valid config property names are listed below.
+  * **config:** takes a golf_config property name and prints the current value. valid config property names are listed below.
     * name - your project name.
     * spriteFile - the sprite file to be converted when build is run.
     * mapFile - the map file to be converted when build is run.
@@ -67,10 +67,11 @@ in the main.go file.
     * outputSpriteFile - the go file to write the converted sprite data to.
     * outputMapFile - the go file to write the converted map data to.
     * outputFlagFile - the go file to write the converted flag data to.
-  * setconfig - takes a golf_config property name and a new value. the new value is assigned to that value in the golf_config file.
-  * clear - clears the terminal screen.
-  * help - displays all the golf toolkit commands.
-  * !! - re-run the last executed command.
+  * **setconfig:** takes a golf_config property name and a new value. 
+  the new value is assigned to that value in the golf_config file.
+  * **clear:** clears the terminal screen.
+  * **help:** displays all the golf toolkit commands.
+  * **!!:** re-run the last executed command.
 
 # Specs
   * 192 x 192 screen size
@@ -281,37 +282,38 @@ to the bottom right. Usually the first 8x8 sprite is not used as this sprite is 
 
 **engine.Text(x, y float64, text string, opts ...TOp):** draws the text on screen at point (x, y), all text is converted to the golf
 engines internal font which is all upper case. There are also several sequences that are converted in to golf emojis. escaped sequences are listed bellow. opts are optional and modify how the text is drawn.
-  * (<) left button ![left button](https://github.com/bjatkin/golf-engine/blob/master/images/left_btn_icon.png)
-  * (>) right button ![right button](https://github.com/bjatkin/golf-engine/blob/master/images/right_btn_icon.png)
-  * (^) up button ![up button](https://github.com/bjatkin/golf-engine/blob/master/images/up_btn_icon.png)
-  * (v) down button ![down button](https://github.com/bjatkin/golf-engine/blob/master/images/down_btn_icon.png)
-  * (x) x button ![x button](https://github.com/bjatkin/golf-engine/blob/master/images/x_btn_icon.png)
-  * (o) o button ![o button](https://github.com/bjatkin/golf-engine/blob/master/images/o_btn_icon.png)
-  * (l) l shoulder button ![l button](https://github.com/bjatkin/golf-engine/blob/master/images/l_btn_icon.png)
-  * (r) r shoulder button ![r button](https://github.com/bjatkin/golf-engine/blob/master/images/r_btn_icon.png)
-  * (+) + button ![plus button](https://github.com/bjatkin/golf-engine/blob/master/images/plus_btn_icon.png)
-  * (-) - button ![minus button](https://github.com/bjatkin/golf-engine/blob/master/images/minus_btn_icon.png)
-  * :) smiley face ![smiley face](https://github.com/bjatkin/golf-engine/blob/master/images/smile_icon.png)
-  * :( frowny face ![frowny face](https://github.com/bjatkin/golf-engine/blob/master/images/frown_icon.png)
-  * x( angry face ![angry face](https://github.com/bjatkin/golf-engine/blob/master/images/angry_icon.png)
-  * :| meh face ![meh face](https://github.com/bjatkin/golf-engine/blob/master/images/meh_icon.png)
-  * =[ boxy face ![boxy face](https://github.com/bjatkin/golf-engine/blob/master/images/box_face_icon.png)
-  * |^ up arrow ![up arrow](https://github.com/bjatkin/golf-engine/blob/master/images/up_arrow_icon.png)
-  * |v down arrow ![down arrow](https://github.com/bjatkin/golf-engine/blob/master/images/down_arrow_icon.png)
-  * <- left arrow ![left arrow](https://github.com/bjatkin/golf-engine/blob/master/images/left_arrow_icon.png)
-  * -> right arrow ![right arrow](https://github.com/bjatkin/golf-engine/blob/master/images/right_arrow_icon.png)
-  * $$ pound symbol ![pound symbol](https://github.com/bjatkin/golf-engine/blob/master/images/pound_icon.png)
-  * @@ small black dot ![small black dot](https://github.com/bjatkin/golf-engine/blob/master/images/dot_icon.png)
-  * <| speaker symbole ![speaker symbole](https://github.com/bjatkin/golf-engine/blob/master/images/speaker_icon.png)
-  * <3 white heart ![white heart](https://github.com/bjatkin/golf-engine/blob/master/images/heart_icon.png)
-  * <4 black heart ![black heart](https://github.com/bjatkin/golf-engine/blob/master/images/black_heart_icon.png)
-  * +1 plus one symbole ![plus one](https://github.com/bjatkin/golf-engine/blob/master/images/plus_one_icon.png)
-  * -1 minus one symbole ![minus one](https://github.com/bjatkin/golf-engine/blob/master/images/minus_one_icon.png)
-  * ~~ the pi symbole ![pi symbole](https://github.com/bjatkin/golf-engine/blob/master/images/pi_icon.png)
-  * () tall black dot ![tall black dot](https://github.com/bjatkin/golf-engine/blob/master/images/big_dot_icon.png)
-  * [] dark square ![dark square](https://github.com/bjatkin/golf-engine/blob/master/images/square_icon.png)
-  * :; dither pattern ![dither pattern](https://github.com/bjatkin/golf-engine/blob/master/images/dither_icon.png)
-  * ** start symbole ![start symbole](https://github.com/bjatkin/golf-engine/blob/master/images/star_icon.png)
+  * **(<)** left button ![left button](https://github.com/bjatkin/golf-engine/blob/master/images/left_btn_icon.png)
+  * **(>)** right button ![right button](https://github.com/bjatkin/golf-engine/blob/master/images/right_btn_icon.png)
+  * **(^)** up button ![up button](https://github.com/bjatkin/golf-engine/blob/master/images/up_btn_icon.png)
+  * **(v)** down button ![down button](https://github.com/bjatkin/golf-engine/blob/master/images/down_btn_icon.png)
+  * **(x)** x button ![x button](https://github.com/bjatkin/golf-engine/blob/master/images/x_btn_icon.png)
+  * **(o)** o button ![o button](https://github.com/bjatkin/golf-engine/blob/master/images/o_btn_icon.png)
+  * **(l)** l shoulder button ![l button](https://github.com/bjatkin/golf-engine/blob/master/images/l_btn_icon.png)
+  * **(r)** r shoulder button ![r button](https://github.com/bjatkin/golf-engine/blob/master/images/r_btn_icon.png)
+  * **(+)** + button ![plus button](https://github.com/bjatkin/golf-engine/blob/master/images/plus_btn_icon.png)
+  * **(-)** - button ![minus button](https://github.com/bjatkin/golf-engine/blob/master/images/minus_btn_icon.png)
+  * **:)** smiley face ![smiley face](https://github.com/bjatkin/golf-engine/blob/master/images/smile_icon.png)
+  * **:(** frowny face ![frowny face](https://github.com/bjatkin/golf-engine/blob/master/images/frown_icon.png)
+  * **x(** angry face ![angry face](https://github.com/bjatkin/golf-engine/blob/master/images/angry_icon.png)
+  * **:|** meh face ![meh face](https://github.com/bjatkin/golf-engine/blob/master/images/meh_icon.png)
+  * **=[** boxy face ![boxy face](https://github.com/bjatkin/golf-engine/blob/master/images/box_face_icon.png)
+  * **|^** up arrow ![up arrow](https://github.com/bjatkin/golf-engine/blob/master/images/up_arrow_icon.png)
+  * **|v** down arrow ![down arrow](https://github.com/bjatkin/golf-engine/blob/master/images/down_arrow_icon.png)
+  * **<-** left arrow ![left arrow](https://github.com/bjatkin/golf-engine/blob/master/images/left_arrow_icon.png)
+  * **->** right arrow ![right arrow](https://github.com/bjatkin/golf-engine/blob/master/images/right_arrow_icon.png)
+  * **$$** pound symbol ![pound symbol](https://github.com/bjatkin/golf-engine/blob/master/images/pound_icon.png)
+  * **@@** small black dot ![small black dot](https://github.com/bjatkin/golf-engine/blob/master/images/dot_icon.png)
+  * **<|** speaker symbole ![speaker symbole](https://github.com/bjatkin/golf-engine/blob/master/images/speaker_icon.png)
+  * **<3** white heart ![white heart](https://github.com/bjatkin/golf-engine/blob/master/images/heart_icon.png)
+  * **<4** black heart ![black heart](https://github.com/bjatkin/golf-engine/blob/master/images/black_heart_icon.png)
+  * **+1** plus one symbole ![plus one](https://github.com/bjatkin/golf-engine/blob/master/images/plus_one_icon.png)
+  * **-1** minus one symbole ![minus one](https://github.com/bjatkin/golf-engine/blob/master/images/minus_one_icon.png)
+  * **~~** the pi symbole ![pi symbole](https://github.com/bjatkin/golf-engine/blob/master/images/pi_icon.png)
+  * **()** tall black dot ![tall black dot](https://github.com/bjatkin/golf-engine/blob/master/images/big_dot_icon.png)
+  * **[]** dark square ![dark square](https://github.com/bjatkin/golf-engine/blob/master/images/square_icon.png)
+  * **:;** dither pattern ![dither pattern](https://github.com/bjatkin/golf-engine/blob/master/images/dither_icon.png)
+  * **\*\*** start symbole ![start symbole](https://github.com/bjatkin/golf-engine/blob/master/images/star_icon.png)
+
   note: if you need to draw one of these patterns without it being drawn as an emoji you can use the '^' symbole to escape.
   the pattern. (e.g. ^** will be drawn as two asterix characters rather than a star)
 
@@ -333,29 +335,30 @@ Another goal of golf is to be a 'hackable' engine. To achieve this golf uses vir
 stores sprite data, map data, the screen buffer and much more. Bellow is a list of all the important memory addresses in the 
 virtual ram. (you can also view memroy addresses by looking at the memoryMap.go file)
 
-  * Screen Buffer: 0x0000 - 0x3600, this data is coppied to the screen once per frame
-  * Screen Pallet: 0x3600, the two screen pallets, top 4 bits are pallet 1 and bottom 4 bits are pallet 2
-  * Start Screen Length: 0x3601, the number of frames to play the startup animation. If you set this to 0 you can skip the startup animtion.
-    If you choose to do this please credit the project some other way in your game.
-  * CameraX: 0x3602-0x3603, the 16 bit x coordinate of the camera.
-  * CameraY: 0x3604-0x3605, the 16 bit y coordinate of the camera.
-  * Frames: 0x3606-0x3608, the 24 bit number that counts the frames since the game engine was started.
-  * ClipX: 0x3609, the x coordinate of the clipping rect.
-  * ClipY: 0x360A, the Y coordinate of the clipping rect.
-  * ClipW: 0x360B, the width of the clipping rect.
-  * ClipH: 0x360C, the height of the clipping rect.
-  * MouseX: 0x360D, the x coordinate of the mouse.
-  * MouseY: 0x360E, the y coordinate of the mouse.
-  * Left Click: 0x360F, the click state of the left mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed)
-  * Middle Click: 0x360F, the click state of the middle mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed
-  * Right Click: 0x360F, the click state of the right mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed
-  * Mouse Style: 0x360F, the draw style of the mouse (00 - mouse currsor is not drawn, 01 - arrow, 10 - hand cursor, 11 - cross cursor)
-  * Keyboad Key Stat: 0x3601 - 0x3646, the pressed state of all the keys on the keyboard (00 - unpressed, 01 - press started, 10 - press ended, 11 - pressed). Keys are indexed in this array based on their js keyCode - 9 (backspace keycode)
-  * Internal Sprite Sheet: 0x3647 - 0x3F47, sprite data for the golf font, emojies, logo and mouse sprites.
-  * Sprite Sheet: 0x3F48 - 0x6F48, the data for the user sprite sheet, this data is stored in the compressed format described below.
-  * Active Sprite Buff: 0x6F49 - 0x6F4A, 16 bit address that points to the memory location that will be used by the sprite functions. You can use this to swap to the internal sprite sheet or reindex sprites on the sprite sheet.
-  * Map Data: 0x6F4B - 0xB74B, the map data, this data is stored in the compressed format described below.
-  * Sprite Flag Data:  0xB74C - 0xB94C, the sprite flag data, each sprite gets one byte of data which is 8 flags.
+  * **Screen Buffer:** 0x0000 - 0x3600, this data is coppied to the screen once per frame
+  * **Screen Pallet:** 0x3600, the two screen pallets, top 4 bits are pallet 1 and bottom 4 bits are pallet 2
+  * **Start Screen Length:** 0x3601, the number of frames to play the startup animation. 
+  If you set this to 0 you can skip the startup animtion. 
+  If you choose to do this please credit the project some other way in your game.
+  * **CameraX:** 0x3602-0x3603, the 16 bit x coordinate of the camera.
+  * **CameraY:** 0x3604-0x3605, the 16 bit y coordinate of the camera.
+  * **Frames:** 0x3606-0x3608, the 24 bit number that counts the frames since the game engine was started.
+  * **ClipX:** 0x3609, the x coordinate of the clipping rect.
+  * **ClipY:** 0x360A, the Y coordinate of the clipping rect.
+  * **ClipW:** 0x360B, the width of the clipping rect.
+  * **ClipH:** 0x360C, the height of the clipping rect.
+  * **MouseX:** 0x360D, the x coordinate of the mouse.
+  * **MouseY:** 0x360E, the y coordinate of the mouse.
+  * **Left Click:** 0x360F, the click state of the left mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed)
+  * **Middle Click:** 0x360F, the click state of the middle mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed
+  * **Right Click:** 0x360F, the click state of the right mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed
+  * **Mouse Style:** 0x360F, the draw style of the mouse (00 - mouse currsor is not drawn, 01 - arrow, 10 - hand cursor, 11 - cross cursor)
+  * **Keyboad Key Stat:** 0x3601 - 0x3646, the pressed state of all the keys on the keyboard (00 - unpressed, 01 - press started, 10 - press ended, 11 - pressed). Keys are indexed in this array based on their js keyCode - 9 (backspace keycode)
+  * **Internal Sprite Sheet:** 0x3647 - 0x3F47, sprite data for the golf font, emojies, logo and mouse sprites.
+  * **Sprite Sheet:** 0x3F48 - 0x6F48, the data for the user sprite sheet, this data is stored in the compressed format described below.
+  * **Active Sprite Buff:** 0x6F49 - 0x6F4A, 16 bit address that points to the memory location that will be used by the sprite functions. You can use this to swap to the internal sprite sheet or reindex sprites on the sprite sheet.
+  * **Map Data:** 0x6F4B - 0xB74B, the map data, this data is stored in the compressed format described below.
+  * **Sprite Flag Data:**  0xB74C - 0xB94C, the sprite flag data, each sprite gets one byte of data which is 8 flags.
 
 # Data Packing
 Part of the goal for this project was to make the console feel somewhat ‘retro’ no just in it’s visual style but also internally.
