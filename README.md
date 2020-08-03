@@ -281,37 +281,37 @@ to the bottom right. Usually the first 8x8 sprite is not used as this sprite is 
 
 **engine.Text(x, y float64, text string, opts ...TOp):** draws the text on screen at point (x, y), all text is converted to the golf
 engines internal font which is all upper case. There are also several sequences that are converted in to golf emojis. escaped sequences are listed bellow. opts are optional and modify how the text is drawn.
-  * (<) left button
-  * (>) right button
-  * (^) up button
-  * (v) down button
-  * (x) x button
-  * (o) o button
-  * (l) l shoulder button
-  * (r) r shoulder button
-  * (+) + button
-  * (-) - button
-  * :) smily face
-  * :( frowny face
-  * x( angry face
-  * :| meh face
-  * =[ boxy face
-  * |^ up arrow
-  * |v down arrow
-  * <- left arrow
-  * -> right arrow
-  * $$ pound symbol
-  * @@ small black dot
-  * <| speaker symbole
-  * <3 white heart
-  * <4 black heart
-  * +1 plus one symbole
-  * -1 minus one symbole
-  * ~~ the pi symbole
-  * () tall black dot
-  * [] dark square
-  * :; dither pattern
-  * ** start symbole
+  * (<) left button ![left button](https://github.com/bjatkin/golf-engine/blob/master/images/left_btn_icon.png)
+  * (>) right button ![right button](https://github.com/bjatkin/golf-engine/blob/master/images/right_btn_icon.png)
+  * (^) up button ![up button](https://github.com/bjatkin/golf-engine/blob/master/images/up_btn_icon.png)
+  * (v) down button ![down button](https://github.com/bjatkin/golf-engine/blob/master/images/down_btn_icon.png)
+  * (x) x button ![x button](https://github.com/bjatkin/golf-engine/blob/master/images/x_btn_icon.png)
+  * (o) o button ![o button](https://github.com/bjatkin/golf-engine/blob/master/images/o_btn_icon.png)
+  * (l) l shoulder button ![l button](https://github.com/bjatkin/golf-engine/blob/master/images/l_btn_icon.png)
+  * (r) r shoulder button ![r button](https://github.com/bjatkin/golf-engine/blob/master/images/r_btn_icon.png)
+  * (+) + button ![plus button](https://github.com/bjatkin/golf-engine/blob/master/images/plus_btn_icon.png)
+  * (-) - button ![minus button](https://github.com/bjatkin/golf-engine/blob/master/images/minus_btn_icon.png)
+  * :) smiley face ![smiley face](https://github.com/bjatkin/golf-engine/blob/master/images/smile_icon.png)
+  * :( frowny face ![frowny face](https://github.com/bjatkin/golf-engine/blob/master/images/frown_icon.png)
+  * x( angry face ![angry face](https://github.com/bjatkin/golf-engine/blob/master/images/angry_icon.png)
+  * :| meh face ![meh face](https://github.com/bjatkin/golf-engine/blob/master/images/meh_icon.png)
+  * =[ boxy face ![boxy face](https://github.com/bjatkin/golf-engine/blob/master/images/box_face_icon.png)
+  * |^ up arrow ![up arrow](https://github.com/bjatkin/golf-engine/blob/master/images/up_arrow_icon.png)
+  * |v down arrow ![down arrow](https://github.com/bjatkin/golf-engine/blob/master/images/down_arrow_icon.png)
+  * <- left arrow ![left arrow](https://github.com/bjatkin/golf-engine/blob/master/images/left_arrow_icon.png)
+  * -> right arrow ![right arrow](https://github.com/bjatkin/golf-engine/blob/master/images/right_arrow_icon.png)
+  * $$ pound symbol ![pound symbol](https://github.com/bjatkin/golf-engine/blob/master/images/pound_icon.png)
+  * @@ small black dot ![small black dot](https://github.com/bjatkin/golf-engine/blob/master/images/dot_icon.png)
+  * <| speaker symbole ![speaker symbole](https://github.com/bjatkin/golf-engine/blob/master/images/speaker_icon.png)
+  * <3 white heart ![white heart](https://github.com/bjatkin/golf-engine/blob/master/images/heart_icon.png)
+  * <4 black heart ![black heart](https://github.com/bjatkin/golf-engine/blob/master/images/black_heart_icon.png)
+  * +1 plus one symbole ![plus one](https://github.com/bjatkin/golf-engine/blob/master/images/plus_one_icon.png)
+  * -1 minus one symbole ![minus one](https://github.com/bjatkin/golf-engine/blob/master/images/minus_one_icon.png)
+  * ~~ the pi symbole ![pi symbole](https://github.com/bjatkin/golf-engine/blob/master/images/pi_icon.png)
+  * () tall black dot ![tall black dot](https://github.com/bjatkin/golf-engine/blob/master/images/big_dot_icon.png)
+  * [] dark square ![dark square](https://github.com/bjatkin/golf-engine/blob/master/images/square_icon.png)
+  * :; dither pattern ![dither pattern](https://github.com/bjatkin/golf-engine/blob/master/images/dither_icon.png)
+  * ** start symbole ![start symbole](https://github.com/bjatkin/golf-engine/blob/master/images/star_icon.png)
   note: if you need to draw one of these patterns without it being drawn as an emoji you can use the '^' symbole to escape.
   the pattern. (e.g. ^** will be drawn as two asterix characters rather than a star)
 
