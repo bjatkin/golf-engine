@@ -34,8 +34,9 @@ This will create all the nessisary files and folders for you to develop your gam
 to add sprites to your game. you can also edit assets/map.png to create a map for your game. You can start writing your GoLF code
 in the main.go file.
 
-In addition to creating your own games you can now play others games as well. If you're intersted in checking out some demos
-for the golf engine you can find a repo with some demo projects [here](https://github.com/bjatkin/golf-examples)
+# GoLF Demos
+Once you've installed GoLF you can try out some demo games. If you not quite ready to start working on your own game but want
+to see what the GoLF engine can do you can find a few demo projects [here](https://github.com/bjatkin/golf-examples)
 
 # Developing your game
 Once you have your first GoLF project up and running development is easy. Just write regular go code using the GoLF api.
