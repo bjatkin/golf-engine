@@ -34,6 +34,9 @@ This will create all the nessisary files and folders for you to develop your gam
 to add sprites to your game. you can also edit assets/map.png to create a map for your game. You can start writing your GoLF code
 in the main.go file.
 
+In addition to creating your own games you can now play others games as well. If you're intersted in checking out some demos
+for the golf engine you can find a repo with some demo projects [here](https://github.com/bjatkin/golf-examples)
+
 # Developing your game
 Once you have your first GoLF project up and running development is easy. Just write regular go code using the GoLF api.
 Each time you reload localhost:8080, the golf_toolkit will automatcialy recompile your code so you you can test out the changes.
@@ -155,14 +158,6 @@ Pallet | Color 1 | Color 2 | Color 3 | Color 4
 13 | (21, 34, 83) | (70, 135, 143) | (148, 227, 68) | (226, 243, 228)
 14 | (0, 48, 59) | (255, 119, 119) | (255, 206, 150) | (241, 242, 218)
 15 | (0, 0, 0) | (197, 17, 17) | (20, 58, 133) | (255, 255, 255)
-
-# Example Games
-There are a few example projects located at golfExamples which you can download, play, and review to better understand how the GoLF engine works.
-You play these games in one of two ways. You can download the WASM files here. Then run the golf_toolkit and run ‘play <wasmfile.wasm>’
-This will start a local server and allow you to play the game on localhost:8080. You can also clone the github repo. 
-Once cloned you can enter the directory for one of the examples (e.g. bibiDuck) and then run the golf_toolkit. 
-From there simple run ‘startserver’ the local development server will be started and you’ll be able to play the game at localhost:8080. 
-Cloning the github project is the preferred method as this allows you to see the code as well as modify it to better understand how the API works.
 
 # GoLF API
 
@@ -300,7 +295,7 @@ to the bottom right. Usually the first 8x8 sprite is not used as this sprite is 
 ### Text
 the GoLF engine uses the custom built font displayed below. It can be accessed using the following functions.
 
-![Fantasy Font](https://github.com/bjatkin/golf-engine/blob/master/images/big_font.png))
+![Fantasy Font](https://github.com/bjatkin/golf-engine/blob/master/images/big_font.png)
 
 **engine.Text(x, y float64, text string, opts ...TOp):** draws the text on screen at point (x, y), all text is converted to the GoLF
 engines internal font which is all upper case. There are also several sequences that are converted in to GoLF emojis. escaped sequences are listed bellow. opts are optional and modify how the text is drawn.
