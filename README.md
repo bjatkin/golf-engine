@@ -1,3 +1,16 @@
+# TODO (ALMOST DONE!)
+  * [] Add a golf play function to the golf_toolkit.
+  * [] Spell and gramar check the readme.
+  * [] Support packing in sprite flags on golf_toolkit build.
+  * [] add Linux build of the golf_toolkit.
+  * [] add windows build of the golf_toolkit.
+  * [] put all versions of the golf_toolkit into a folder.
+  * [] add a section in the readme on how to compile the golf_toolkit in case my build does not work.
+  * [] ask coby/ pablo to test it.
+  * [] move onto just building example games.
+  * [] add a section for those who are interested in colaboration.
+  * [] add a legal license. (MIT?)
+
 # GoLF Engine
 the GoLang Fantasy Engine (GoLF Engine) is a retro game engine. It draws inspiration from fantasy console projects like 
 [pico-8](https://www.lexaloffle.com/pico-8.php), [tic-80](https://tic.computer/), and [pyxle](https://pypi.org/project/pyxel/). 
