@@ -35,6 +35,20 @@ to add sprites to your game. you can also edit assets/map.png to create a map fo
 in the main.go file.
 
 # Developing your game
+Once you have your first golf project up and running development is easy. Just write regular go code using the golf api.
+Each time you reload localhost:8080, the golf toolkit will automatcialy recompile your code so you you can test out the changes.
+If you run into problems you can also run the build command manually. This will run the build script as well as re-importing your
+sprite sheet and map file. If there are any errors compiling your go code the golf toolkit will let you know. <br />
+It's important to remember that the golf engine only supports 8 colors on screen at a time. This means your sprite sheet can only
+contain 8 colors as well. When building your sprite sheet be sure to pick 2 of the 16 color pallets and stick with those colors.
+Also remember that your sprites will be drawn based on the color pallets set by golf so your sprites make be a different color
+on screen than they are on the sprite sheet. <br />
+
+![Sprite Pallet Example](https://github.com/bjatkin/golf-engine/blob/master/images/sprite_pal_data.png)
+
+The map file is another important aspect of your golf project. It's important to note that the map is just a 2d array of sprites to
+draw on screen. When creating your map file be sure that all the tiles you add line up with the 8x8 grid. Each tile should also
+match up with an 8x8 sprite on your sprite sheet.
 
 # Releasing your game
 
@@ -398,20 +412,15 @@ In the case the the spritesheet ‘overgrows’ the map keep in mind that the ma
 
 ![Map Vs Sprite Data](https://github.com/bjatkin/golf-engine/blob/master/images/sprite_vs_map.png)
 
-### TODO
----
-* Add instructions for installing and playing the golf examples
-* Test the golf toolkit on a windows machine
-
-### TODO long term
----
-* Make it more fantasy console like
-  * add a golf terminal that runs in the browser
-  * build with golf engine so it has the same feel
-  * sprite editor in the golf terminal
-  * map editor and viewer
-  * sprite flag editor 
-* Sound? (I still have 20k memory for this)
-* Add interpreted scripting language to make it more aproacable and to prevent golang from being an install requirement
-* Let text use multips options with {} syntac to start and end option sections
-* add vertical and horizontal flip to the text functions
+# Future Features
+* Make the project more fantasy console like
+  * simplify instalation
+  * add a golf ternimal the runs in the browser rather than using golf toolkit
+  * add sprite editor
+  * add map editor
+* add in a sound api (use the last 20k of memory)
+  * convert midi files
+  * create a music editor
+* add a scription language to make building games easier/ more aproachable
+* Let the text function use multiple TOp argumnets for different portions of the string
+* add vertical/ horizontal flipping for the text functions
