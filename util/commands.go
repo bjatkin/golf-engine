@@ -142,7 +142,7 @@ var commands = []command{
 		"startserver",
 		"starts a server in the current directory that can be used to play your golf engine games",
 		0,
-		startServer,
+		startDevServer,
 	},
 
 	command{
@@ -158,7 +158,7 @@ var commands = []command{
 		"play <wasm file>",
 		"plays the wasm game file",
 		1,
-		playGame,
+		startGameServer,
 	},
 
 	command{

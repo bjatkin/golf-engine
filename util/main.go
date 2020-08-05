@@ -3,16 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"net/http"
 	"os"
 	"strings"
-	"sync"
 )
 
 var cmdDone = false
 var lastCmd = "help"
-var serverSG = &sync.WaitGroup{}
-var server = &http.Server{Addr: ":8080"}
 var appDir = ""
 
 //go:generate ../generate/genTemplates packedTemplates.go templates main
@@ -28,19 +24,7 @@ func main() {
 	commands = append(commands, helpCommand)
 	commands = append(commands, bangbangCommand)
 
-	// Make the server serve the file server
-	fs := http.FileServer(http.Dir("./web"))
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/" {
-			fmt.Println("build")
-			err := buildProject(nil)
-			if err != nil {
-				printErrorLine(err.Error())
-			}
-			printCommandLine()
-		}
-		fs.ServeHTTP(w, r)
-	})
+	initServer()
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("\nWelcome to the Golf Toolkit!\ntype help for more info\n")
