@@ -1,135 +1,132 @@
 # TODO (ALMOST DONE!)
-  * [] Add a golf play function to the golf_toolkit.
-  * [] Spell and gramar check the readme.
+  * [] Apply the checks to the readme.
   * [] Support packing in sprite flags on golf_toolkit build.
-  * [] add Linux build of the golf_toolkit.
-  * [] add windows build of the golf_toolkit.
-  * [] put all versions of the golf_toolkit into a folder.
-  * [] add a section in the readme on how to compile the golf_toolkit in case my build does not work.
   * [] ask coby/ pablo to test it.
   * [] move onto just building example games.
-  * [] add a section for those who are interested in colaboration.
-  * [] add a legal license. (MIT?)
+  * [] add a section for those who are interested in collaboration.
 
 # GoLF Engine
-the GoLang Fantasy Engine (GoLF Engine) is a retro game engine. It draws inspiration from fantasy console projects like 
+The GoLang Fantasy Engine (GoLF Engine) is a retro game engine. It draws inspiration from fantasy console projects like 
 [pico-8](https://www.lexaloffle.com/pico-8.php), [tic-80](https://tic.computer/), and [pyxle](https://pypi.org/project/pyxel/). 
-Like those projects it is designed to be a retro feeling game creation/ playing tool. Unlike those
-projects GoLF is more minimal in scope and only provides an api and a small set of tools to help you create your games. Tools like
-an image editor, and code editor are not built in. Despite this creating games in GoLF is still easy and should still maintain
-the retro game feel.
+Like those projects it is designed to be a retro-feeling game creation/playing tool. Unlike those
+projects GoLF is more minimal in scope and only provides an API and a small set of tools to help you create your games. Tools like
+an image editor and code editor are not built in. Despite this minimalism creating games in GoLF is still easy and should still maintain the retro game feel.
 
 # Getting Started
 Installing the GoLF engine is simple. You can install the engine and required tools by running the following commands.
-from your terminal run 
+From your terminal run 
 
 `go get github.com/bjatkin/golf-engine/golf`
 
-ignore any errors you get about syscall/js.
+Ignore any errors you get about syscall/js.
 
-then run
+Then run
 
 `go get github.com/bjatkin/golf-engine/util`
 
-then create a directory for your game. for example.
+Then create a directory for your game. For example:
 
 `mkdir hello world`
 
-navigte into this direcotry and run the golf_toolkit binary, located in the GoLF engine utils folder
+Navigte into this directory and run the golf_toolkit binary, located in the GoLF engine utils folder.
 
-`./Users/[your user name]/go/src/github.com/bjatkin/golf-engine/util/golf_toolkit`
+`./Users/[your user name]/go/src/github.com/bjatkin/golf-engine/util/[windows,mac,linux]/golf_toolkit`
 
-This will start the golf_toolkit which you'll need to help you develop GoLF engine games. Now you can init your new project.
+This will start the golf_toolkit. which you'll need to help you develop GoLF engine games. Now you can init your new project.
 
 `init <project name>`
 
-This will create all the nessisary files and folders for you to develop your game. You can edit the assets/spritesheet.png file
-to add sprites to your game. you can also edit assets/map.png to create a map for your game. You can start writing your GoLF code
-in the main.go file.
+This will create all the necessary files and folders for you to develop your game. You can edit the assets/spritesheet.png file
+to add sprites to your game. You can also edit assets/map.png to create a map for your game.
+Then you can start writing your GoLF code in the main.go file.
 
 # GoLF Demos
-Once you've installed GoLF you can try out some demo games. If your not quite ready to start working on your own game,
-but want to see what the GoLF engine can do you can find a few demo projects [here](https://github.com/bjatkin/golf-examples)
+Once you've installed GoLF, you can try out some demo games. If you're not quite ready to start working on your own game
+but want to see what the GoLF engine can do you can find a few demo projects [here](https://github.com/bjatkin/golf-examples).
 
-# Developing your game
-Once you have your first GoLF project up and running development is easy. Just write regular go code using the GoLF api.
-Each time you reload localhost:8080, the golf_toolkit will automatcialy recompile your code so you you can test out the changes.
-If you run into problems you can also run the build command manually. This will run the build script as well as re-importing your
-sprite sheet and map file. If there are any errors compiling your go code the golf_toolkit will let you know.
+# Developing Your Game
+Once you have your first GoLF project up and running, development is easy. Just write regular Go code using the GoLF API.
+Each time you reload localhost:8080, the golf_toolkit will automatically recompile your code so you can test out the changes.
+If you run into problems, you can also run the build command manually. This will run the build script as well as re-importing your
+sprite sheet and map file. If there are any errors compiling your Go code, the golf_toolkit will let you know.
 
 
 It's important to remember that the GoLF engine only supports 8 colors on screen at a time. This means your sprite sheet can only
-contain 8 colors as well. When building your sprite sheet be sure to pick 2 of the 16 color pallets and stick with those colors.
-Also remember that your sprites will be drawn based on the color pallets set by GoLF so your sprites make be a different color
+contain 8 colors as well. When building your sprite sheet, be sure to pick 2 of the 16 color pallets and stick with those colors.
+Also remember that your sprites will be drawn based on the color pallets set by GoLF, so your sprites may be a different color
 on screen than they are on the sprite sheet.
 
 ![Sprite Pallet Example](https://github.com/bjatkin/golf-engine/blob/master/images/sprite_pal_data.png)
 
-The map file is another important aspect of your GoLF project. It's important to note that the map is just a 2d array of sprites to
+The map file is another important aspect of your GoLF project. It's important to note that the map is just a 2D array of sprites to
 draw on screen. When creating your map file be sure that all the tiles you add line up with the 8x8 grid. Each tile should also
 match up with an 8x8 sprite on your sprite sheet.
 
 ![Map File Example](https://github.com/bjatkin/golf-engine/blob/master/images/sprite_to_map.png)
 
-# Releasing your game
+# Releasing Your Game
 Making your GoLF games available for others to play can be done in two ways.
-If your friends have the golf_toolkit installed you can simply send them the WASM file generated by go build.
-anyone can then play your game using the ‘play <wasmfile.wasm>’ command in the golf_toolkit.
+If your friends have the golf_toolkit installed, you can simply send them a copy
+of the web folder generated by golf toolkit build command. You can rename this folder however you like.
+Anyone can then play your game using the `play <game folder>` command in the golf_toolkit.
 
 
-The second option is to make your game playable online. Simply server the 3 files in the web folder (game_name.wasm, index.html, and wasm_exec.js) using any server that supports the WASM file extension. You can also edit the html file to customize your game.
-Any part of the index.html can be changed with the exception of the script tag and canvas tag.
+The second option is to make your game playable online. Simply serve the 3 files in the web folder (project_name.wasm, index.html, and wasm_exec.js) using any server that supports the WASM file extension. You can also edit the html file to customize your game.
+Any part of the index.html can be changed, with the exception of the script tag and canvas tag.
 
-# GoLF toolkit commands
-The golf_toolkit is a utility desigend to help you develop games in the GoLF engine.
-Below is a list of commands which can be run inside the golf_toolkit along with an explination for what they do.
+# GoLF Toolkit Commands
+The golf_toolkit is a utility designed to help you develop games in the GoLF engine.
+Below is a list of commands which can be run inside the golf_toolkit along with an explanation of what they do.
 
-  * **about:** Displays some simple information about the golf_toolkit and why it exsists.
+  * **about:** Displays some simple information about the golf_toolkit and why it exists.
   * **exit:** Quits the golf_toolkit. Will stop the development server if it's running.
-  * **map:** Takes a map file location, a sprite file location, and an output file location. the map file should be a png file filled with 8x8 sprites from the specified sprite sheet. The result is saved to the output file.
-  * **csvmap:** Takes a csv map file location and an output file. This file should have a list of sprite indexes which corresponds to the index of 8x8 sprites on the sprite sheet. The resut is save to the output file.
-  * **sprite:** Takes a sprite file location and an output file location. Converts the sprite sheet into GoLF data and saves it to the output file location. Sprite sheets must only use 2 pallets from the 16 GoLF pallets
-  * **flag:** Takes a flage file location and an output file location. Contains a list of flags that corespond to the sprite sheet. Each flag should be 8 characters long and consist of 1's(flag is set) and 0's(flag is not set).
+  * **map:** Takes a map file location, a sprite file location, and an output file location. The map file should be a png file filled with 8x8 sprites from the specified sprite sheet. The result is saved to the output file.
+  * **csvmap:** Takes a csv map file location and an output file. This file should have a list of sprite indexes that correspond to the index of 8x8 sprites on the sprite sheet. The result is saved to the output file.
+  * **sprite:** Takes a sprite file location and an output file location. Converts the sprite sheet into GoLF data and saves it to the output file location. Sprite sheets must only use 2 pallets from the 16 GoLF pallets.
+  * **flag:** Takes a flag file location and an output file location. Contains a list of flags that correspond to the sprite sheet. Each flag should be 8 characters long and consist of 1's (flag is set) and 0's (flag is not set).
   This file need not contain all flags for all 512 sprites.
-  * **startserver:** starts a development server. This will automatically only your default browsers to localhost:8080 where you can play your game. Each time you reload your game your project will be rebuilt.
-  * **stopserver:** stops the deveopment server if it's running. Otherwise does nothing.
-  * **build:** builds the current project, creating a new WASM game file.
-  * **init:** init's a new game in the current directory. Creates the following files.
+  * **startserver:** Starts a development server. This will automatically open your default browser to localhost:8080 where you can play your game. Each time you reload your game your project will be rebuilt.
+  * **stopserver:** Stops the development/ play server if it's running. Otherwise, it does nothing.
+  * **play:**: Starts a play server. This will automatically open your default browser to localhost:8080 where you can play
+  the game located in the specified folder.
+  * **build:** Builds the current project, creating a new WASM game file.
+  * **init:** Initializes a new game in the current directory. Creates the following files.
     * assets
-      * map.png - an empty my file.
-      * spritesheet.png - an empyt sprite sheet.
+      * map.png - An empty map file.
+      * spritesheet.png - An empty sprite sheet.
     * web
-      * index.html - simple html file with a canvas to run your game.
-      * wasm_exec.js - the golang wasm glue file.
-    * main.go - some boiler plate code to get you started.
-    * golf_config - used by the golf_toolkit to compile your project.
-    * build.sh - build file.
-  * **config:** takes a golf_config property name and prints the current value. valid config property names are listed below.
-    * name - your project name.
-    * spriteFile - the sprite file to be converted when build is run.
-    * mapFile - the map file to be converted when build is run.
-    * flagFile - the flag file to be converted when build is run.
-    * outputSpriteFile - the go file to write the converted sprite data to.
-    * outputMapFile - the go file to write the converted map data to.
-    * outputFlagFile - the go file to write the converted flag data to.
-  * **setconfig:** takes a golf_config property name and a new value. 
-  the new value is assigned to that value in the golf_config file.
-  * **clear:** clears the terminal screen.
-  * **help:** displays all the golf_toolkit commands.
-  * **!!:** re-run the last executed command.
+      * index.html - Simple html file with a canvas to run your game.
+      * wasm_exec.js - The golang WASM glue file.
+    * main.go - Some boiler plate code to get you started.
+    * golf_config - Used by the golf_toolkit to compile your project.
+    * build.sh - Build file.
+  * **config:** Takes a golf_config property name and prints the current value. Valid config property names are listed below.
+    * name - Your project name.
+    * spriteFile - The sprite file to be converted when build is run.
+    * mapFile - The map file to be converted when build is run.
+    * flagFile - The flag file to be converted when build is run.
+    * outputSpriteFile - The Go file to write the converted sprite data to.
+    * outputMapFile - The Go file to write the converted map data to.
+    * outputFlagFile - The Go file to write the converted flag data to.
+  * **setconfig:** Takes a golf_config property name and a new value. 
+  The new value is assigned to that value in the golf_config file.
+  * **clear:** Clears the terminal screen.
+  * **help:** Displays all the golf_toolkit commands.
+  * **!!:** Re-run the last executed command.
 
 # Specs
   * 192 x 192 screen size
   * 64 total colors split into 16 pallets with 4 colors each
   * 8 on screen colors consisting of any 2 of the 16 predefined pallets
-  * one 256 x 128 sprite sheet for a total of 512 8x8 sprites
-  * one 128 x 128 tile map
+  * One 256 x 128 sprite sheet for a total of 512 8x8 sprites
+  * One 128 x 128 tile map
   * 60 FPS
   * Mouse support with 3 different cursor styles
   * Keyboard support
 
-# The GoLF color pallet
-GoLF uses a pallet of 64 colors split into 16 four color pallets. You can mix and match these pallets however you want but only 2 can be used at a time
+# The GoLF Color Pallet
+GoLF uses a pallet of 64 colors split into 16 four-color pallets.
+You can mix and match these pallets however you want, but only 2 can be used at a time.
 
 ![Color Pallet](https://github.com/bjatkin/golf-engine/blob/master/images/golf_color_pallet.png)
 
@@ -175,69 +172,69 @@ Pallet | Color 1 | Color 2 | Color 3 | Color 4
 
 # GoLF API
 
-### GoLF structs
-There are 2 main golf structs that allow you to modify various GoLF draw functions
+### GoLF Structs
+There are 2 main GoLF structs that allow you to modify various GoLF draw functions.
 
 **golf.SOp:** This structure is a list of options that can be passed to a sprite to change how it is drawn.
-  * FH: flip the sprite horizontally.
-  * FV: flip the sprite vertically.
-  * TCol: set the sprites tranparency color.
-  * PFrom & PTo: change the sprites pallet. colors number n in PFrom is converted to color number n in PTo.
-  * W: width of the sprite in tiles to read from the spritesheet. (e.g. W: 2 is 16 pixels in width).
-  * H: height of the sprite in tiles to read from the spritesheet. (e.g. H: 2 is 16 pixels tall).
-  * SW: the amount to scale the width of the sprite. default value is 1 or no scaling.
-  * SH: the amount to scale the height of the sprite. default value is 1 or no scaling.
-  * Fixed: if this is set to true then the sprite ignores the camera x & y when draing. Useful for UI.
+  * FH: Flip the sprite horizontally.
+  * FV: Flip the sprite vertically.
+  * TCol: Set the sprite's transparency color.
+  * PFrom & PTo: Change the sprite's pallet. Colors number n in PFrom is converted to color number n in PTo.
+  * W: Width of the sprite in tiles to read from the spritesheet. (e.g. W: 2 is 16 pixels in width).
+  * H: Height of the sprite in tiles to read from the spritesheet. (e.g. H: 2 is 16 pixels tall).
+  * SW: The amount to scale the width of the sprite. Default value is 1 or no scaling.
+  * SH: The amount to scale the height of the sprite. Default value is 1 or no scaling.
+  * Fixed: If this is set to true then the sprite ignores the camera X & Y when drawing. Useful for UI.
 
 **golf.TOp:** this structure is a list of options that can be passed to text functions to change how text is drawn.
   * Col: The color to draw the text.
 	* Fixed: If this is set to true the text ignores the camera.
-	* SW: the amount to scale the width of the text.
-  * SH: the amount to scale the height of the text.
+	* SW: The amount to scale the width of the text.
+  * SH: The amount to scale the height of the text.
 
 ### Golf Types
 There are 2 GoLF types that will help you work with the GoLF color pallet.
 
-**golf.Col:** a GoLF color. there are 8 colors ranging from Col0 to Col7. The first 4 colors map to pallet A and the last
+**golf.Col:** A GoLF color. There are 8 colors ranging from Col0 to Col7. The first 4 colors map to pallet A and the last
 four map to pallet B.
 
-**golf.Pal:** a GoLF pallet. There are 16 available pallets (Pal0 to Pal15). These can be used to give you game a unique feel/ look.
+**golf.Pal:** A GoLF pallet. There are 16 available pallets (Pal0 to Pal15). These can be used to give your game a unique feel/look.
 
 ### The GoLF Engine
 The GoLF Engine is the main object exposed by the GoLF package.
 
-**NewEngine(updateFunc func(), draw func()):** creates a GoLF engine instance and returns a pointer to the engine. 
-The GoLF engine is the main object used to perform most of the GoLF functions
+**NewEngine(updateFunc func(), draw func()):** Ereates a GoLF Engine instance and returns a pointer to the engine. 
+The GoLF Engine is the main object used to perform most of the GoLF functions.
 
-**engine.Run():** starts the game engine running. Once this is run the update function will be called 60 times a second and the draw function will be called 60 times a second.
+**engine.Run():** Starts the game engine running. Once this is run, the update function will be called 60 times a second and the draw function will be called 60 times a second.
 
-**engine.Frames():** returns the number of frames that have passed since the game engine was started. This count includes
-the startup animation frames. The startup animation is 254 frames meaning the first frame that the update/ draw function 
+**engine.Frames():** Returns the number of frames that have passed since the game engine was started. This count includes
+the startup animation frames. The startup animation is 254 frames, meaning the first frame that the update/draw function 
 will be called is frame 255.
 
-**engine.DrawMouse(style int):** sets the draw style for the mouse indictor.
-  * 0 = no mouse cursor is drawn
-  * 1 = a mouse arrow is drawn
-  * 2 = a hand cursor is drawn
-  * 3 = a cross cursoe is drawn
+**engine.DrawMouse(style int):** Sets the draw style for the mouse indicator.
+  * 0 = No mouse cursor is drawn.
+  * 1 = A mouse arrow is drawn.
+  * 2 = A hand cursor is drawn.
+  * 3 = A cross cursor is drawn.
 
-**engine.Cls(col golf.Col):** fills the screen with the col color.
+**engine.Cls(col golf.Col):** Fills the screen with the col color.
 
 **engine.Camera(x, y int):** Changes the X, Y coordinates of the camera. This value is then subtracted from the
-X, Y coordinates of all future drawing calls. This is useful for moving the panning the screen around.
+X, Y coordinates of all future drawing calls. This is useful for panning the screen around.
 
-**engine.Clip(x, y, w, h int):** clips all future draw functions with upper left corner at point (x, y) and with w and heigh h.
+**engine.Clip(x, y, w, h int):** Clips all future draw functions with upper left corner at point (x, y) and width w and heigh h.
 
-**engine.RClip():** resets the screen clipping so that no screen pixels are clipped.
+**engine.RClip():** Resets the screen clipping so that no screen pixels are clipped.
 
-**engine.PalA(pallet golf.Pal):** sets the first pallet.
+**engine.PalA(pallet golf.Pal):** Sets the first pallet.
 
-**engine.PalB(pallet golf.Pal):** sets the second pallet.
+**engine.PalB(pallet golf.Pal):** Sets the second pallet.
 
-**engine.PalGet():** returns the first and second pallets that are currently set.
+**engine.PalGet():** Returns the first and second pallets that are currently set.
 
 ### Shapes
-Using the following functions you can draw various shaps on screen.
+Using the following functions, you can draw various shapes on screen.
 
 **engine.Pset(x, y float64, col golf.Col):** Sets the pixel on the screen at point (x, y) to the color col.
 
@@ -250,69 +247,69 @@ Using the following functions you can draw various shaps on screen.
 **engine.Line(x1, y1, x2, y2 float64, col golf.Col):** Draw a line from point (x1, y1) to (x2, y2). The line is drawn with
 the specified color.
 
-**engine.Circ(xc, yx, r float64, col golf.Col):** Draw a circle outline with center at point (xc, yc) with radius r.
+**engine.Circ(xc, yc, r float64, col golf.Col):** Draw a circle outline with center at point (xc, yc) with radius r.
 The outline is drawn with the specified color.
 
 **engine.CircFill(xc, yc, r float64, col golf.Col):** Draw a filled circle with center at point (xc, yc) with radius r.
 The circle is drawn with the specified color
 
 ### Controlls
-Using these functions you can recieve user input for your game.
+Using these functions, you can receive and handle user input for your game.
 
-**engine.Btn(key golf.Key):** returns true if the given key is being held on this frame.
+**engine.Btn(key golf.Key):** Returns true if the given key is being held on this frame.
 
-**engine.Btnp(key golf.Key):** returns true if the given key was first pressed on this frame.
+**engine.Btnp(key golf.Key):** Returns true if the given key was first pressed on this frame.
 
-**engine.Btnr(key golf.Key):** returns true if the given key was released on this frame.
+**engine.Btnr(key golf.Key):** Returns true if the given key was released on this frame.
 
-**engine.Mbtn(key golf.MouseBtn):** returns true if the given mouse key is being held on this frame.
+**engine.Mbtn(key golf.MouseBtn):** Returns true if the given mouse key is being held on this frame.
 
-**engine.Mbtnp(key golf.MouseBtn):** returns true if the given mouse key was first pressed on this frame.
+**engine.Mbtnp(key golf.MouseBtn):** Returns true if the given mouse key was first pressed on this frame.
 
-**engine.Mbtnr(key golf.MouseBtn):** returns true if the given mouse was released ont his frame.
+**engine.Mbtnr(key golf.MouseBtn):** Returns true if the given mouse was released ont this frame.
 
 ### Map
 The map functions allow you to draw a game map onto the screen easily and quickly.
 
-**engine.LoadMap(mapData [0x4800]byte):** load the map data into memory.
+**engine.LoadMap(mapData [0x4800]byte):** Load the map data into memory.
 
 **engine.Map(mx, my, mw, mh int, dx, dy float64, opts ...SOp):** Draws the map data onto the screen witht he left coordinate 
-at screen point dx, dy. mx and my are the map coordinates in tiles and dw and mh are the map size in tiles. opts are optional and change how each individual map tile is drawn.
+at screen point (dx, dy). mx and my are the map coordinates in tiles and mw and mh are the map size in tiles. opts are optional and change how each individual map tile is drawn.
 
-**engine.Mset(x, y, t int):** sets the map tile to sprite number t at the map coordinate (x, y)
+**engine.Mset(x, y, t int):** Sets the map tile to sprite number t at the map coordinate (x, y)
 
-**engine.Mget(x, y int):** returns the sprite index of the tile a the map coordinate (x, y)
+**engine.Mget(x, y int):** Returns the sprite index of the tile a the map coordinate (x, y)
 
 ### Sprites
 These functions allow you to draw sprites on the screen and modify how they are drawn.
 
-**engine.LoadSprs(sheet [0x3000]byte):** load the sprite sheet data into memory.
+**engine.LoadSprs(sheet [0x3000]byte):** Load the sprite sheet data into memory.
 
-**engine.LoadFlags(flags [0x200]byte):** load the sprite flags into memory. Each sprite in the sprite sheet has 1 byte 
-(or 8 flags) associated with is that can be set and then later checked. The meaning of each of these flags is 
-totally up to the needs of the progarmmer.
+**engine.LoadFlags(flags [0x200]byte):** Load the sprite flags into memory. Each sprite in the sprite sheet has 1 byte 
+(or 8 flags) associated with it that can be set and then later checked. The meaning of each of these flags is 
+entirely up to the needs of the programmer.
 
-**engine.Spr(n int, x, y float64, opts ...SOp):** draw sprite number n at screen position x, y. opts are optional and change
-how the sprite is drawn on screen. the sprite sheet is broken up into 8x8 areas that are then number from the top left 
-to the bottom right. Usually the first 8x8 sprite is not used as this sprite is drawn as a transparent tile when used on the map screen.
+**engine.Spr(n int, x, y float64, opts ...SOp):** Draw sprite number n at screen position x, y. opts are optional and change
+how the sprite is drawn on screen. The sprite sheet is broken up into 8x8 areas that are then numbered from the top left 
+to the bottom right. Usually the first 8x8 sprite is not used, as this sprite is drawn as a transparent tile when used on the map screen.
 
-**engine.SSpr(sx, sy, sw, sh int, dx, dy float64, opts ...SOp):** a more general version of the spr function. It draws a sprite from an abitrary spot on the sprite sheet with abitrary size to the screen. sx and sy are the pixel coordiantes of upper left corner of the sprite on the sprite sheet. sw and sh are the sprites withd and height respectivly. dx and dy are the screen coordinates that the sprite is drawn to. opts is optional and changes how the sprite is drawn on screen.
+**engine.SSpr(sx, sy, sw, sh int, dx, dy float64, opts ...SOp):** A more general version of the spr function. It draws a sprite from an arbitrary spot on the sprite sheet with arbitrary size to the screen. sx and sy are the pixel coordinates of the upper left corner of the sprite on the sprite sheet. sw and sh are the sprites width and height respectively. dx and dy are the screen coordinates that the sprite is drawn to. opts is optional and changes how the sprite is drawn on screen.
 
-**engine.Fget(n, f int):** returns flag number f associated with sprite number n.
+**engine.Fget(n, f int):** Returns flag number f associated with sprite number n.
 
-**engine.Fset(n, f int, s bool):** sets the flag number f for sprite n to the same value as s.
+**engine.Fset(n, f int, s bool):** Sets the flag number f for sprite n to the same value as s.
 
-**engine.FgetByte(n int):** returns the full byte assocated with sprite number n.
+**engine.FgetByte(n int):** Returns the full byte associated with sprite number n.
 
-**engine.FsetByte(n int, b byte):** sets the full byte assocated with sprite number n to the value of b.
+**engine.FsetByte(n int, b byte):** Sets the full byte associated with sprite number n to the value of b.
 
 ### Text
-the GoLF engine uses the custom built font displayed below. It can be accessed using the following functions.
+The GoLF Engine uses the custom-built font displayed below. It can be accessed using the following functions.
 
 ![Fantasy Font](https://github.com/bjatkin/golf-engine/blob/master/images/big_font.png)
 
-**engine.Text(x, y float64, text string, opts ...TOp):** draws the text on screen at point (x, y), all text is converted to the GoLF
-engines internal font which is all upper case. There are also several sequences that are converted in to GoLF emojis. escaped sequences are listed bellow. opts are optional and modify how the text is drawn.
+**engine.Text(x, y float64, text string, opts ...TOp):** Draws the text on screen at point (x, y). All text is converted to the GoLF
+Engine's internal font, which is all upper case. There are also several sequences that are converted into GoLF emojis. The escaped sequences are listed bellow. opts are optional and modify how the text is drawn.
   * **(<)** left button ![left button](https://github.com/bjatkin/golf-engine/blob/master/images/left_btn_icon.png)
   * **(>)** right button ![right button](https://github.com/bjatkin/golf-engine/blob/master/images/right_btn_icon.png)
   * **(^)** up button ![up button](https://github.com/bjatkin/golf-engine/blob/master/images/up_btn_icon.png)
@@ -334,118 +331,120 @@ engines internal font which is all upper case. There are also several sequences 
   * **->** right arrow ![right arrow](https://github.com/bjatkin/golf-engine/blob/master/images/right_arrow_icon.png)
   * **$$** pound symbol ![pound symbol](https://github.com/bjatkin/golf-engine/blob/master/images/pound_icon.png)
   * **@@** small black dot ![small black dot](https://github.com/bjatkin/golf-engine/blob/master/images/dot_icon.png)
-  * **<|** speaker symbole ![speaker symbole](https://github.com/bjatkin/golf-engine/blob/master/images/speaker_icon.png)
+  * **<|** speaker symbol ![speaker symbol](https://github.com/bjatkin/golf-engine/blob/master/images/speaker_icon.png)
   * **<3** white heart ![white heart](https://github.com/bjatkin/golf-engine/blob/master/images/heart_icon.png)
   * **<4** black heart ![black heart](https://github.com/bjatkin/golf-engine/blob/master/images/black_heart_icon.png)
-  * **+1** plus one symbole ![plus one](https://github.com/bjatkin/golf-engine/blob/master/images/plus_one_icon.png)
-  * **-1** minus one symbole ![minus one](https://github.com/bjatkin/golf-engine/blob/master/images/minus_one_icon.png)
-  * **~~** the pi symbole ![pi symbole](https://github.com/bjatkin/golf-engine/blob/master/images/pi_icon.png)
+  * **+1** plus one symbol ![plus one](https://github.com/bjatkin/golf-engine/blob/master/images/plus_one_icon.png)
+  * **-1** minus one symbol ![minus one](https://github.com/bjatkin/golf-engine/blob/master/images/minus_one_icon.png)
+  * **~~** the pi symbol ![pi symbol](https://github.com/bjatkin/golf-engine/blob/master/images/pi_icon.png)
   * **()** tall black dot ![tall black dot](https://github.com/bjatkin/golf-engine/blob/master/images/big_dot_icon.png)
   * **[]** dark square ![dark square](https://github.com/bjatkin/golf-engine/blob/master/images/square_icon.png)
   * **:;** dither pattern ![dither pattern](https://github.com/bjatkin/golf-engine/blob/master/images/dither_icon.png)
-  * **\*\*** start symbole ![start symbole](https://github.com/bjatkin/golf-engine/blob/master/images/star_icon.png)
+  * **\*\*** start symbol ![start symbol](https://github.com/bjatkin/golf-engine/blob/master/images/star_icon.png)
 
-  note: if you need to draw one of these patterns without it being drawn as an emoji you can use the '^' symbole to escape.
-  the pattern. (e.g. ^** will be drawn as two asterix characters rather than a star)
+  Note: If you need to draw one of these patterns without it being drawn as an emoji, you can use the '^' symbol to escape
+  the pattern. (e.g. ^** will be drawn as two asterisk characters rather than a star)
 
-**engine.TextL(text string, opts ...TOp):** draws text in the upper left hand corner of the screen. Each time TextL called a new
+**engine.TextL(text string, opts ...TOp):** Draw text in the upper left hand corner of the screen. Each time TextL called a new
 line is added.
 
-**engine.TextR(text string, opts ...TOp):** draws text in the upper right hand corner of the screen. Each time TextR is called
+**engine.TextR(text string, opts ...TOp):** Draw text in the upper right hand corner of the screen. Each time TextR is called
 a new line is added.
 
 ### Cart Data
-cart data functions allow you to store an retrive persistant data (like game saves).
+Cart data functions allow you to store and retrieve persistent data (like game saves).
 
-**engine.Dset(name string, data []byte):** stores persistent data to a users browser as a cookie. only 1024 bytes or less can be stored and the name must be alpa numeric.
-the name is used to save the data so it can be retrived later. Keep in mind this name should be unique or it may get overwritten by other games.
+**engine.Dset(name string, data []byte):** Stores persistent data to a user's browser as a cookie.
+Only 1024 bytes or less can be stored, and the name must be alpa numeric. 
+The name is used to save the data so it can be retrieved later.
+Keep in mind this name should be unique, or it may get overwritten by other games.
 
-**engine.Dget(name string):** retrievs data stored with Dset. In addition to returning the data it returns a bool which is true if the saved data was successfully found.
+**engine.Dget(name string):** Retrieves data stored with Dset. In addition to returning the data it returns a bool which is true if the saved data was successfully found.
 
-# The GoLF memory map
-Another goal of GoLF is to be a 'hackable' engine. To achieve this GoLF uses virtual ram (stored in engine.RAM). This virtual ram
-stores sprite data, map data, the screen buffer and much more. Bellow is a list of all the important memory addresses in the 
-virtual ram. This ram is stored as a byte array and can be accesed through the RAM member variable of a GoLF engine instance.
-(you can also view memroy addresses by looking at the memoryMap.go file)
+# The GoLF Memory Map
+Another goal of GoLF is to be a 'hackable' engine. To achieve this, GoLF uses virtual RAM (stored in engine.RAM). This virtual RAM 
+stores sprite data, map data, the screen buffer and much more. Below is a list of all the important memory addresses in the 
+virtual RAM. This RAM is stored as a byte array and can be accessed through the RAM member variable of a GoLF Engine instance 
+(you can also view memory addresses by looking at the memoryMap.go file)
 
-  * **Screen Buffer:** 0x0000 - 0x3600, this data is coppied to the screen once per frame
-  * **Screen Pallet:** 0x3600, the two screen pallets, top 4 bits are pallet 1 and bottom 4 bits are pallet 2
-  * **Start Screen Length:** 0x3601, the number of frames to play the startup animation. 
-  If you set this to 0 you can skip the startup animtion. 
-  If you choose to do this please credit the project some other way in your game.
-  * **CameraX:** 0x3602-0x3603, the 16 bit x coordinate of the camera.
-  * **CameraY:** 0x3604-0x3605, the 16 bit y coordinate of the camera.
-  * **Frames:** 0x3606-0x3608, the 24 bit number that counts the frames since the game engine was started.
-  * **ClipX:** 0x3609, the x coordinate of the clipping rect.
-  * **ClipY:** 0x360A, the Y coordinate of the clipping rect.
-  * **ClipW:** 0x360B, the width of the clipping rect.
-  * **ClipH:** 0x360C, the height of the clipping rect.
-  * **MouseX:** 0x360D, the x coordinate of the mouse.
-  * **MouseY:** 0x360E, the y coordinate of the mouse.
-  * **Left Click:** 0x360F, the click state of the left mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed)
-  * **Middle Click:** 0x360F, the click state of the middle mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed
-  * **Right Click:** 0x360F, the click state of the right mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed
-  * **Mouse Style:** 0x360F, the draw style of the mouse (00 - mouse currsor is not drawn, 01 - arrow, 10 - hand cursor, 11 - cross cursor)
-  * **Keyboad Key Stat:** 0x3601 - 0x3646, the pressed state of all the keys on the keyboard (00 - unpressed, 01 - press started, 10 - press ended, 11 - pressed). Keys are indexed in this array based on their js keyCode - 9 (backspace keycode)
-  * **Internal Sprite Sheet:** 0x3647 - 0x3F47, sprite data for the GoLF font, emojies, logo and mouse sprites.
-  * **Sprite Sheet:** 0x3F48 - 0x6F48, the data for the user sprite sheet, this data is stored in the compressed format described below.
+  * **Screen Buffer:** 0x0000 - 0x3600, This data is copied to the screen once per frame
+  * **Screen Pallet:** 0x3600, The two screen pallets (top 4 bits are pallet 1 and bottom 4 bits are pallet 2)
+  * **Start Screen Length:** 0x3601, The number of frames to play the startup animation. 
+  If you set this to 0 you can skip the startup animation. 
+  If you choose to do this, please credit the project some other way in your game.
+  * **CameraX:** 0x3602-0x3603, The 16 bit x coordinate of the camera.
+  * **CameraY:** 0x3604-0x3605, The 16 bit y coordinate of the camera.
+  * **Frames:** 0x3606-0x3608, The 24 bit number that counts the frames since the game engine was started.
+  * **ClipX:** 0x3609, The x coordinate of the clipping rect.
+  * **ClipY:** 0x360A, The Y coordinate of the clipping rect.
+  * **ClipW:** 0x360B, The width of the clipping rect.
+  * **ClipH:** 0x360C, The height of the clipping rect.
+  * **MouseX:** 0x360D, The x coordinate of the mouse.
+  * **MouseY:** 0x360E, The y coordinate of the mouse.
+  * **Left Click:** 0x360F, The click state of the left mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed).
+  * **Middle Click:** 0x360F, The click state of the middle mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed).
+  * **Right Click:** 0x360F, The click state of the right mouse button (00 - unclicked, 01 - click started, 10 - click ended, 11 - pressed).
+  * **Mouse Style:** 0x360F, The draw style of the mouse (00 - mouse cursor is not drawn, 01 - arrow, 10 - hand cursor, 11 - cross cursor).
+  * **Keyboard Key State:** 0x3601 - 0x3646, The pressed state of all the keys on the keyboard (00 - unpressed, 01 - press started, 10 - press ended, 11 - pressed). Keys are indexed in this array based on their js keyCode - 9 (backspace keycode).
+  * **Internal Sprite Sheet:** 0x3647 - 0x3F47, Sprite data for the GoLF font, emojis, logo and mouse sprites.
+  * **Sprite Sheet:** 0x3F48 - 0x6F48, The data for the user sprite sheet. This data is stored in the compressed format described below.
   * **Active Sprite Buff:** 0x6F49 - 0x6F4A, 16 bit address that points to the memory location that will be used by the sprite functions. You can use this to swap to the internal sprite sheet or reindex sprites on the sprite sheet.
-  * **Map Data:** 0x6F4B - 0xB74B, the map data, this data is stored in the compressed format described below.
-  * **Sprite Flag Data:**  0xB74C - 0xB94C, the sprite flag data, each sprite gets one byte of data which is 8 flags.
+  * **Map Data:** 0x6F4B - 0xB74B, The map data. This data is stored in the compressed format described below.
+  * **Sprite Flag Data:**  0xB74C - 0xB94C, The sprite flag data. Each sprite gets one byte of data which is 8 flags.
 
 # Data Packing
-As mentioned above the GoLF engine uses simulated ram in order to be more 'hackable' and to aid in the 'retro' feel.
-Using this memory efficiently is one of they ways GoLF emulates the retro feel.
-Because of this some of the internal representations of data can get a little difficult to understand.
-In order to aid in this I’ve included the following sections.
-Keep in mind that it is not strictly nessisary to understand these concepts in order to use the GoLF engine.
+As mentioned above, the GoLF Engine uses simulated RAM in order to be more 'hackable' and to aid in the 'retro' feel.
+Using this memory efficiently is one of the ways GoLF emulates the retro feel.
+Because of this, some of the internal memory representations of data can get a little difficult to understand.
+In order to aid in this, I’ve included the following sections.
+Keep in mind that it is not strictly necessary to understand these concepts in order to use the GoLF Engine.
 
 # GoLF Pixel Data
-GoLF supports up to 8 colors on screen at a time. Unfortunately 8 is only a 3 bit number which makes packing the color data
-efficiently into 8 bit bytes a little difficult (8 is not evenly divisable by 3).
-In order resolve this the GoLF engine splits a pixels shade from its pallet. This leads to the following internal representation
-for pixel data in GoLF's simulated ram. for each 3 byte set in any section of graphics data there are 
+GoLF supports up to 8 colors on screen at a time. Unfortunately, 8 is only a 3 bit number, which makes packing the color data
+efficiently into 8 bit bytes a little difficult (8 is not evenly divisible by 3).
+In order to resolve this the GoLF Engine splits a pixel's shade from its pallet. This leads to the following internal representation
+for pixel data in GoLF's simulated RAM. For each 3 byte set in any section of graphics data, there are 
 2 bytes with 4 pixel shades (1-4) followed by one byte with 8 color pallets (0 or 1). 
-each pallet bit maps to one of the previous 8 pixel shades.
-You can learn more about his by looking at the pget and pset functions in the GoLF engine or by looking at the graphic below.
+Each pallet bit corresponds to one of the previous 8 pixel shades.
+You can learn more about this by looking at the pget and pset functions in the GoLF engine or by looking at the graphic below.
 
 ![Sprite Data](https://github.com/bjatkin/golf-engine/blob/master/images/sprite_data.png)
 
 # GoLF Map Tile Data
 The GoLF map supports indexing 512 8x8 sprites from the sprite sheet.
-512 is a 9 bit number leading to a similar problem as the one we saw with sprite data (8 is not evenly divisable by 9). 
-In order to deal with this map tile data is packed using the following method.
+512 is a 9-bit number leading to a similar problem as the one we saw with sprite data (8 is not evenly divisible by 9). 
+In order to deal with this, map tile data is packed using the following method.
 The sprite sheet is broken up into two halves, each with 256 sprites.
 The top half is the low half (low memory) and the bottom half is the high half (high memory). 
-Each tile can then be indexed with an 8 bit integer 0-255.
-In addition to this index the half of the sprite sheet where the tile is located must be stored (1 bit).
+Each tile can then be indexed with an 8-bit integer 0-255.
+In addition to this index, the half of the sprite sheet where the tile is located must be stored (1 bit).
 This data is packed into the GoLF RAM as follows. 8 bytes with a 0-255 index for each tile, followed by 1 byte 
 with 8 bits to map the previous 8 tiles to the high or low halves of the sprite sheet.
 You can learn more about this by looking at the Map function in the GoLF engine or by looking at the graphic below.
 
 ![Map Tile Data](https://github.com/bjatkin/golf-engine/blob/master/images/map_data.png)
 
-# GoLF Graphics Memory Layout (Map and SpriteSheet)
+# GoLF Graphics Memory Layout (Map and Sprite Sheet)
 In the GoLF memory, sprite data and map data are placed next to each other.
 Sprite memory and map memory also grow in opposite directions.
 Sprite memory grows from low memory to high memory and the map memory grows from high memory to low memory.
 This allows for the sprite sheet or the map data to be expanded beyond their default size.
-In the case the the spritesheet ‘overgrows’ the map keep in mind that the map will only index the first
+In the case that the spritesheet ‘overgrows’ the map, keep in mind that the map will only index the first
 512 tiles. Also the sprite flags will only apply to the first 512 sprites as the flag section of memory is fixed.
-For more info on this look at the LoadMap and LoadSprs functions in the GoLF engine or look at the graphic below.
+For more info on this look at the LoadMap and LoadSprs functions in the GoLF Engine, or look at the graphic below.
 
 ![Map Vs Sprite Data](https://github.com/bjatkin/golf-engine/blob/master/images/sprite_vs_map.png)
 
 # Future Features
-* Add the ability to play game natively using electron rather than using a localhost server.
-* Make the project more fantasy console like
-  * simplify instalation
-  * add a GoLF ternimal the runs in the browser rather than using GoLF toolkit
-  * add sprite editor
-  * add map editor
-* add in a sound api (use the last 20k of memory)
-  * convert midi files
-  * create a music editor
-* add a scription language to make building games easier/ more aproachable
-* Let the text function use multiple TOp argumnets for different portions of the string
-* add vertical/ horizontal flipping for the text functions
+* Add the ability to play games natively using Electron rather than using a localhost server.
+* Make the project more fantasy console-like.
+  * Simplify installation
+  * Add a GoLF terminal that runs in the browser rather than using GoLF toolkit
+  * Add sprite editor
+  * Add map editor
+* Add in a sound API (use the last 20k of memory)
+  * Convert midi files
+  * Create a music editor
+* Add a scripting language to make building games easier/more approachable
+* Let the text function use multiple TOp arguments for different portions of the string.
+* Add vertical/horizontal flipping for the text functions.
