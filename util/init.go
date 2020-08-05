@@ -37,6 +37,11 @@ func initProject(args []string) error {
 		return err
 	}
 
+	err = addFile("assets/spriteflags.csv", spriteflagsTemplate[:], false)
+	if err != nil {
+		return err
+	}
+
 	err = addFile("main.go", mainTemplate[:], false)
 	if err != nil {
 		return err
@@ -62,7 +67,7 @@ func initProject(args []string) error {
 		name:             args[0],
 		spriteFile:       "assets/spritesheet.png",
 		mapFile:          "assets/map.png",
-		flagFile:         "assets/flag.csv",
+		flagFile:         "assets/spriteflags.csv",
 		outputSpriteFile: "spritesheet.go",
 		outputMapFile:    "map.go",
 		outputFlagFile:   "flag.go",

@@ -37,7 +37,11 @@ func buildProject(args []string) error {
 	}
 
 	// TODO: pack in the sprite flags file
-	fmt.Println("   converting the sprite flags file is not yet supported")
+	fmt.Println("   converting the sprite flags file")
+	err = convertFlag(confData.flagFile, confData.outputFlagFile)
+	if err != nil {
+		return fmt.Errorf("sprite flags err %s", err.Error())
+	}
 
 	fmt.Println("   building the project")
 	return runBuild()

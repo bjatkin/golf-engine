@@ -12,7 +12,8 @@ func convertFlag(inputFile, outputFile string) error {
 		return err
 	}
 
-	csvFile := strings.Split(string(file), ",")
+	csvData := strings.Replace(string(file), "\n", "", -1)
+	csvFile := strings.Split(csvData, ",")
 	if len(csvFile) > 512 {
 		return errors.New("Only the first 512 sprites can have sprite tiles")
 	}
