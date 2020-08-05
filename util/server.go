@@ -13,7 +13,7 @@ import (
 var serverSG = &sync.WaitGroup{}
 var server = &http.Server{Addr: ":8080"}
 var fs http.Handler
-var dir string
+var serverRunning bool
 
 func initServer() {
 	// Make the server serve the file server
@@ -33,13 +33,17 @@ func initServer() {
 func startDevServer(args []string) error {
 	fs = http.FileServer(http.Dir("./web"))
 
-	// Shut down any currently running server
-	err := server.Shutdown(context.Background())
-	if err != nil {
-		return err
+	if serverRunning {
+		fmt.Println("   swaping to server the web directory")
+		return nil
 	}
+	err := startServer()
+	if err == nil {
+		fmt.Println("   now serving the web directory")
+	}
+	serverRunning = true
 
-	return startServer()
+	return err
 }
 
 func startServer() error {
@@ -47,12 +51,12 @@ func startServer() error {
 
 	go func() {
 		defer serverSG.Done()
+		fmt.Println("Starting the Server listenting and serving")
 		if err := server.ListenAndServe(); err != http.ErrServerClosed {
 			log.Fatalf(err.Error())
 		}
 	}()
 
-	fmt.Printf("   Server Started!")
 	return openBrowser("http://localhost:8080/")
 }
 
@@ -60,7 +64,9 @@ func stopServer(args []string) error {
 	err := server.Shutdown(context.Background())
 	server = &http.Server{Addr: ":8080"}
 	serverSG = &sync.WaitGroup{}
-	fmt.Printf("   Server Stopped!")
+	fmt.Printf("   server stopped")
+	serverRunning = false
+
 	return err
 }
 

@@ -19,7 +19,7 @@ func main() {
 func update() {}
 
 func draw() {
-	g.Cls(golf.Col3)
+	g.Cls(golf.Col7)
 
 	g.Text(60, 50, "hello world!")
 }
