@@ -12,19 +12,19 @@ func (e *Engine) startupAnim() {
 	fadeFrom := []Col{Col0, Col1, Col2, Col3, Col4, Col5, Col6, Col7}
 	fadeTo := [][]Col{
 		[]Col{Col7, Col7, Col7, Col7, Col7, Col7, Col7, Col7},
-		[]Col{Col6, Col7, Col7, Col7, Col7, Col7, Col7, Col7},
-		[]Col{Col5, Col6, Col7, Col7, Col7, Col7, Col7, Col7},
-		[]Col{Col4, Col5, Col6, Col7, Col7, Col7, Col7, Col7},
-		[]Col{Col3, Col4, Col5, Col6, Col7, Col7, Col7, Col7},
-		[]Col{Col2, Col3, Col4, Col5, Col6, Col7, Col7, Col7},
-		[]Col{Col1, Col2, Col3, Col4, Col5, Col6, Col7, Col7},
-		[]Col{Col0, Col1, Col2, Col3, Col4, Col5, Col6, Col7},
-		[]Col{Col0, Col0, Col1, Col2, Col3, Col4, Col5, Col6},
-		[]Col{Col0, Col0, Col0, Col1, Col2, Col3, Col4, Col5},
-		[]Col{Col0, Col0, Col0, Col0, Col1, Col2, Col3, Col4},
-		[]Col{Col0, Col0, Col0, Col0, Col0, Col1, Col2, Col3},
-		[]Col{Col0, Col0, Col0, Col0, Col0, Col0, Col1, Col2},
-		[]Col{Col0, Col0, Col0, Col0, Col0, Col0, Col0, Col1},
+		[]Col{Col3, Col7, Col7, Col7, Col7, Col7, Col7, Col7},
+		[]Col{Col6, Col3, Col7, Col7, Col7, Col7, Col7, Col7},
+		[]Col{Col2, Col6, Col3, Col7, Col7, Col7, Col7, Col7},
+		[]Col{Col5, Col2, Col6, Col3, Col7, Col7, Col7, Col7},
+		[]Col{Col1, Col5, Col2, Col6, Col3, Col7, Col7, Col7},
+		[]Col{Col4, Col1, Col5, Col2, Col6, Col3, Col7, Col7},
+		[]Col{Col0, Col4, Col1, Col5, Col2, Col6, Col3, Col7},
+		[]Col{Col0, Col0, Col4, Col1, Col5, Col2, Col6, Col3},
+		[]Col{Col0, Col0, Col0, Col4, Col1, Col5, Col2, Col6},
+		[]Col{Col0, Col0, Col0, Col0, Col4, Col1, Col5, Col2},
+		[]Col{Col0, Col0, Col0, Col0, Col0, Col4, Col1, Col5},
+		[]Col{Col0, Col0, Col0, Col0, Col0, Col0, Col4, Col1},
+		[]Col{Col0, Col0, Col0, Col0, Col0, Col0, Col0, Col4},
 		[]Col{Col0, Col0, Col0, Col0, Col0, Col0, Col0, Col0},
 	}
 
@@ -36,10 +36,7 @@ func (e *Engine) startupAnim() {
 	if frame > endIntro+fadeLen {
 		bgCol = Col0
 	}
-	// tmpBG := e.BG()
-	// e.SetBG(bgCol)
 	e.Cls(bgCol)
-	// e.SetBG(tmpBG)
 
 	// Draw "made with"
 	txtf := 0
