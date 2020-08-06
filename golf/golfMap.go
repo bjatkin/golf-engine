@@ -34,12 +34,12 @@ func (e *Engine) Map(mx, my, mw, mh int, dx, dy float64, opts ...SOp) {
 	}
 
 	for x := 0; x < mw; x++ {
-		sprX := int(float64((x+int(dx))*8*opt.W) * roundPxl(opt.SW, float64(8*opt.W)))
+		sprX := int(float64(int(dx)+x*8*opt.W) * roundPxl(opt.SW, float64(8*opt.W)))
 		if !tileInboundsX(sprX-cx, opt) {
 			continue
 		}
 		for y := 0; y < mh; y++ {
-			sprY := int(float64((y+int(dy))*8*opt.H) * roundPxl(opt.SH, float64(8*opt.H)))
+			sprY := int(float64(int(dy)+y*8*opt.H) * roundPxl(opt.SH, float64(8*opt.H)))
 			if !tileInboundsY(sprY-cy, opt) {
 				continue
 			}
