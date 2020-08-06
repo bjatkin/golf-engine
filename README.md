@@ -1,11 +1,9 @@
-# TODO (ALMOST DONE!)
-  * [] Apply the checks to the readme.
-  * [] Support packing in sprite flags on golf_toolkit build.
+# TODO
   * [] ask coby/ pablo to test it.
   * [] move onto just building example games.
-  * [] add a section for those who are interested in collaboration.
 
 # GoLF Engine
+![GoLF Logo](https://github.com/bjatkin/golf-engine/blob/master/images/logo_large.png)
 The GoLang Fantasy Engine (GoLF Engine) is a retro game engine. It draws inspiration from fantasy console projects like 
 [pico-8](https://www.lexaloffle.com/pico-8.php), [tic-80](https://tic.computer/), and [pyxle](https://pypi.org/project/pyxel/). 
 Like those projects it is designed to be a retro-feeling game creation/playing tool. Unlike those
@@ -43,6 +41,8 @@ Then you can start writing your GoLF code in the main.go file.
 # GoLF Demos
 Once you've installed GoLF, you can try out some demo games. If you're not quite ready to start working on your own game
 but want to see what the GoLF engine can do you can find a few demo projects [here](https://github.com/bjatkin/golf-examples).
+
+![API Demo](https://github.com/bjatkin/golf-engine/blob/master/images/APIDemo.png)
 
 # Developing Your Game
 Once you have your first GoLF project up and running, development is easy. Just write regular Go code using the GoLF API.
@@ -169,6 +169,8 @@ Pallet | Color 1 | Color 2 | Color 3 | Color 4
 13 | (21, 34, 83) | (70, 135, 143) | (148, 227, 68) | (226, 243, 228)
 14 | (0, 48, 59) | (255, 119, 119) | (255, 206, 150) | (241, 242, 218)
 15 | (0, 0, 0) | (197, 17, 17) | (20, 58, 133) | (255, 255, 255)
+
+Note: Thanks to ![@Kirokaze](https://twitter.com/kirokaze) for pallet 13 and ![@Polyducks](https://twitter.com/Polyducks) for pallet 12.
 
 # GoLF API
 
@@ -434,6 +436,9 @@ In the case that the spritesheet ‘overgrows’ the map, keep in mind that the 
 For more info on this look at the LoadMap and LoadSprs functions in the GoLF Engine, or look at the graphic below.
 
 ![Map Vs Sprite Data](https://github.com/bjatkin/golf-engine/blob/master/images/sprite_vs_map.png)
+
+# contributing To This Project
+If you are interesting in this project and would like to contribute to it please contact me at opensource.atkin@gmail.com
 
 # Future Features
 * Add the ability to play games natively using Electron rather than using a localhost server.
