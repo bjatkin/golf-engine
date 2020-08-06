@@ -227,7 +227,6 @@ func (e *Engine) Circ(xc, yc, r float64, col Col) {
 // CircFill draws a filled circle using Bresenham's algorithm
 func (e *Engine) CircFill(xc, yc, r float64, col Col) {
 	e.circ(xc, yc, r, col, true)
-	e.circ(xc, yc, r, col, false)
 }
 
 // drawCirc8 draws 8 points on a circle
@@ -237,16 +236,17 @@ func (e *Engine) drawCirc8(xc, yc, x, y float64, c Col, filled bool) {
 		e.Line(xc-x, yc+y, xc-x, yc-y, c)
 		e.Line(xc+y, yc+x, xc+y, yc-x, c)
 		e.Line(xc-y, yc+x, xc-y, yc-x, c)
-	} else {
-		e.Pset(xc+x, yc+y, c)
-		e.Pset(xc-x, yc+y, c)
-		e.Pset(xc+x, yc-y, c)
-		e.Pset(xc-x, yc-y, c)
-		e.Pset(xc+y, yc+x, c)
-		e.Pset(xc-y, yc+x, c)
-		e.Pset(xc+y, yc-x, c)
-		e.Pset(xc-y, yc-x, c)
 	}
+	xc -= toFloat(e.RAM[cameraX:cameraX+2], true)
+	yc -= toFloat(e.RAM[cameraY:cameraY+2], true)
+	e.Pset(xc+x, yc+y, c)
+	e.Pset(xc-x, yc+y, c)
+	e.Pset(xc+x, yc-y, c)
+	e.Pset(xc-x, yc-y, c)
+	e.Pset(xc+y, yc+x, c)
+	e.Pset(xc-y, yc+x, c)
+	e.Pset(xc+y, yc-x, c)
+	e.Pset(xc-y, yc-x, c)
 }
 
 func (e *Engine) circ(xc, yc, r float64, c Col, filled bool) {
