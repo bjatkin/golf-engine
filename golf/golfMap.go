@@ -106,7 +106,7 @@ func (e *Engine) Mset(x, y, t int) {
 	dex := x + y*128
 	shift := dex % 8
 	i := ((dex / 8) * 9) + shift
-	j := ((i / 8) * 9) + 8
+	j := ((dex / 8) * 9) + 8
 
 	e.RAM[mapBase-i] = byte(t)
 	e.RAM[mapBase-j] &= (0b00000001 << (7 - shift)) ^ 0b11111111
