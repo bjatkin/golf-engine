@@ -41,14 +41,16 @@ func stringToByte(bString string) (byte, error) {
 		return 0, errors.New("string \"" + bString + "\" is not 8 characters long")
 	}
 	ret := byte(0)
-	for _, c := range bString {
+	for i, c := range bString {
 		if c != '0' && c != '1' {
 			return 0, errors.New("string \"" + bString + "\" contains a character other than 0 and 1")
 		}
 		if c == '1' {
 			ret++
 		}
-		ret <<= 1
+		if i < 7 {
+			ret <<= 1
+		}
 	}
 	return ret, nil
 }

@@ -115,7 +115,7 @@ func subPixels(palFrom, palTo []Col, col Col) Col {
 
 // Fget gets the fth flag on the nth sprite
 func (e *Engine) Fget(n, f int) bool {
-	return e.RAM[spriteFlags+n]&(0b00000001<<f) > 0
+	return e.RAM[spriteFlags+n]&(0b10000000>>f) > 0
 }
 
 // FgetByte gets the byte flag on the nth sprite
@@ -125,9 +125,9 @@ func (e *Engine) FgetByte(n int) byte {
 
 // Fset sets the fth flag on the nth sprite to s
 func (e *Engine) Fset(n, f int, s bool) {
-	e.RAM[spriteFlags+n] &= (0b00000001<<f ^ 0b11111111)
+	e.RAM[spriteFlags+n] &= (0b10000001>>f ^ 0b11111111)
 	if s {
-		e.RAM[spriteFlags+n] |= (0b00000001 << f)
+		e.RAM[spriteFlags+n] |= (0b10000000 >> f)
 	}
 }
 

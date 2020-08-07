@@ -36,7 +36,7 @@ func buildProject(args []string) error {
 		return fmt.Errorf("mapfile err %s", err.Error())
 	}
 
-	// TODO: pack in the sprite flags file
+	// pack in the sprite flags file
 	fmt.Println("   converting the sprite flags file")
 	err = convertFlag(confData.flagFile, confData.outputFlagFile)
 	if err != nil {
