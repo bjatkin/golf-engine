@@ -172,7 +172,7 @@ Pallet | Color 1 | Color 2 | Color 3 | Color 4
 14 | (0, 48, 59) | (255, 119, 119) | (255, 206, 150) | (241, 242, 218)
 15 | (0, 0, 0) | (197, 17, 17) | (20, 58, 133) | (255, 255, 255)
 
-Note: Thanks to ![@Kirokaze](https://twitter.com/kirokaze) for pallet 13 and ![@Polyducks](https://twitter.com/Polyducks) for pallet 12.
+Note: Thanks to [@Kirokaze](https://twitter.com/kirokaze) for pallet 13 and [@Polyducks](https://twitter.com/Polyducks) for pallet 12.
 
 # GoLF API
 
