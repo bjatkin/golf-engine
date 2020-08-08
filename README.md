@@ -1,4 +1,5 @@
 # TODO
+  * [] add methods to draw fixed shapes
   * [] ask coby/ pablo to test it.
   * [] move onto just building example games.
 
@@ -244,18 +245,23 @@ Using the following functions, you can draw various shapes on screen.
 
 **engine.Pget(x, y float64):** Gets the color currently set at screen pixel (x, y).
 
-**engine.Rect(x, y, w, h float64, col golf.Col):** Draw an empty rectangle outline with the specified draw color.
+**engine.Rect(x, y, w, h float64, col golf.Col, fixed bool):** Draw an empty rectangle outline with the specified draw color.
+fixed is an optional parameter. When set to true rect ignores the camera (useful for UI)
 
-**engine.RectFill(x, y, w, h float64, col golf.Col):** Draw a filled rectangle with the specified draw color.
+**engine.RectFill(x, y, w, h float64, col golf.Col, fixed bool):** Draw a filled rectangle with the specified draw color.
+fixed is an optional parameter. When set to true rect ignores the camera (useful for UI)
 
-**engine.Line(x1, y1, x2, y2 float64, col golf.Col):** Draw a line from point (x1, y1) to (x2, y2). The line is drawn with
-the specified color.
+**engine.Line(x1, y1, x2, y2 float64, col golf.Col, fixed bool):** Draw a line from point (x1, y1) to (x2, y2).
+The line is drawn with the specified color. fixed is an optional parameter.
+When set to true rect ignores the camera (useful for UI)
 
-**engine.Circ(xc, yc, r float64, col golf.Col):** Draw a circle outline with center at point (xc, yc) with radius r.
-The outline is drawn with the specified color.
+**engine.Circ(xc, yc, r float64, col golf.Col, fixed bool):** Draw a circle outline with center at point (xc, yc) with radius r.
+The outline is drawn with the specified color. fixed is an optional parameter.
+When set to true rect ignores the camera (useful for UI)
 
-**engine.CircFill(xc, yc, r float64, col golf.Col):** Draw a filled circle with center at point (xc, yc) with radius r.
-The circle is drawn with the specified color
+**engine.CircFill(xc, yc, r float64, col golf.Col, fixed bool):** Draw a filled circle with center at point (xc, yc) with radius r.
+The circle is drawn with the specified color. fixed is an optional parameter.
+When set to true rect ignores the camera (useful for UI)
 
 ### Controlls
 Using these functions, you can receive and handle user input for your game.

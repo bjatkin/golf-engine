@@ -166,9 +166,15 @@ func (e *Engine) Camera(x, y int) {
 }
 
 // Rect draws a rectangle border on the screen
-func (e *Engine) Rect(x, y, w, h float64, col Col) {
-	x -= toFloat(e.RAM[cameraX:cameraX+2], true)
-	y -= toFloat(e.RAM[cameraY:cameraY+2], true)
+func (e *Engine) Rect(x, y, w, h float64, col Col, fixed ...bool) {
+	f := false
+	if len(fixed) > 0 {
+		f = fixed[0]
+	}
+	if !f {
+		x -= toFloat(e.RAM[cameraX:cameraX+2], true)
+		y -= toFloat(e.RAM[cameraY:cameraY+2], true)
+	}
 	for r := 0.0; r < w; r++ {
 		e.Pset(x+r, y, col)
 		e.Pset(x+r, y+(h-1), col)
@@ -180,9 +186,15 @@ func (e *Engine) Rect(x, y, w, h float64, col Col) {
 }
 
 // RectFill draws a filled rectangle one the screen
-func (e *Engine) RectFill(x, y, w, h float64, col Col) {
-	x -= toFloat(e.RAM[cameraX:cameraX+2], true)
-	y -= toFloat(e.RAM[cameraY:cameraY+2], true)
+func (e *Engine) RectFill(x, y, w, h float64, col Col, fixed ...bool) {
+	f := false
+	if len(fixed) > 0 {
+		f = fixed[0]
+	}
+	if !f {
+		x -= toFloat(e.RAM[cameraX:cameraX+2], true)
+		y -= toFloat(e.RAM[cameraY:cameraY+2], true)
+	}
 	for r := 0.0; r < w; r++ {
 		for c := 0.0; c < h; c++ {
 			e.Pset(x+r, y+c, col)
@@ -191,11 +203,17 @@ func (e *Engine) RectFill(x, y, w, h float64, col Col) {
 }
 
 // Line draws a colored line
-func (e *Engine) Line(x1, y1, x2, y2 float64, col Col) {
-	x1 -= toFloat(e.RAM[cameraX:cameraX+2], true)
-	x2 -= toFloat(e.RAM[cameraX:cameraX+2], true)
-	y1 -= toFloat(e.RAM[cameraY:cameraY+2], true)
-	y2 -= toFloat(e.RAM[cameraY:cameraY+2], true)
+func (e *Engine) Line(x1, y1, x2, y2 float64, col Col, fixed ...bool) {
+	f := false
+	if len(fixed) > 0 {
+		f = fixed[0]
+	}
+	if !f {
+		x1 -= toFloat(e.RAM[cameraX:cameraX+2], true)
+		x2 -= toFloat(e.RAM[cameraX:cameraX+2], true)
+		y1 -= toFloat(e.RAM[cameraY:cameraY+2], true)
+		y2 -= toFloat(e.RAM[cameraY:cameraY+2], true)
+	}
 	if x2 < x1 {
 		x2, x1 = x1, x2
 	}
@@ -220,25 +238,35 @@ func (e *Engine) Line(x1, y1, x2, y2 float64, col Col) {
 }
 
 // Circ draws a circle using Bresenham's algorithm
-func (e *Engine) Circ(xc, yc, r float64, col Col) {
-	e.circ(xc, yc, r, col, false)
+func (e *Engine) Circ(xc, yc, r float64, col Col, fixed ...bool) {
+	f := false
+	if len(fixed) > 0 {
+		f = fixed[0]
+	}
+	e.circ(xc, yc, r, col, false, f)
 }
 
 // CircFill draws a filled circle using Bresenham's algorithm
-func (e *Engine) CircFill(xc, yc, r float64, col Col) {
-	e.circ(xc, yc, r, col, true)
+func (e *Engine) CircFill(xc, yc, r float64, col Col, fixed ...bool) {
+	f := false
+	if len(fixed) > 0 {
+		f = fixed[0]
+	}
+	e.circ(xc, yc, r, col, true, f)
 }
 
 // drawCirc8 draws 8 points on a circle
-func (e *Engine) drawCirc8(xc, yc, x, y float64, c Col, filled bool) {
+func (e *Engine) drawCirc8(xc, yc, x, y float64, c Col, filled bool, fixed bool) {
 	if filled {
-		e.Line(xc+x, yc+y, xc+x, yc-y, c)
-		e.Line(xc-x, yc+y, xc-x, yc-y, c)
-		e.Line(xc+y, yc+x, xc+y, yc-x, c)
-		e.Line(xc-y, yc+x, xc-y, yc-x, c)
+		e.Line(xc+x, yc+y, xc+x, yc-y, c, fixed)
+		e.Line(xc-x, yc+y, xc-x, yc-y, c, fixed)
+		e.Line(xc+y, yc+x, xc+y, yc-x, c, fixed)
+		e.Line(xc-y, yc+x, xc-y, yc-x, c, fixed)
 	}
-	xc -= toFloat(e.RAM[cameraX:cameraX+2], true)
-	yc -= toFloat(e.RAM[cameraY:cameraY+2], true)
+	if !fixed {
+		xc -= toFloat(e.RAM[cameraX:cameraX+2], true)
+		yc -= toFloat(e.RAM[cameraY:cameraY+2], true)
+	}
 	e.Pset(xc+x, yc+y, c)
 	e.Pset(xc-x, yc+y, c)
 	e.Pset(xc+x, yc-y, c)
@@ -249,13 +277,13 @@ func (e *Engine) drawCirc8(xc, yc, x, y float64, c Col, filled bool) {
 	e.Pset(xc-y, yc-x, c)
 }
 
-func (e *Engine) circ(xc, yc, r float64, c Col, filled bool) {
+func (e *Engine) circ(xc, yc, r float64, c Col, filled bool, fixed bool) {
 	if r == 0 {
 		return
 	}
 	x, y := 0.0, r
 	d := 3 - 2*r
-	e.drawCirc8(xc, yc, x, y, c, filled)
+	e.drawCirc8(xc, yc, x, y, c, filled, fixed)
 	for y >= x {
 		x++
 		if d > 0 {
@@ -264,7 +292,7 @@ func (e *Engine) circ(xc, yc, r float64, c Col, filled bool) {
 		} else {
 			d = d + 4*x + 6
 		}
-		e.drawCirc8(xc, yc, x, y, c, filled)
+		e.drawCirc8(xc, yc, x, y, c, filled, fixed)
 	}
 }
 
