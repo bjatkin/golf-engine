@@ -45,7 +45,7 @@ Once you've installed GoLF, you can try out some demo games. If you're not quite
 but want to see what the GoLF engine can do you can find a few demo projects [here](https://github.com/bjatkin/golf-examples).
 
 ![API Demo](https://github.com/bjatkin/golf-engine/blob/master/images/APIDemo.png)
-![BiBi Duck Demo](https://github.com/bjatkin/golf-engine/blob/master/images/bibiDemo3.png)
+![BiBi Duck Demo](https://github.com/bjatkin/golf-engine/blob/master/images/BiBiDemo3.png)
 
 # Developing Your Game
 Once you have your first GoLF project up and running, development is easy. Just write regular Go code using the GoLF API.
