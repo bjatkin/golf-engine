@@ -11,7 +11,7 @@ func main() {
 
 	// g.LoadSprs(spriteSheet)
 	// g.LoadMap(mapData)
-	// g.LoadFlags(flagData)
+	// g.LoadFlags(spriteFlags)
 
 	g.Run()
 }
