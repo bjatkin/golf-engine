@@ -20,9 +20,10 @@ func (e *Engine) TextL(text string, opts ...TOp) {
 	splitText := strings.Split(text, "\n")
 	for _, line := range splitText {
 		if len(opts) > 0 {
+			opts[0].Fixed = true
 			e.Text(1, float64(1+6*textLline), line, opts[0])
 		} else {
-			e.Text(1, float64(1+6*textLline), line)
+			e.Text(1, float64(1+6*textLline), line, TOp{Fixed: true})
 		}
 		textLline++
 	}
@@ -35,9 +36,10 @@ func (e *Engine) TextR(text string, opts ...TOp) {
 	for _, line := range splitText {
 		x := ScreenWidth - 1 - len(line)*6
 		if len(opts) > 0 {
+			opts[0].Fixed = true
 			e.Text(float64(x), float64(1+6*textRline), line, opts[0])
 		} else {
-			e.Text(float64(x), float64(1+6*textRline), line)
+			e.Text(float64(x), float64(1+6*textRline), line, TOp{Fixed: true})
 		}
 		textRline++
 	}
