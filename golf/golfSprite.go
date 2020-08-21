@@ -79,7 +79,7 @@ func (e *Engine) SSpr(sx, sy, sw, sh int, dx, dy float64, opts ...SOp) {
 
 	for x := 0; x < sw; x++ {
 		for y := 0; y < sh; y++ {
-			pxl := e.pget(sx+x, sy+y, buffBase, 256)
+			pxl := e.pget(float64(sx+x), float64(sy+y), buffBase, 256, true)
 			if pxl != opt.TCol {
 				pxl = subPixels(opt.PFrom, opt.PTo, pxl)
 				fx := 0
