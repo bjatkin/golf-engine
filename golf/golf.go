@@ -315,11 +315,7 @@ func (e *Engine) RClip() {
 // sets a pixel in abitrary memory
 // buffBase is the start of the pixel buffer in memory
 // pxlWidth is the width of the pixel buffer in pixels
-func (e *Engine) pset(x, y float64, col Col, buffBase, pxlWidth int, fixed bool) {
-	if !fixed {
-		x -= toFloat(e.RAM[cameraX:cameraX+2], true)
-		y -= toFloat(e.RAM[cameraY:cameraY+2], true)
-	}
+func (e *Engine) pset(x, y float64, col Col, buffBase, pxlWidth int) {
 	ix, iy := int(x), int(y)
 	i := ix + iy*pxlWidth
 	index := int(float64(i/4) / 2 * 3)
@@ -336,26 +332,18 @@ func (e *Engine) pset(x, y float64, col Col, buffBase, pxlWidth int, fixed bool)
 }
 
 // Pset sets a pixel on the screen
-func (e *Engine) Pset(x, y float64, col Col, fixed ...bool) {
+func (e *Engine) Pset(x, y float64, col Col) {
 	if x < float64(e.RAM[clipX]) || x >= float64(e.RAM[clipX]+e.RAM[clipW]) ||
 		y < float64(e.RAM[clipY]) || y >= float64(e.RAM[clipY]+e.RAM[clipH]) {
 		return
 	}
-	if len(fixed) > 0 {
-		e.pset(x, y, col, 0, 192, fixed[0])
-		return
-	}
-	e.pset(x, y, col, 0, 192, false)
+	e.pset(x, y, col, 0, 192)
 }
 
 // pget gets a pixel from abitrary memory
 // buffBase is the start of the memory buffer
 // pxlWidth is the width of the buffer in pixels
-func (e *Engine) pget(x, y float64, buffBase, pxlWidth int, fixed bool) Col {
-	if !fixed {
-		x -= toFloat(e.RAM[cameraX:cameraX+2], true)
-		y -= toFloat(e.RAM[cameraY:cameraY+2], true)
-	}
+func (e *Engine) pget(x, y float64, buffBase, pxlWidth int) Col {
 	ix, iy := int(x), int(y)
 	i := ix + iy*pxlWidth
 	index := int(float64(i/4) / 2 * 3)
@@ -369,14 +357,11 @@ func (e *Engine) pget(x, y float64, buffBase, pxlWidth int, fixed bool) Col {
 }
 
 // Pget gets the color of a pixel on the screen
-func (e *Engine) Pget(x, y float64, fixed ...bool) Col {
+func (e *Engine) Pget(x, y float64) Col {
 	if x < 0 || x > 192 || y < 0 || y >= 192 {
 		return Col0
 	}
-	if len(fixed) > 0 {
-		return e.pget(x, y, 0, 192, fixed[0])
-	}
-	return e.pget(x, y, 0, 192, false)
+	return e.pget(x, y, 0, 192)
 }
 
 // PalA sets pallet A
