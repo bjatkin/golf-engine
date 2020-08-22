@@ -1,8 +1,3 @@
-# TODO
-  * [] add methods to draw fixed shapes
-  * [] ask coby/ pablo to test it.
-  * [] move onto just building example games.
-
 # GoLF Engine
 ![GoLF Logo](https://github.com/bjatkin/golf-engine/blob/master/images/logo_large.png)
 
