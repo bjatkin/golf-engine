@@ -39,8 +39,13 @@ Then you can start writing your GoLF code in the main.go file.
 Once you've installed GoLF, you can try out some demo games. If you're not quite ready to start working on your own game
 but want to see what the GoLF engine can do you can find a few demo projects [here](https://github.com/bjatkin/golf-examples).
 
-![API Demo](https://github.com/bjatkin/golf-engine/blob/master/images/APIDemo.png)
-![BiBi Duck Demo](https://github.com/bjatkin/golf-engine/blob/master/images/BiBiDemo3.png)
+<img src="https://github.com/bjatkin/golf-engine/blob/master/images/APIDemo.png" alt="API Demo" width="350" >
+<img src="https://github.com/bjatkin/golf-engine/blob/master/images/bibiDuck1.png" alt="BiBiDuck Demo 1" width="350" >
+<img src="https://github.com/bjatkin/golf-engine/blob/master/images/bibiDuck3.png" alt="BiBiDuck Demo 3" width="350" >
+<img src="https://github.com/bjatkin/golf-engine/blob/master/images/blood2.png" alt="Blood Demo 2" width="350" >
+<img src="https://github.com/bjatkin/golf-engine/blob/master/images/blood3.png" alt="Blood Demo 3" width="350" >
+<img src="https://github.com/bjatkin/golf-engine/blob/master/images/wander1.png" alt="Wander Demo 1" width="350" >
+<img src="https://github.com/bjatkin/golf-engine/blob/master/images/wander2.png" alt="Wander Demo 2" width="350" >
 
 # Developing Your Game
 Once you have your first GoLF project up and running, development is easy. Just write regular Go code using the GoLF API.
