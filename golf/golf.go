@@ -1,6 +1,7 @@
 package golf
 
 import (
+	"math"
 	"syscall/js"
 )
 
@@ -214,26 +215,19 @@ func (e *Engine) Line(x1, y1, x2, y2 float64, col Col, fixed ...bool) {
 		y1 -= toFloat(e.RAM[cameraY:cameraY+2], true)
 		y2 -= toFloat(e.RAM[cameraY:cameraY+2], true)
 	}
-	if x2 < x1 {
-		x2, x1 = x1, x2
+	dx, dy := x2-x1, y2-y1
+	step := math.Abs(dy)
+	if math.Abs(dx) >= math.Abs(dy) {
+		step = math.Abs(dx)
 	}
-	w := x2 - x1
-	dh := (float64(y2) - float64(y1)) / float64(w)
-	if w > 0 {
-		for x := x1; x < x2; x++ {
-			e.Pset(x, y1+dh*(x-x1), col)
-		}
-		return
-	}
-	if y2 < y1 {
-		y2, y1 = y1, y2
-	}
-	h := y2 - y1
-	dw := (float64(x2) - float64(x1)) / float64(h)
-	if h > 0 {
-		for y := y1; y < y2; y++ {
-			e.Pset(x1+(dw*(y-y1)), y, col)
-		}
+
+	dx = dx / step
+	dy = dy / step
+	x, y := x1, y1
+	for i := 0.0; i < step; i++ {
+		e.Pset(x, y, col)
+		x = x + dx
+		y = y + dy
 	}
 }
 
