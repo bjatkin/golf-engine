@@ -23,7 +23,7 @@ Then create a directory for your game. For example:
 
 `mkdir hello world`
 
-Navigte into this directory and run the golf_toolkit binary, located in the GoLF engine utils folder.
+Navigate into this directory and run the golf_toolkit binary, located in the GoLF engine utils folder.
 
 `./Users/[your user name]/go/src/github.com/bjatkin/golf-engine/util/[windows,mac,linux]/golf_toolkit`
 
